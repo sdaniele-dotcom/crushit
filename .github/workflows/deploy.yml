@@ -24,10 +24,12 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      # For a project site served at /<repo>, uncomment and set BASE_PATH:
-      # env:
-      #   BASE_PATH: /crushit
+      # Project site is served at /crushit, so assets must be prefixed.
+      # If you later move to a custom domain or user/org root site,
+      # set BASE_PATH to "" (empty) instead.
       - run: npm run build
+        env:
+          BASE_PATH: /crushit
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
