@@ -1,0 +1,145 @@
+import type { Metadata } from "next";
+import { Container, PageHero, Button, Eyebrow, Card } from "@/components/ui";
+import { site } from "@/lib/site";
+
+export const metadata: Metadata = {
+  title: "Co-Marketing Toolkit",
+  description:
+    "Co-branded flyers, social posts, open-house resources, and lead tools to grow your business together with Crush Mortgage.",
+};
+
+const assets = [
+  {
+    icon: "📄",
+    title: "Co-branded flyers",
+    desc: "Property flyers, financing highlight sheets, and 'just listed' one-pagers with your name and photo alongside ours.",
+    tags: ["Print-ready PDF", "Editable"],
+  },
+  {
+    icon: "📱",
+    title: "Social media kit",
+    desc: "Ready-to-post graphics and captions for new listings, rate updates, and buyer tips — all compliant and on-brand.",
+    tags: ["Instagram", "Facebook", "Stories"],
+  },
+  {
+    icon: "🏡",
+    title: "Open house pack",
+    desc: "Digital sign-in, financing scenarios for the specific listing, and a follow-up sequence that captures every visitor.",
+    tags: ["Sign-in", "Follow-up"],
+  },
+  {
+    icon: "✉️",
+    title: "Email templates",
+    desc: "Nurture sequences for new leads, past clients, and 'thinking about selling' homeowners — co-branded and ready to send.",
+    tags: ["Drip campaigns"],
+  },
+  {
+    icon: "🎥",
+    title: "Video scripts",
+    desc: "Short-form scripts for market updates and buyer tips you can film in minutes to stay top-of-mind.",
+    tags: ["Reels", "Shorts"],
+  },
+  {
+    icon: "📊",
+    title: "Listing financing sheets",
+    desc: "Show buyers exactly what a monthly payment looks like on your listing — with multiple down-payment scenarios.",
+    tags: ["Per-listing"],
+  },
+];
+
+const playbook = [
+  ["Pick your assets", "Choose the co-branded materials that fit your next listing or campaign."],
+  ["We co-brand them", "Your name, photo, and contact info added alongside your loan officer — compliant and fast."],
+  ["Launch together", "Post, print, or email. We amplify from our channels too."],
+  ["Capture & follow up", "Leads route to both of us so no opportunity slips through."],
+];
+
+export default function CoMarketingPage() {
+  return (
+    <>
+      <PageHero
+        eyebrow="Co-marketing toolkit"
+        title={
+          <>
+            Grow your business{" "}
+            <span className="text-gradient">together</span> with us
+          </>
+        }
+        subtitle="Compliant, co-branded marketing that puts your name front and center. We handle the design and the mortgage expertise — you get the credit."
+      />
+
+      <Container className="py-14">
+        {/* Asset grid */}
+        <Eyebrow>What&apos;s included</Eyebrow>
+        <h2 className="mt-4 text-3xl font-bold tracking-tight text-ink-900">
+          A full marketing department, on the house
+        </h2>
+        <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {assets.map((a) => (
+            <Card key={a.title} className="card-hover flex flex-col">
+              <span className="grid h-12 w-12 place-items-center rounded-xl bg-crush-50 text-2xl">
+                {a.icon}
+              </span>
+              <h3 className="mt-4 text-lg font-bold text-ink-900">{a.title}</h3>
+              <p className="mt-2 flex-1 text-sm text-muted">{a.desc}</p>
+              <div className="mt-4 flex flex-wrap gap-2">
+                {a.tags.map((t) => (
+                  <span
+                    key={t}
+                    className="rounded-full bg-surface-2 px-2.5 py-1 text-xs font-medium text-ink-700"
+                  >
+                    {t}
+                  </span>
+                ))}
+              </div>
+            </Card>
+          ))}
+        </div>
+
+        {/* Playbook */}
+        <div className="mt-16 grid items-center gap-12 rounded-3xl bg-ink-900 p-8 text-white sm:p-12 lg:grid-cols-2">
+          <div>
+            <Eyebrow>The partnership playbook</Eyebrow>
+            <h2 className="mt-4 text-3xl font-bold tracking-tight text-white">
+              Four steps to co-marketing that works
+            </h2>
+            <p className="mt-4 text-slate-300">
+              A simple, repeatable system that keeps both of our names in front
+              of buyers and sellers all year long.
+            </p>
+            <div className="mt-6">
+              <Button href="/contact">Start co-marketing</Button>
+            </div>
+          </div>
+          <ol className="space-y-5">
+            {playbook.map(([t, d], i) => (
+              <li key={t} className="flex gap-4">
+                <span className="grid h-9 w-9 shrink-0 place-items-center rounded-full bg-crush-500 font-bold text-white">
+                  {i + 1}
+                </span>
+                <div>
+                  <p className="font-semibold text-white">{t}</p>
+                  <p className="text-sm text-slate-400">{d}</p>
+                </div>
+              </li>
+            ))}
+          </ol>
+        </div>
+
+        {/* Compliance note */}
+        <Card className="mt-14 bg-surface">
+          <h3 className="text-lg font-bold text-ink-900">
+            Compliant by design
+          </h3>
+          <p className="mt-2 text-sm text-muted">
+            All co-marketing follows RESPA guidelines — costs for shared
+            marketing are split based on fair-market value and the pro-rata
+            share of each party&apos;s promotion. We keep the paperwork clean so
+            you can focus on selling. Ask {site.loanOfficer} for the co-marketing
+            agreement to get started.
+          </p>
+        </Card>
+      </Container>
+    </>
+  );
+}

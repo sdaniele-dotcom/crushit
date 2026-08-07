@@ -1,0 +1,114 @@
+@import "tailwindcss";
+
+/*
+  CRUSH IT — Realtors Suite design system
+  Brand: energetic, confident, real-estate + mortgage.
+  Palette: deep navy "ink" + vibrant crush orange accent.
+*/
+
+:root {
+  --background: #ffffff;
+  --foreground: #0b1b2e;
+
+  /* Brand ink (navy) scale */
+  --ink-950: #060f1c;
+  --ink-900: #0b1b2e;
+  --ink-800: #10263f;
+  --ink-700: #163350;
+  --ink-600: #1e4368;
+
+  /* Crush accent (orange) scale */
+  --crush-50: #fff3ed;
+  --crush-100: #ffe1d1;
+  --crush-400: #ff8a4c;
+  --crush-500: #ff5a1f;
+  --crush-600: #f0430a;
+  --crush-700: #c6350a;
+
+  /* Support */
+  --mint-500: #10b981;
+  --sky-500: #0ea5e9;
+
+  --surface: #f6f8fb;
+  --surface-2: #eef2f7;
+  --border: #e2e8f0;
+  --muted: #5b6b7f;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  --color-ink-950: var(--ink-950);
+  --color-ink-900: var(--ink-900);
+  --color-ink-800: var(--ink-800);
+  --color-ink-700: var(--ink-700);
+  --color-ink-600: var(--ink-600);
+
+  --color-crush-50: var(--crush-50);
+  --color-crush-100: var(--crush-100);
+  --color-crush-400: var(--crush-400);
+  --color-crush-500: var(--crush-500);
+  --color-crush-600: var(--crush-600);
+  --color-crush-700: var(--crush-700);
+
+  --color-mint-500: var(--mint-500);
+  --color-sky-500: var(--sky-500);
+
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-border: var(--border);
+  --color-muted: var(--muted);
+
+  --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+}
+
+* {
+  border-color: var(--border);
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* Utility: brand gradient text */
+.text-gradient {
+  background: linear-gradient(100deg, var(--crush-500), var(--crush-400));
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+/* Utility: subtle grid / glow backdrops */
+.hero-grid {
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.05) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.05) 1px, transparent 1px);
+  background-size: 44px 44px;
+  -webkit-mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 100%);
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 40%, transparent 100%);
+}
+
+.card-hover {
+  transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+}
+.card-hover:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 18px 40px -18px rgba(11, 27, 46, 0.35);
+  border-color: var(--crush-400);
+}
+
+/* Focus visibility for accessibility */
+:where(a, button, input, select, textarea):focus-visible {
+  outline: 2px solid var(--crush-500);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
