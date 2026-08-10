@@ -172,6 +172,34 @@ export const loanPrograms: LoanProgram[] = [
   },
 ];
 
+export type RateRow = {
+  program: string;
+  term: string;
+  rate: string; // note rate
+  apr: string; // annual percentage rate
+  points?: string;
+  featured?: boolean;
+};
+
+/**
+ * ⚠️ SAMPLE RATES — for layout only. Mortgage rates change daily and are
+ * regulated (APR must reflect the same assumptions). Replace every value
+ * below with your own current, compliant numbers before promoting the site,
+ * and update `ratesAsOf` each time. Keep the assumptions line accurate.
+ */
+export const ratesAsOf = "August 10, 2026";
+export const rateAssumptions =
+  "Sample scenario: $400,000 loan amount, 25% down, 740+ FICO, single-family primary residence, 30-day rate lock. Your rate depends on your full application.";
+
+export const rateTable: RateRow[] = [
+  { program: "Conventional", term: "30-Year Fixed", rate: "0.000%", apr: "0.000%", points: "0.00", featured: true },
+  { program: "Conventional", term: "15-Year Fixed", rate: "0.000%", apr: "0.000%", points: "0.00" },
+  { program: "FHA", term: "30-Year Fixed", rate: "0.000%", apr: "0.000%", points: "0.00" },
+  { program: "VA", term: "30-Year Fixed", rate: "0.000%", apr: "0.000%", points: "0.00" },
+  { program: "Jumbo", term: "30-Year Fixed", rate: "0.000%", apr: "0.000%", points: "0.00" },
+  { program: "ARM", term: "7/6 SOFR ARM", rate: "0.000%", apr: "0.000%", points: "0.00" },
+];
+
 export type Resource = {
   title: string;
   description: string;
