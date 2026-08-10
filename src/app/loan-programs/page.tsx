@@ -1,6 +1,11 @@
 import type { Metadata } from "next";
 import { Container, PageHero, Button, Eyebrow } from "@/components/ui";
-import { loanPrograms } from "@/lib/data";
+import {
+  loanPrograms,
+  rateTable,
+  ratesAsOf,
+  rateAssumptions,
+} from "@/lib/data";
 
 export const metadata: Metadata = {
   title: "Loan Programs",
@@ -49,6 +54,69 @@ export default function LoanProgramsPage() {
               ))}
             </tbody>
           </table>
+        </div>
+
+        {/* Rate table */}
+        <div className="mt-16">
+          <div className="flex flex-wrap items-end justify-between gap-3">
+            <div>
+              <Eyebrow>Today&apos;s rates</Eyebrow>
+              <h2 className="mt-4 text-3xl font-bold tracking-tight text-ink-900">
+                Sample rate snapshot
+              </h2>
+            </div>
+            <p className="text-sm text-muted">
+              Rates as of{" "}
+              <span className="font-semibold text-ink-900">{ratesAsOf}</span>
+            </p>
+          </div>
+
+          <div className="mt-6 overflow-x-auto rounded-2xl border border-border">
+            <table className="w-full min-w-[640px] text-left text-sm">
+              <thead className="bg-ink-900 text-white">
+                <tr>
+                  <th className="px-5 py-3 font-semibold">Program</th>
+                  <th className="px-5 py-3 font-semibold">Term</th>
+                  <th className="px-5 py-3 font-semibold">Rate</th>
+                  <th className="px-5 py-3 font-semibold">APR</th>
+                  <th className="px-5 py-3 font-semibold">Points</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-border bg-white">
+                {rateTable.map((r) => (
+                  <tr
+                    key={`${r.program}-${r.term}`}
+                    className={r.featured ? "bg-crush-50/60" : "hover:bg-surface"}
+                  >
+                    <td className="px-5 py-3 font-semibold text-ink-900">
+                      {r.program}
+                    </td>
+                    <td className="px-5 py-3 text-muted">{r.term}</td>
+                    <td className="px-5 py-3 text-lg font-bold tabular-nums text-crush-600">
+                      {r.rate}
+                    </td>
+                    <td className="px-5 py-3 tabular-nums text-ink-800">
+                      {r.apr}
+                    </td>
+                    <td className="px-5 py-3 tabular-nums text-muted">
+                      {r.points}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+
+          <p className="mt-4 text-xs leading-relaxed text-muted">
+            {rateAssumptions} Rates, APRs, and points are estimates for
+            illustration only, are not a commitment to lend, and change daily.
+            Contact us for a rate specific to your scenario. Equal Housing
+            Opportunity.
+          </p>
+
+          <div className="mt-6">
+            <Button href="/contact">Get your custom rate quote</Button>
+          </div>
         </div>
 
         {/* Detail cards */}
