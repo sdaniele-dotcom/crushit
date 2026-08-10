@@ -17,7 +17,7 @@ export const site = {
   // ─── Company / loan-officer details ───────────────────────────────
   company: "Crush Mortgage",
   loanOfficer: "Shannon Daniele",
-  title: "Founder & Mortgage Broker",
+  title: "Loan Officer",
   nmls: "2332050", // Shannon Daniele (individual MLO)
   companyNmls: "169136",
   phone: "(562) 317-6112",

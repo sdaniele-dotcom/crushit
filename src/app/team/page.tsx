@@ -64,7 +64,6 @@ export default function TeamPage() {
                   {m.nmls && (
                     <p className="mt-0.5 text-sm text-muted">NMLS #{m.nmls}</p>
                   )}
-                  <p className="mt-3 text-sm text-muted">{m.bio}</p>
 
                   <div className="mt-4 flex flex-wrap gap-x-4 gap-y-1 text-sm">
                     <a
