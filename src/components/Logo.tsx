@@ -1,20 +1,20 @@
 import Link from "next/link";
 import Image from "next/image";
+import logo from "../../public/crush-mortgage-logo.png";
 
 /**
  * Official Crush Mortgage logo (white/dark-background version) + a small
  * "Realtors Suite" tag. Used on dark surfaces (header + footer).
  *
- * The logo file lives at /public/crush-mortgage-logo.png.
+ * The logo is imported statically so Next.js emits it with the correct
+ * (base-path-aware) URL when the site is exported to a subpath like /crushit.
  */
 export function Logo() {
   return (
     <Link href="/" className="group inline-flex items-center gap-3">
       <Image
-        src="/crush-mortgage-logo.png"
+        src={logo}
         alt="Crush Mortgage"
-        width={1000}
-        height={324}
         priority
         className="h-9 w-auto"
       />
