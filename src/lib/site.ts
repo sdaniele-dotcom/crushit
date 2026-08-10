@@ -2,8 +2,9 @@
  * CRUSH IT — Realtors Suite
  * Central configuration.
  *
- * ▶ TO CUSTOMIZE: replace every value marked with `[PLACEHOLDER]`
- *   with your real Crush Mortgage / loan-officer details.
+ * Pre-filled with Crush Mortgage details pulled from crushmortgage.com.
+ * ▶ Double-check the values marked `// TODO` and swap in anything more
+ *   specific (e.g. your individual MLO NMLS or real social URLs).
  *   Everything on the site reads from this one file.
  */
 
@@ -13,21 +14,23 @@ export const site = {
   shortDescription:
     "A complete toolkit of calculators, loan guides, and co-marketing resources built to help realtors win more clients and close more deals.",
 
-  // ─── Loan officer / company details — REPLACE THESE ───────────────
+  // ─── Company / loan-officer details ───────────────────────────────
   company: "Crush Mortgage",
-  loanOfficer: "[LOAN OFFICER NAME]",
-  title: "Mortgage Loan Officer",
-  nmls: "[NMLS #]",
-  companyNmls: "[COMPANY NMLS #]",
-  phone: "[555-000-0000]",
-  email: "[loans@crushmortgage.com]",
-  website: "[https://crushmortgage.com]",
-  address: "[123 Main St, Suite 100, Your City, ST 00000]",
+  loanOfficer: "Shannon Daniele",
+  title: "Founder & Mortgage Broker",
+  nmls: "169136", // TODO: replace with individual MLO NMLS if different from company
+  companyNmls: "169136",
+  phone: "(562) 317-6112",
+  email: "info@crushmortgage.com",
+  website: "https://www.crushmortgage.com",
+  address: "3750 Schaufele Ave, Suite 270A, Long Beach, CA 90808",
 
   // Optional: where the contact / pre-approval form should submit.
   // Drop in a Formspree ID, Getform URL, or your own endpoint.
   formEndpoint: "" as string, // e.g. "https://formspree.io/f/xxxxxxx"
 
+  // Social links — set real URLs to make them appear in the footer.
+  // Any value left as a "[...]" placeholder is hidden automatically.
   social: {
     facebook: "[https://facebook.com/...]",
     instagram: "[https://instagram.com/...]",

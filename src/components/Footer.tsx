@@ -56,33 +56,27 @@ export function Footer() {
                 href={site.website}
                 className="text-slate-400 transition-colors hover:text-crush-400"
               >
-                {site.company}
+                {site.website.replace(/^https?:\/\//, "")}
               </a>
             </li>
-            <li>
-              <a
-                href={site.social.instagram}
-                className="text-slate-400 transition-colors hover:text-crush-400"
-              >
-                Instagram
-              </a>
-            </li>
-            <li>
-              <a
-                href={site.social.facebook}
-                className="text-slate-400 transition-colors hover:text-crush-400"
-              >
-                Facebook
-              </a>
-            </li>
-            <li>
-              <a
-                href={site.social.linkedin}
-                className="text-slate-400 transition-colors hover:text-crush-400"
-              >
-                LinkedIn
-              </a>
-            </li>
+            {(
+              [
+                ["Instagram", site.social.instagram],
+                ["Facebook", site.social.facebook],
+                ["LinkedIn", site.social.linkedin],
+              ] as const
+            )
+              .filter(([, url]) => url && !url.startsWith("["))
+              .map(([label, url]) => (
+                <li key={label}>
+                  <a
+                    href={url}
+                    className="text-slate-400 transition-colors hover:text-crush-400"
+                  >
+                    {label}
+                  </a>
+                </li>
+              ))}
           </ul>
         </div>
       </div>
