@@ -282,7 +282,7 @@ export type TeamMember = {
 export const team: TeamMember[] = [
   {
     name: "Shannon Daniele",
-    role: "Founder & Mortgage Broker",
+    role: "Loan Officer",
     nmls: "2332050",
     phone: "(562) 256-5779",
     email: "sdaniele@crushmortgage.com",
