@@ -32,6 +32,28 @@ export default function ResourcesPage() {
       />
 
       <Container className="py-14">
+        {/* Featured: full first-time buyer guide */}
+        <a
+          href="/first-time-buyers"
+          className="card-hover group mb-14 flex flex-col items-start justify-between gap-4 rounded-3xl bg-ink-900 p-8 text-white sm:flex-row sm:items-center"
+        >
+          <div>
+            <span className="inline-flex items-center gap-2 rounded-full bg-crush-500/20 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-crush-400">
+              Featured guide
+            </span>
+            <h2 className="mt-3 text-2xl font-bold">
+              The complete First-Time Buyer Guide
+            </h2>
+            <p className="mt-1 max-w-xl text-slate-300">
+              A full walkthrough — budgeting, down payment options, documents,
+              costs, and FAQs. The perfect thing to share with a new buyer.
+            </p>
+          </div>
+          <span className="inline-flex shrink-0 items-center gap-2 rounded-full bg-crush-500 px-6 py-3 text-sm font-semibold text-white transition-colors group-hover:bg-crush-600">
+            Read the guide →
+          </span>
+        </a>
+
         {/* Homebuying journey */}
         <Eyebrow>The homebuying journey</Eyebrow>
         <h2 className="mt-4 text-3xl font-bold tracking-tight text-ink-900">
