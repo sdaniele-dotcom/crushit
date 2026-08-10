@@ -8,31 +8,31 @@
 
 :root {
   --background: #ffffff;
-  --foreground: #0b1b2e;
+  --foreground: #16181d;
 
-  /* Brand ink (navy) scale */
-  --ink-950: #060f1c;
-  --ink-900: #0b1b2e;
-  --ink-800: #10263f;
-  --ink-700: #163350;
-  --ink-600: #1e4368;
+  /* Brand ink (charcoal/black) scale — matches the Crush Mortgage logo */
+  --ink-950: #0a0b0d;
+  --ink-900: #16181d;
+  --ink-800: #1f2228;
+  --ink-700: #2b2f37;
+  --ink-600: #3c414b;
 
-  /* Crush accent (orange) scale */
-  --crush-50: #fff3ed;
-  --crush-100: #ffe1d1;
-  --crush-400: #ff8a4c;
-  --crush-500: #ff5a1f;
-  --crush-600: #f0430a;
-  --crush-700: #c6350a;
+  /* Crush accent (red) scale — matches the logo red */
+  --crush-50: #fef2f2;
+  --crush-100: #fcdcdd;
+  --crush-400: #ef4a50;
+  --crush-500: #e11b22;
+  --crush-600: #c20f16;
+  --crush-700: #9c0c12;
 
   /* Support */
   --mint-500: #10b981;
   --sky-500: #0ea5e9;
 
-  --surface: #f6f8fb;
-  --surface-2: #eef2f7;
-  --border: #e2e8f0;
-  --muted: #5b6b7f;
+  --surface: #f7f7f8;
+  --surface-2: #eeeff1;
+  --border: #e4e5e8;
+  --muted: #62666e;
 }
 
 @theme inline {

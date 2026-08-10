@@ -121,7 +121,7 @@ export function PaymentCalculator() {
           <div className="mt-5">
             <StackBar
               segments={[
-                { label: "Principal & interest", value: b.pi, color: "#ff5a1f" },
+                { label: "Principal & interest", value: b.pi, color: "#e11b22" },
                 { label: "Taxes", value: b.tax, color: "#0ea5e9" },
                 { label: "Insurance", value: b.insurance, color: "#10b981" },
                 { label: "PMI", value: b.pmi, color: "#f59e0b" },
