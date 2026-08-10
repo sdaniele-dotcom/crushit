@@ -11,7 +11,7 @@ export function Header() {
   const pathname = usePathname();
 
   return (
-    <header className="sticky top-0 z-50 border-b border-border/80 bg-white/85 backdrop-blur-md">
+    <header className="sticky top-0 z-50 border-b border-white/10 bg-ink-900/90 backdrop-blur-md">
       <div className="mx-auto flex h-16 w-full max-w-6xl items-center justify-between px-5 sm:px-8">
         <Logo />
 
@@ -25,8 +25,8 @@ export function Header() {
                 href={item.href}
                 className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
                   active
-                    ? "bg-surface-2 text-ink-900"
-                    : "text-muted hover:text-ink-900"
+                    ? "bg-white/10 text-white"
+                    : "text-slate-300 hover:text-white"
                 }`}
               >
                 {item.label}
@@ -45,7 +45,7 @@ export function Header() {
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}
-          className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-border text-ink-900 md:hidden"
+          className="inline-flex h-10 w-10 items-center justify-center rounded-lg border border-white/20 text-white md:hidden"
           aria-label="Toggle menu"
           aria-expanded={open}
         >
@@ -68,14 +68,14 @@ export function Header() {
 
       {/* Mobile menu */}
       {open && (
-        <nav className="border-t border-border bg-white md:hidden">
+        <nav className="border-t border-white/10 bg-ink-900 md:hidden">
           <div className="mx-auto max-w-6xl px-5 py-3 sm:px-8">
             {navItems.map((item) => (
               <Link
                 key={item.href}
                 href={item.href}
                 onClick={() => setOpen(false)}
-                className="block rounded-lg px-3 py-2.5 text-base font-medium text-ink-800 hover:bg-surface"
+                className="block rounded-lg px-3 py-2.5 text-base font-medium text-slate-200 hover:bg-white/5"
               >
                 {item.label}
               </Link>
