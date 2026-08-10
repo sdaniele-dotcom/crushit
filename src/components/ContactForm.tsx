@@ -87,6 +87,24 @@ export function ContactForm() {
 
   return (
     <form onSubmit={handleSubmit} className="grid gap-4 sm:grid-cols-2">
+      {/* FormSubmit config (no-op if a different endpoint is used) */}
+      <input
+        type="hidden"
+        name="_subject"
+        value="New CRUSH IT Realtors Suite inquiry"
+      />
+      <input type="hidden" name="_template" value="table" />
+      <input type="hidden" name="_captcha" value="false" />
+      {/* Honeypot: bots fill this, humans never see it */}
+      <input
+        type="text"
+        name="_honey"
+        tabIndex={-1}
+        autoComplete="off"
+        className="hidden"
+        aria-hidden
+      />
+
       <label className="block sm:col-span-2">
         <span className="text-sm font-medium text-ink-800">Full name *</span>
         <input name="name" required className={inputCls} placeholder="Jane Buyer" />
