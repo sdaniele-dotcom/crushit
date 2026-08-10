@@ -25,9 +25,12 @@ export const site = {
   website: "https://www.crushmortgage.com",
   address: "3750 Schaufele Ave, Suite 270A, Long Beach, CA 90808",
 
-  // Optional: where the contact / pre-approval form should submit.
-  // Drop in a Formspree ID, Getform URL, or your own endpoint.
-  formEndpoint: "" as string, // e.g. "https://formspree.io/f/xxxxxxx"
+  // Where the contact / pre-approval form submits. Uses FormSubmit
+  // (no account needed) to deliver leads straight to this inbox.
+  // ▶ To change the destination, edit the email below. To hide the
+  //   address, activate the form once and swap in the FormSubmit alias
+  //   hash: https://formsubmit.co/ajax/<your-hash>
+  formEndpoint: "https://formsubmit.co/ajax/sdaniele@crushmortgage.com" as string,
 
   // Social links — set real URLs to make them appear in the footer.
   // Any value left as a "[...]" placeholder is hidden automatically.
