@@ -18,7 +18,7 @@ export const site = {
   company: "Crush Mortgage",
   loanOfficer: "Shannon Daniele",
   title: "Founder & Mortgage Broker",
-  nmls: "169136", // TODO: replace with individual MLO NMLS if different from company
+  nmls: "2332050", // Shannon Daniele (individual MLO)
   companyNmls: "169136",
   phone: "(562) 317-6112",
   email: "info@crushmortgage.com",

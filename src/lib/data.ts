@@ -2,6 +2,11 @@
  * Static content data for the CRUSH IT suite.
  * Editable, plain-English content — safe for non-developers to update.
  */
+import type { StaticImageData } from "next/image";
+import shannonPhoto from "../../public/team/shannon-daniele.jpg";
+import joshPhoto from "../../public/team/josh-amescua.jpg";
+import silviaPhoto from "../../public/team/silvia-robles.jpg";
+import amrajPhoto from "../../public/team/amraj-kaur.jpg";
 
 export type Feature = {
   title: string;
@@ -265,39 +270,50 @@ export type TeamMember = {
   nmls?: string; // individual MLO NMLS — leave blank to hide
   phone?: string; // direct line — falls back to the company phone if blank
   email?: string; // direct email — falls back to the company email if blank
-  photo?: string; // e.g. "/team/shannon.jpg" (drop the file in /public/team)
+  photo?: StaticImageData | ""; // headshot in /public/team; "" shows initials avatar
   bio: string;
 };
 
 /**
  * Crush Mortgage team (from crushmortgage.com/our-team).
- * ▶ Add each person's individual NMLS, direct phone/email, and a photo
- *   (place the image in /public/team and set `photo`). Until a photo is
- *   set, a branded initials avatar is shown.
+ * Photos live in /public/team and are imported above so they get the
+ * correct base-path-aware URL on export.
  */
 export const team: TeamMember[] = [
   {
     name: "Shannon Daniele",
     role: "Founder & Mortgage Broker",
-    photo: "", // e.g. "/team/shannon-daniele.jpg"
+    nmls: "2332050",
+    phone: "(562) 256-5779",
+    email: "sdaniele@crushmortgage.com",
+    photo: shannonPhoto,
     bio: "Founder of Crush Mortgage and a Long Beach mortgage broker who helps buyers and partner agents structure the right loan and get to the closing table with confidence.",
   },
   {
     name: "Josh Amescua",
     role: "Loan Officer",
-    photo: "",
+    nmls: "1202316",
+    phone: "(562) 688-3804",
+    email: "jamescua@crushmortgage.com",
+    photo: joshPhoto,
     bio: "Loan officer partnering with buyers and real-estate agents to make financing simple, fast, and clear from pre-approval through closing.",
   },
   {
     name: "Silvia Robles",
     role: "Loan Officer",
-    photo: "",
+    nmls: "2323986",
+    phone: "(562) 912-7769",
+    email: "srobles@crushmortgage.com",
+    photo: silviaPhoto,
     bio: "Mortgage professional guiding buyers through their loan options with care and clear communication every step of the way.",
   },
   {
     name: "Amraj Kaur",
     role: "Loan Officer",
-    photo: "",
+    nmls: "2787571",
+    phone: "(562) 416-5366",
+    email: "amraj@crushmortgage.com",
+    photo: amrajPhoto,
     bio: "Mortgage professional helping buyers and partner agents move from pre-approval to closing with confidence.",
   },
 ];
