@@ -260,6 +260,20 @@ export const team: TeamMember[] = [
     photo: "",
     bio: "Loan officer partnering with buyers and real-estate agents to make financing simple, fast, and clear from pre-approval through closing.",
   },
+  {
+    // TODO: confirm surname — best match found was "Silvia Sandoval"
+    name: "Silvia Sandoval",
+    role: "Loan Officer",
+    photo: "",
+    bio: "Mortgage professional guiding buyers through their loan options with care and clear communication every step of the way.",
+  },
+  {
+    // TODO: add surname — only the first name was available
+    name: "Amraj",
+    role: "Loan Officer",
+    photo: "",
+    bio: "Mortgage professional helping buyers and partner agents move from pre-approval to closing with confidence.",
+  },
 ];
 
 export const stats = [
