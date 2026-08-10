@@ -231,6 +231,37 @@ export const resources: Resource[] = [
   },
 ];
 
+export type TeamMember = {
+  name: string;
+  role: string;
+  nmls?: string; // individual MLO NMLS — leave blank to hide
+  phone?: string; // direct line — falls back to the company phone if blank
+  email?: string; // direct email — falls back to the company email if blank
+  photo?: string; // e.g. "/team/shannon.jpg" (drop the file in /public/team)
+  bio: string;
+};
+
+/**
+ * Crush Mortgage team (from crushmortgage.com/our-team).
+ * ▶ Add each person's individual NMLS, direct phone/email, and a photo
+ *   (place the image in /public/team and set `photo`). Until a photo is
+ *   set, a branded initials avatar is shown.
+ */
+export const team: TeamMember[] = [
+  {
+    name: "Shannon Daniele",
+    role: "Founder & Mortgage Broker",
+    photo: "", // e.g. "/team/shannon-daniele.jpg"
+    bio: "Founder of Crush Mortgage and a Long Beach mortgage broker who helps buyers and partner agents structure the right loan and get to the closing table with confidence.",
+  },
+  {
+    name: "Josh Amescua",
+    role: "Loan Officer",
+    photo: "",
+    bio: "Loan officer partnering with buyers and real-estate agents to make financing simple, fast, and clear from pre-approval through closing.",
+  },
+];
+
 export const stats = [
   { value: "4", label: "Interactive tools" },
   { value: "6", label: "Loan programs explained" },
