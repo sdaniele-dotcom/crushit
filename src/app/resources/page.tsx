@@ -34,7 +34,7 @@ export default function ResourcesPage() {
 
       <Container className="py-14">
         {/* Featured: full first-time buyer guide */}
-        <a
+        <Link
           href="/first-time-buyers"
           className="card-hover group mb-14 flex flex-col items-start justify-between gap-4 rounded-3xl bg-ink-900 p-8 text-white sm:flex-row sm:items-center"
         >
@@ -53,7 +53,7 @@ export default function ResourcesPage() {
           <span className="inline-flex shrink-0 items-center gap-2 rounded-full bg-crush-500 px-6 py-3 text-sm font-semibold text-white transition-colors group-hover:bg-crush-600">
             Read the guide →
           </span>
-        </a>
+        </Link>
 
         {/* Homebuying journey */}
         <Eyebrow>The homebuying journey</Eyebrow>

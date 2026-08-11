@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Container, PageHero, Button, Eyebrow, Card } from "@/components/ui";
 import { site } from "@/lib/site";
 
@@ -169,12 +170,12 @@ export default function FirstTimeBuyersPage() {
                 </svg>
                 Download the guide (PDF)
               </a>
-              <a
+              <Link
                 href="/co-brand"
                 className="text-center text-sm font-semibold text-crush-400 hover:text-crush-300 sm:text-right"
               >
                 Agents: co-brand this guide →
-              </a>
+              </Link>
             </div>
           </div>
         </div>
@@ -226,12 +227,12 @@ export default function FirstTimeBuyersPage() {
                   <h3 className="text-lg font-bold text-ink-900">{s.t}</h3>
                   <p className="mt-1 text-muted">{s.d}</p>
                   {s.link && (
-                    <a
+                    <Link
                       href={s.link.href}
                       className="mt-2 inline-flex items-center gap-1 text-sm font-semibold text-crush-600 hover:text-crush-700"
                     >
                       {s.link.label} →
-                    </a>
+                    </Link>
                   )}
                 </div>
               </li>

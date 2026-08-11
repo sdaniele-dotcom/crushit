@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Container, PageHero, Button, Eyebrow, Card } from "@/components/ui";
 import { site } from "@/lib/site";
 
@@ -127,7 +128,7 @@ export default function CoMarketingPage() {
         </div>
 
         {/* Instant co-branded flyer */}
-        <a
+        <Link
           href="/co-brand"
           className="card-hover group mt-14 flex flex-col items-start justify-between gap-4 rounded-3xl border border-border bg-white p-8 sm:flex-row sm:items-center"
         >
@@ -151,7 +152,7 @@ export default function CoMarketingPage() {
           <span className="inline-flex shrink-0 items-center gap-2 rounded-full bg-crush-500 px-6 py-3 text-sm font-semibold text-white transition-colors group-hover:bg-crush-600">
             Make my flyer →
           </span>
-        </a>
+        </Link>
 
         {/* Compliance note */}
         <Card className="mt-8 bg-surface">
