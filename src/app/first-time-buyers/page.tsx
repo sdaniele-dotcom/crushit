@@ -141,15 +141,11 @@ export default function FirstTimeBuyersPage() {
               </span>
               <div>
                 <h2 className="text-2xl font-bold">
-                  Free printable First-Time Homebuyer Guide
+                  The Crush Mortgage First-Time Homebuyer Guide
                 </h2>
                 <p className="mt-2 max-w-xl text-slate-300">
-                  A polished, share-ready PDF you can hand or email to any buyer.{" "}
-                  <span className="font-semibold text-white">
-                    Agents: we&apos;ll co-brand it with your name, photo, and
-                    contact info
-                  </span>{" "}
-                  so it goes out under your brand — just ask.
+                  A polished, share-ready PDF from the {site.company} team — hand
+                  it or email it to any buyer.
                 </p>
               </div>
             </div>
@@ -174,10 +170,10 @@ export default function FirstTimeBuyersPage() {
                 Download the guide (PDF)
               </a>
               <a
-                href="/co-marketing"
+                href="/co-brand"
                 className="text-center text-sm font-semibold text-crush-400 hover:text-crush-300 sm:text-right"
               >
-                Get it co-branded to you →
+                Agents: co-brand this guide →
               </a>
             </div>
           </div>
