@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Container, PageHero, Button, Eyebrow } from "@/components/ui";
 import {
   loanPrograms,
@@ -227,12 +228,12 @@ export default function LoanProgramsPage() {
           <p className="mt-6 text-sm text-muted">
             Don&apos;t see the fit? We have access to dozens more niche and
             down-payment-assistance programs —{" "}
-            <a
+            <Link
               href="/contact"
               className="font-semibold text-crush-600 hover:text-crush-700"
             >
               just ask
-            </a>
+            </Link>
             .
           </p>
         </div>
