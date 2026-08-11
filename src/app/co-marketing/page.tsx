@@ -126,8 +126,35 @@ export default function CoMarketingPage() {
           </ol>
         </div>
 
+        {/* Instant co-branded flyer */}
+        <a
+          href="/co-brand"
+          className="card-hover group mt-14 flex flex-col items-start justify-between gap-4 rounded-3xl border border-border bg-white p-8 sm:flex-row sm:items-center"
+        >
+          <div className="flex items-start gap-5">
+            <span className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-crush-50 text-3xl">
+              🪄
+            </span>
+            <div>
+              <span className="inline-flex items-center rounded-full bg-crush-50 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-crush-700">
+                Instant &amp; free
+              </span>
+              <h3 className="mt-2 text-xl font-bold text-ink-900">
+                Co-brand the Homebuyer Guide in seconds
+              </h3>
+              <p className="mt-1 max-w-xl text-muted">
+                Add your name, photo, and contact info and download a co-branded
+                flyer to share with buyers — no design work, no waiting.
+              </p>
+            </div>
+          </div>
+          <span className="inline-flex shrink-0 items-center gap-2 rounded-full bg-crush-500 px-6 py-3 text-sm font-semibold text-white transition-colors group-hover:bg-crush-600">
+            Make my flyer →
+          </span>
+        </a>
+
         {/* Compliance note */}
-        <Card className="mt-14 bg-surface">
+        <Card className="mt-8 bg-surface">
           <h3 className="text-lg font-bold text-ink-900">
             Compliant by design
           </h3>
