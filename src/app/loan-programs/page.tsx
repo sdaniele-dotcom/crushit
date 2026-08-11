@@ -4,9 +4,6 @@ import {
   loanPrograms,
   specialtyPrograms,
   otherPrograms,
-  rateTable,
-  ratesAsOf,
-  rateAssumptions,
 } from "@/lib/data";
 
 export const metadata: Metadata = {
@@ -58,62 +55,36 @@ export default function LoanProgramsPage() {
           </table>
         </div>
 
-        {/* Rate table */}
+        {/* Live rates (Optimal Blue OBMMI widget) */}
         <div className="mt-16">
-          <div className="flex flex-wrap items-end justify-between gap-3">
-            <div>
-              <Eyebrow>Today&apos;s rates</Eyebrow>
-              <h2 className="mt-4 text-3xl font-bold tracking-tight text-ink-900">
-                Sample rate snapshot
-              </h2>
-            </div>
-            <p className="text-sm text-muted">
-              Rates as of{" "}
-              <span className="font-semibold text-ink-900">{ratesAsOf}</span>
-            </p>
-          </div>
+          <Eyebrow>Today&apos;s rates</Eyebrow>
+          <h2 className="mt-4 text-3xl font-bold tracking-tight text-ink-900">
+            Live market rates
+          </h2>
+          <p className="mt-3 max-w-2xl text-muted">
+            Current average mortgage rates, updated daily and pulled live from
+            the Optimal Blue Mortgage Market Indices — the same market data that
+            drives real pricing.
+          </p>
 
-          <div className="mt-6 overflow-x-auto rounded-2xl border border-border">
-            <table className="w-full min-w-[640px] text-left text-sm">
-              <thead className="bg-ink-900 text-white">
-                <tr>
-                  <th className="px-5 py-3 font-semibold">Program</th>
-                  <th className="px-5 py-3 font-semibold">Term</th>
-                  <th className="px-5 py-3 font-semibold">Rate</th>
-                  <th className="px-5 py-3 font-semibold">APR</th>
-                  <th className="px-5 py-3 font-semibold">Points</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-border bg-white">
-                {rateTable.map((r) => (
-                  <tr
-                    key={`${r.program}-${r.term}`}
-                    className={r.featured ? "bg-crush-50/60" : "hover:bg-surface"}
-                  >
-                    <td className="px-5 py-3 font-semibold text-ink-900">
-                      {r.program}
-                    </td>
-                    <td className="px-5 py-3 text-muted">{r.term}</td>
-                    <td className="px-5 py-3 text-lg font-bold tabular-nums text-crush-600">
-                      {r.rate}
-                    </td>
-                    <td className="px-5 py-3 tabular-nums text-ink-800">
-                      {r.apr}
-                    </td>
-                    <td className="px-5 py-3 tabular-nums text-muted">
-                      {r.points}
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="mt-6 overflow-x-auto rounded-2xl border border-border bg-white p-3 sm:p-4">
+            <iframe
+              title="Live mortgage market rates (Optimal Blue OBMMI)"
+              src="https://www2.optimalblue.com/OBMMI/widgetConfig.php?actbg=f62817&inactbg=e62c2c&hoverBG=ff7a7a&rate=e62c2c&graph1=af1c1c"
+              width={750}
+              height={462}
+              className="mx-auto block max-w-none"
+              style={{ border: 0 }}
+              loading="lazy"
+            />
           </div>
 
           <p className="mt-4 text-xs leading-relaxed text-muted">
-            {rateAssumptions} Rates, APRs, and points are estimates for
-            illustration only, are not a commitment to lend, and change daily.
-            Contact us for a rate specific to your scenario. Equal Housing
-            Opportunity.
+            Market index data via Optimal Blue (OBMMI). Figures shown are daily
+            market averages for reference only — not a quote or commitment to
+            lend. Your actual rate and APR depend on a full application, credit
+            approval, and current pricing. Contact us for a rate specific to your
+            scenario. Equal Housing Opportunity.
           </p>
 
           <div className="mt-6">
