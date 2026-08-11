@@ -404,6 +404,7 @@ export type Resource = {
   title: string;
   description: string;
   audience: string;
+  href: string;
   items: string[];
 };
 
@@ -413,6 +414,7 @@ export const resources: Resource[] = [
     description:
       "A step-by-step walkthrough from 'thinking about it' to keys in hand.",
     audience: "Share with new buyers",
+    href: "/first-time-buyers",
     items: [
       "Get pre-approved before you shop",
       "Understand your true monthly budget",
@@ -425,6 +427,7 @@ export const resources: Resource[] = [
     title: "Document Checklist",
     description: "Everything a buyer needs to gather for a smooth approval.",
     audience: "Give at first meeting",
+    href: "/guides/document-checklist",
     items: [
       "30 days of pay stubs",
       "2 years W-2s / tax returns",
@@ -435,8 +438,9 @@ export const resources: Resource[] = [
   },
   {
     title: "Homebuying Glossary",
-    description: "The 20 terms every buyer asks about, in plain English.",
+    description: "The terms every buyer asks about, in plain English.",
     audience: "Reduce buyer anxiety",
+    href: "/guides/glossary",
     items: [
       "APR vs. interest rate",
       "Escrow & impound accounts",
@@ -449,6 +453,7 @@ export const resources: Resource[] = [
     title: "Closing-Day Prep",
     description: "What to bring and what to expect at the closing table.",
     audience: "Send 3 days before closing",
+    href: "/guides/closing-day",
     items: [
       "Bring a valid photo ID",
       "Wire funds or bring a cashier's check",

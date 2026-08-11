@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Container, PageHero, Button, Eyebrow, Card } from "@/components/ui";
 import { resources } from "@/lib/data";
 
@@ -84,10 +85,14 @@ export default function ResourcesPage() {
           </h2>
           <div className="mt-8 grid gap-6 md:grid-cols-2">
             {resources.map((r) => (
-              <Card key={r.title} className="card-hover flex flex-col">
-                <div className="flex items-center justify-between">
+              <Link
+                key={r.title}
+                href={r.href}
+                className="card-hover group flex flex-col rounded-2xl border border-border bg-white p-6"
+              >
+                <div className="flex items-center justify-between gap-3">
                   <h3 className="text-xl font-bold text-ink-900">{r.title}</h3>
-                  <span className="rounded-full bg-crush-50 px-3 py-1 text-xs font-semibold text-crush-700">
+                  <span className="shrink-0 rounded-full bg-crush-50 px-3 py-1 text-xs font-semibold text-crush-700">
                     {r.audience}
                   </span>
                 </div>
@@ -103,7 +108,22 @@ export default function ResourcesPage() {
                     </li>
                   ))}
                 </ul>
-              </Card>
+                <span className="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-crush-600">
+                  View the guide
+                  <svg
+                    viewBox="0 0 20 20"
+                    className="h-4 w-4 transition-transform group-hover:translate-x-1"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2.2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    aria-hidden
+                  >
+                    <path d="M4 10h12M11 5l5 5-5 5" />
+                  </svg>
+                </span>
+              </Link>
             ))}
           </div>
         </div>
