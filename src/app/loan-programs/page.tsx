@@ -2,6 +2,8 @@ import type { Metadata } from "next";
 import { Container, PageHero, Button, Eyebrow } from "@/components/ui";
 import {
   loanPrograms,
+  specialtyPrograms,
+  otherPrograms,
   rateTable,
   ratesAsOf,
   rateAssumptions,
@@ -176,6 +178,92 @@ export default function LoanProgramsPage() {
               </p>
             </div>
           ))}
+        </div>
+
+        {/* Specialty & exclusive programs */}
+        <div className="mt-16">
+          <Eyebrow>Specialty &amp; exclusive programs</Eyebrow>
+          <h2 className="mt-4 text-3xl font-bold tracking-tight text-ink-900">
+            Programs most lenders don&apos;t offer
+          </h2>
+          <p className="mt-3 max-w-2xl text-muted">
+            Niche solutions for self-employed borrowers, investors, ITIN buyers,
+            and anyone who doesn&apos;t fit the traditional mold. These are what
+            make you the agent with answers.
+          </p>
+
+          <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+            {specialtyPrograms.map((p) => (
+              <div
+                key={p.name}
+                className="flex flex-col rounded-2xl border border-border bg-white p-6"
+              >
+                <span className="inline-flex w-fit items-center rounded-full bg-crush-50 px-3 py-1 text-xs font-semibold text-crush-700">
+                  {p.badge}
+                </span>
+                <h3 className="mt-3 text-lg font-bold text-ink-900">{p.name}</h3>
+                <p className="mt-1 text-sm font-medium text-crush-600">
+                  {p.tagline}
+                </p>
+                <ul className="mt-4 space-y-2">
+                  {p.highlights.map((h) => (
+                    <li
+                      key={h}
+                      className="flex items-start gap-2 text-sm text-ink-800"
+                    >
+                      <svg
+                        viewBox="0 0 20 20"
+                        className="mt-0.5 h-4 w-4 shrink-0 text-crush-500"
+                        fill="none"
+                        stroke="currentColor"
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        aria-hidden
+                      >
+                        <path d="M4 10l4 4 8-9" />
+                      </svg>
+                      {h}
+                    </li>
+                  ))}
+                </ul>
+                <p className="mt-4 border-t border-border pt-4 text-xs text-muted">
+                  <span className="font-semibold text-ink-800">Best for:</span>{" "}
+                  {p.bestFor}
+                </p>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* More programs */}
+        <div className="mt-16">
+          <Eyebrow>More programs we offer</Eyebrow>
+          <h2 className="mt-4 text-3xl font-bold tracking-tight text-ink-900">
+            Even more ways to get your buyer approved
+          </h2>
+          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {otherPrograms.map((p) => (
+              <div
+                key={p.name}
+                className="rounded-2xl border border-border bg-surface p-5"
+              >
+                <h3 className="font-bold text-ink-900">{p.name}</h3>
+                <p className="mt-1 text-sm text-muted">{p.description}</p>
+              </div>
+            ))}
+          </div>
+          <p className="mt-6 text-sm text-muted">
+            Don&apos;t see the fit? We have access to dozens more niche and
+            down-payment-assistance programs —{" "}
+            <a
+              href="/contact"
+              className="font-semibold text-crush-600 hover:text-crush-700"
+            >
+              just ask
+            </a>
+            .
+          </p>
         </div>
 
         <div className="mt-14 rounded-3xl bg-ink-900 p-8 text-center sm:p-12">
