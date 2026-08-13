@@ -32,6 +32,10 @@ export const site = {
   //   hash: https://formsubmit.co/ajax/<your-hash>
   formEndpoint: "https://formsubmit.co/ajax/sdaniele@crushmortgage.com" as string,
 
+  // Backend that generates co-branded property flyers (the crushmortgage
+  // Vercel app's public API). Agents' info + a listing are POSTed here.
+  flyerApiBase: "https://crushmortgage.vercel.app" as string,
+
   // Social links — set real URLs to make them appear in the footer.
   // Any value left as a "[...]" placeholder is hidden automatically.
   social: {

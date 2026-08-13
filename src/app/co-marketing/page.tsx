@@ -141,11 +141,12 @@ export default function CoMarketingPage() {
                 Instant &amp; free
               </span>
               <h3 className="mt-2 text-xl font-bold text-ink-900">
-                Co-brand the Homebuyer Guide in seconds
+                Generate a co-branded property flyer
               </h3>
               <p className="mt-1 max-w-xl text-muted">
-                Add your name, photo, and contact info and download a co-branded
-                flyer to share with buyers — no design work, no waiting.
+                Enter your info and a listing to instantly create a co-branded
+                flyer with financing scenarios and a print-ready PDF — no design
+                work, no waiting.
               </p>
             </div>
           </div>
