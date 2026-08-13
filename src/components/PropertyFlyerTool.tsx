@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { site } from "@/lib/site";
 
 type Status = "idle" | "loading" | "success" | "error";
@@ -43,6 +43,22 @@ export function PropertyFlyerTool() {
   const [error, setError] = useState<string>("");
   const [result, setResult] = useState<Result | null>(null);
   const [headshot, setHeadshot] = useState<string>("");
+  const [officers, setOfficers] = useState<
+    { id: string; name: string; title: string }[]
+  >([]);
+  const [officerId, setOfficerId] = useState<string>("");
+
+  useEffect(() => {
+    fetch(`${site.flyerApiBase}/api/public/loan-officers`)
+      .then((r) => r.json())
+      .then((d) => {
+        if (d?.ok && Array.isArray(d.officers) && d.officers.length) {
+          setOfficers(d.officers);
+          setOfficerId(d.officers[0].id);
+        }
+      })
+      .catch(() => {});
+  }, []);
 
   async function onPhoto(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -89,6 +105,7 @@ export function PropertyFlyerTool() {
         first_time_buyer: fd.get("first_time_buyer") === "on" ? true : null,
         veteran: fd.get("veteran") === "on" ? true : null,
       },
+      loan_officer_id: officerId || undefined,
     };
 
     setStatus("loading");
@@ -132,6 +149,23 @@ export function PropertyFlyerTool() {
             <span className={label}>Email</span>
             <input name="agent_email" type="email" className={inputCls} placeholder="jane@brokerage.com" />
           </label>
+          {officers.length > 0 && (
+            <label className="block sm:col-span-2">
+              <span className={label}>Loan officer (co-brands with you)</span>
+              <select
+                value={officerId}
+                onChange={(e) => setOfficerId(e.target.value)}
+                className={inputCls}
+              >
+                {officers.map((o) => (
+                  <option key={o.id} value={o.id}>
+                    {o.name}
+                    {o.title ? ` — ${o.title}` : ""}
+                  </option>
+                ))}
+              </select>
+            </label>
+          )}
           <div className="sm:col-span-2">
             <span className={label}>Headshot</span>
             <div className="mt-1.5 flex items-center gap-4">
