@@ -113,6 +113,10 @@ export function PropertyFlyerTool() {
         </div>
 
         <h2 className="mt-8 text-2xl font-bold text-ink-900">The property</h2>
+        <p className="mt-1 text-sm text-muted">
+          Enter the address — we&apos;ll pull the price and details from the MLS.
+          Fields below are optional overrides.
+        </p>
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
           <label className="block sm:col-span-2">
             <span className={label}>Street address *</span>
@@ -133,8 +137,8 @@ export function PropertyFlyerTool() {
             </label>
           </div>
           <label className="block">
-            <span className={label}>Purchase price *</span>
-            <input name="purchase_price" required className={inputCls} placeholder="$650,000" inputMode="decimal" />
+            <span className={label}>Purchase price</span>
+            <input name="purchase_price" className={inputCls} placeholder="Auto-filled from MLS" inputMode="decimal" />
           </label>
           <label className="block">
             <span className={label}>Property type</span>
