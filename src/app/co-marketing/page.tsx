@@ -15,36 +15,48 @@ const assets = [
     title: "Co-branded flyers",
     desc: "Property flyers, financing highlight sheets, and 'just listed' one-pagers with your name and photo alongside ours.",
     tags: ["Print-ready PDF", "Editable"],
+    href: "/co-brand",
+    cta: "Make a flyer",
   },
   {
     icon: "📱",
     title: "Social media kit",
     desc: "Ready-to-post graphics and captions for new listings, rate updates, and buyer tips — all compliant and on-brand.",
     tags: ["Instagram", "Facebook", "Stories"],
+    href: "/contact",
+    cta: "Request the kit",
   },
   {
     icon: "🏡",
     title: "Open house pack",
-    desc: "Digital sign-in, financing scenarios for the specific listing, and a follow-up sequence that captures every visitor.",
-    tags: ["Sign-in", "Follow-up"],
+    desc: "A co-branded flyer with financing scenarios and a QR code for the specific listing — perfect for the sign-in table.",
+    tags: ["QR code", "Print PDF"],
+    href: "/co-brand",
+    cta: "Create one",
   },
   {
     icon: "✉️",
     title: "Email templates",
     desc: "Nurture sequences for new leads, past clients, and 'thinking about selling' homeowners — co-branded and ready to send.",
     tags: ["Drip campaigns"],
+    href: "/contact",
+    cta: "Request templates",
   },
   {
     icon: "🎥",
     title: "Video scripts",
     desc: "Short-form scripts for market updates and buyer tips you can film in minutes to stay top-of-mind.",
     tags: ["Reels", "Shorts"],
+    href: "/contact",
+    cta: "Request scripts",
   },
   {
     icon: "📊",
     title: "Listing financing sheets",
     desc: "Show buyers exactly what a monthly payment looks like on your listing — with multiple down-payment scenarios.",
     tags: ["Per-listing"],
+    href: "/co-brand",
+    cta: "Make a sheet",
   },
 ];
 
@@ -77,7 +89,11 @@ export default function CoMarketingPage() {
         </h2>
         <div className="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {assets.map((a) => (
-            <Card key={a.title} className="card-hover flex flex-col">
+            <Link
+              key={a.title}
+              href={a.href}
+              className="card-hover group flex flex-col rounded-2xl border border-border bg-white p-6"
+            >
               <span className="grid h-12 w-12 place-items-center rounded-xl bg-crush-50 text-2xl">
                 {a.icon}
               </span>
@@ -93,7 +109,13 @@ export default function CoMarketingPage() {
                   </span>
                 ))}
               </div>
-            </Card>
+              <span className="mt-5 inline-flex items-center gap-1 text-sm font-semibold text-crush-600">
+                {a.cta}
+                <svg viewBox="0 0 20 20" className="h-4 w-4 transition-transform group-hover:translate-x-1" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+                  <path d="M4 10h12M11 5l5 5-5 5" />
+                </svg>
+              </span>
+            </Link>
           ))}
         </div>
 
