@@ -28,11 +28,11 @@ const assets = [
   },
   {
     icon: "🏡",
-    title: "Open house pack",
-    desc: "A co-branded flyer with financing scenarios and a QR code for the specific listing — perfect for the sign-in table.",
-    tags: ["QR code", "Print PDF"],
-    href: "/co-brand",
-    cta: "Create one",
+    title: "Open house kit",
+    desc: "A printable sign-in sheet, a before/during/after checklist, and follow-up templates that turn open-house traffic into buyers.",
+    tags: ["Sign-in sheet", "Checklist", "Follow-ups"],
+    href: "/co-marketing/open-house-kit",
+    cta: "Open the kit",
   },
   {
     icon: "✉️",
@@ -52,11 +52,11 @@ const assets = [
   },
   {
     icon: "📊",
-    title: "Listing financing sheets",
-    desc: "Show buyers exactly what a monthly payment looks like on your listing — with multiple down-payment scenarios.",
-    tags: ["Per-listing"],
-    href: "/co-brand",
-    cta: "Make a sheet",
+    title: "Buyer guides & checklists",
+    desc: "Client-ready guides — first-time buyer steps, document checklists, and closing timelines you can share or hand out.",
+    tags: ["Client-ready", "Printable"],
+    href: "/resources",
+    cta: "Browse guides",
   },
 ];
 
