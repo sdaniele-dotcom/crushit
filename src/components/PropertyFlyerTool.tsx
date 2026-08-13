@@ -44,7 +44,6 @@ export function PropertyFlyerTool() {
         property_type: g("property_type"),
         annual_property_taxes: num("annual_property_taxes"),
         monthly_hoa: num("monthly_hoa"),
-        monthly_insurance: num("monthly_insurance"),
         photo_url: g("photo_url"),
       },
       assumptions: {
@@ -73,9 +72,7 @@ export function PropertyFlyerTool() {
         setStatus("error");
       }
     } catch {
-      setError(
-        "Couldn't reach the flyer service. Please try again in a moment.",
-      );
+      setError("Couldn't reach the flyer service. Please try again in a moment.");
       setStatus("error");
     }
   }
@@ -86,13 +83,9 @@ export function PropertyFlyerTool() {
       <form onSubmit={handleSubmit}>
         <h2 className="text-2xl font-bold text-ink-900">Your info</h2>
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
-          <label className="block">
+          <label className="block sm:col-span-2">
             <span className={label}>Full name *</span>
             <input name="agent_name" required className={inputCls} placeholder="Jane Agent" />
-          </label>
-          <label className="block">
-            <span className={label}>Brokerage</span>
-            <input name="agent_brokerage" className={inputCls} placeholder="Realty Group" />
           </label>
           <label className="block">
             <span className={label}>Phone</span>
@@ -102,20 +95,11 @@ export function PropertyFlyerTool() {
             <span className={label}>Email</span>
             <input name="agent_email" type="email" className={inputCls} placeholder="jane@brokerage.com" />
           </label>
-          <label className="block">
-            <span className={label}>License # (DRE)</span>
-            <input name="agent_license" className={inputCls} placeholder="DRE #00000000" />
-          </label>
-          <label className="block">
-            <span className={label}>Headshot URL (optional)</span>
-            <input name="agent_headshot" className={inputCls} placeholder="https://…/photo.jpg" />
-          </label>
         </div>
 
-        <h2 className="mt-8 text-2xl font-bold text-ink-900">The property</h2>
+        <h2 className="mt-8 text-2xl font-bold text-ink-900">Property address</h2>
         <p className="mt-1 text-sm text-muted">
           Enter the address — we&apos;ll pull the price and details from the MLS.
-          Fields below are optional overrides.
         </p>
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
           <label className="block sm:col-span-2">
@@ -136,65 +120,88 @@ export function PropertyFlyerTool() {
               <input name="zip" className={inputCls} placeholder="90808" />
             </label>
           </div>
-          <label className="block">
-            <span className={label}>Purchase price</span>
-            <input name="purchase_price" className={inputCls} placeholder="Auto-filled from MLS" inputMode="decimal" />
-          </label>
-          <label className="block">
-            <span className={label}>Property type</span>
-            <input name="property_type" className={inputCls} placeholder="Single-family" />
-          </label>
-          <label className="block">
-            <span className={label}>Annual property taxes</span>
-            <input name="annual_property_taxes" className={inputCls} placeholder="$7,200" inputMode="decimal" />
-          </label>
-          <label className="block">
-            <span className={label}>Monthly HOA</span>
-            <input name="monthly_hoa" className={inputCls} placeholder="$0" inputMode="decimal" />
-          </label>
-          <label className="block sm:col-span-2">
-            <span className={label}>Listing photo URL (optional)</span>
-            <input name="photo_url" className={inputCls} placeholder="https://…/listing.jpg" />
-          </label>
         </div>
 
-        <h2 className="mt-8 text-2xl font-bold text-ink-900">Scenario options</h2>
-        <div className="mt-4 grid gap-4 sm:grid-cols-2">
-          <label className="block">
-            <span className={label}>Down payment %</span>
-            <input name="down_pct" className={inputCls} placeholder="10" inputMode="decimal" />
-          </label>
-          <label className="block">
-            <span className={label}>Occupancy</span>
-            <select name="occupancy" className={inputCls} defaultValue="owner_occupied">
-              <option value="owner_occupied">Primary residence</option>
-              <option value="second_home">Second home</option>
-              <option value="investment">Investment</option>
-            </select>
-          </label>
-          <label className="flex items-center gap-2 text-sm text-ink-800">
-            <input type="checkbox" name="first_time_buyer" className="h-4 w-4 accent-crush-500" />
-            First-time buyer
-          </label>
-          <label className="flex items-center gap-2 text-sm text-ink-800">
-            <input type="checkbox" name="veteran" className="h-4 w-4 accent-crush-500" />
-            Veteran / active duty
-          </label>
-        </div>
-
+        {/* Primary CTA — always visible right after the essentials */}
         <div className="mt-8">
           <button
             type="submit"
             disabled={status === "loading"}
-            className="inline-flex items-center justify-center gap-2 rounded-full bg-crush-500 px-7 py-3.5 text-sm font-semibold text-white shadow-lg shadow-crush-500/20 transition-colors hover:bg-crush-600 disabled:opacity-60"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-crush-500 px-7 py-4 text-base font-semibold text-white shadow-lg shadow-crush-500/20 transition-colors hover:bg-crush-600 disabled:opacity-60 sm:w-auto"
           >
             {status === "loading" ? "Generating flyer…" : "Generate my flyer"}
           </button>
+          <p className="mt-3 text-xs text-muted">
+            Estimated financing scenarios, co-branded with you and {site.company}.
+            Estimates only — not a commitment to lend.
+          </p>
         </div>
-        <p className="mt-3 text-xs text-muted">
-          Produces estimated financing scenarios for the property, co-branded
-          with you and {site.company}. Estimates only — not a commitment to lend.
-        </p>
+
+        {/* Optional overrides */}
+        <details className="group mt-8 rounded-2xl border border-border bg-surface">
+          <summary className="flex cursor-pointer list-none items-center justify-between gap-3 px-5 py-4 text-sm font-semibold text-ink-900">
+            Add optional details
+            <span className="text-xs font-normal text-muted">
+              brokerage, license, price override, scenario options
+            </span>
+          </summary>
+          <div className="border-t border-border p-5">
+            <div className="grid gap-4 sm:grid-cols-2">
+              <label className="block">
+                <span className={label}>Brokerage</span>
+                <input name="agent_brokerage" className={inputCls} placeholder="Realty Group" />
+              </label>
+              <label className="block">
+                <span className={label}>License # (DRE)</span>
+                <input name="agent_license" className={inputCls} placeholder="DRE #00000000" />
+              </label>
+              <label className="block sm:col-span-2">
+                <span className={label}>Headshot URL</span>
+                <input name="agent_headshot" className={inputCls} placeholder="https://…/photo.jpg" />
+              </label>
+              <label className="block">
+                <span className={label}>Purchase price</span>
+                <input name="purchase_price" className={inputCls} placeholder="Auto-filled from MLS" inputMode="decimal" />
+              </label>
+              <label className="block">
+                <span className={label}>Property type</span>
+                <input name="property_type" className={inputCls} placeholder="Single-family" />
+              </label>
+              <label className="block">
+                <span className={label}>Annual property taxes</span>
+                <input name="annual_property_taxes" className={inputCls} placeholder="$7,200" inputMode="decimal" />
+              </label>
+              <label className="block">
+                <span className={label}>Monthly HOA</span>
+                <input name="monthly_hoa" className={inputCls} placeholder="$0" inputMode="decimal" />
+              </label>
+              <label className="block sm:col-span-2">
+                <span className={label}>Listing photo URL</span>
+                <input name="photo_url" className={inputCls} placeholder="https://…/listing.jpg" />
+              </label>
+              <label className="block">
+                <span className={label}>Down payment %</span>
+                <input name="down_pct" className={inputCls} placeholder="10" inputMode="decimal" />
+              </label>
+              <label className="block">
+                <span className={label}>Occupancy</span>
+                <select name="occupancy" className={inputCls} defaultValue="owner_occupied">
+                  <option value="owner_occupied">Primary residence</option>
+                  <option value="second_home">Second home</option>
+                  <option value="investment">Investment</option>
+                </select>
+              </label>
+              <label className="flex items-center gap-2 text-sm text-ink-800">
+                <input type="checkbox" name="first_time_buyer" className="h-4 w-4 accent-crush-500" />
+                First-time buyer
+              </label>
+              <label className="flex items-center gap-2 text-sm text-ink-800">
+                <input type="checkbox" name="veteran" className="h-4 w-4 accent-crush-500" />
+                Veteran / active duty
+              </label>
+            </div>
+          </div>
+        </details>
       </form>
 
       {/* Result */}
@@ -205,8 +212,8 @@ export function PropertyFlyerTool() {
         <div className="rounded-2xl border border-border bg-surface p-6">
           {status === "idle" && (
             <p className="text-sm text-muted">
-              Fill in your info and a listing, then generate — your co-branded
-              flyer and a print-ready PDF (with QR code) appear here.
+              Add your info and a listing address, then generate — your
+              co-branded flyer and a print-ready PDF (with QR code) appear here.
             </p>
           )}
           {status === "loading" && (
@@ -232,20 +239,10 @@ export function PropertyFlyerTool() {
                 Share the page link or download the print PDF for open houses.
               </p>
               <div className="mt-4 flex flex-col gap-3">
-                <a
-                  href={result.publicUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center rounded-full bg-crush-500 px-5 py-3 text-sm font-semibold text-white hover:bg-crush-600"
-                >
+                <a href={result.publicUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center rounded-full bg-crush-500 px-5 py-3 text-sm font-semibold text-white hover:bg-crush-600">
                   View flyer page
                 </a>
-                <a
-                  href={result.pdfUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="inline-flex items-center justify-center rounded-full border border-border bg-white px-5 py-3 text-sm font-semibold text-ink-900 hover:bg-surface-2"
-                >
+                <a href={result.pdfUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center rounded-full border border-border bg-white px-5 py-3 text-sm font-semibold text-ink-900 hover:bg-surface-2">
                   Download print PDF
                 </a>
               </div>
