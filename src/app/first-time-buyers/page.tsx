@@ -174,7 +174,7 @@ export default function FirstTimeBuyersPage() {
                 href="/co-brand"
                 className="text-center text-sm font-semibold text-crush-400 hover:text-crush-300 sm:text-right"
               >
-                Agents: co-brand this guide →
+                Agents: make a co-branded flyer →
               </Link>
             </div>
           </div>
