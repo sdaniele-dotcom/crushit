@@ -12,10 +12,47 @@ const inputCls =
 
 const label = "text-sm font-medium text-ink-800";
 
+/** Load, downscale (max 640px), and JPEG-compress an image to a data URL. */
+function resizeImage(file: File, max = 640): Promise<string> {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => {
+      const img = new Image();
+      img.onload = () => {
+        const scale = Math.min(1, max / Math.max(img.width, img.height));
+        const w = Math.round(img.width * scale);
+        const h = Math.round(img.height * scale);
+        const canvas = document.createElement("canvas");
+        canvas.width = w;
+        canvas.height = h;
+        const ctx = canvas.getContext("2d");
+        if (!ctx) return reject(new Error("no canvas"));
+        ctx.drawImage(img, 0, 0, w, h);
+        resolve(canvas.toDataURL("image/jpeg", 0.82));
+      };
+      img.onerror = reject;
+      img.src = reader.result as string;
+    };
+    reader.onerror = reject;
+    reader.readAsDataURL(file);
+  });
+}
+
 export function PropertyFlyerTool() {
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState<string>("");
   const [result, setResult] = useState<Result | null>(null);
+  const [headshot, setHeadshot] = useState<string>("");
+
+  async function onPhoto(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    try {
+      setHeadshot(await resizeImage(file));
+    } catch {
+      setHeadshot("");
+    }
+  }
 
   async function handleSubmit(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
@@ -33,7 +70,7 @@ export function PropertyFlyerTool() {
         phone: g("agent_phone"),
         dre_license: g("agent_license"),
         brokerage: g("agent_brokerage"),
-        headshot_url: g("agent_headshot"),
+        headshot_data: headshot,
       },
       property: {
         street_address: g("street_address"),
@@ -95,6 +132,29 @@ export function PropertyFlyerTool() {
             <span className={label}>Email</span>
             <input name="agent_email" type="email" className={inputCls} placeholder="jane@brokerage.com" />
           </label>
+          <div className="sm:col-span-2">
+            <span className={label}>Headshot</span>
+            <div className="mt-1.5 flex items-center gap-4">
+              {headshot ? (
+                // eslint-disable-next-line @next/next/no-img-element
+                <img
+                  src={headshot}
+                  alt="Headshot preview"
+                  className="h-16 w-16 rounded-full object-cover ring-2 ring-crush-500/40"
+                />
+              ) : (
+                <span className="grid h-16 w-16 place-items-center rounded-full bg-surface-2 text-xs font-semibold text-muted">
+                  Photo
+                </span>
+              )}
+              <input
+                type="file"
+                accept="image/*"
+                onChange={onPhoto}
+                className="block w-full text-sm text-muted file:mr-4 file:rounded-full file:border-0 file:bg-ink-900 file:px-4 file:py-2 file:text-sm file:font-semibold file:text-white hover:file:bg-ink-800"
+              />
+            </div>
+          </div>
         </div>
 
         <h2 className="mt-8 text-2xl font-bold text-ink-900">Property address</h2>
@@ -154,10 +214,6 @@ export function PropertyFlyerTool() {
               <label className="block">
                 <span className={label}>License # (DRE)</span>
                 <input name="agent_license" className={inputCls} placeholder="DRE #00000000" />
-              </label>
-              <label className="block sm:col-span-2">
-                <span className={label}>Headshot URL</span>
-                <input name="agent_headshot" className={inputCls} placeholder="https://…/photo.jpg" />
               </label>
               <label className="block">
                 <span className={label}>Purchase price</span>
