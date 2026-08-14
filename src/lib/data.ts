@@ -102,7 +102,7 @@ export const loanPrograms: LoanProgram[] = [
     name: "FHA",
     slug: "fha",
     tagline: "Lower barrier to entry.",
-    bestFor: "Buyers with lower credit or limited down payment.",
+    bestFor: "Buyers who want an easier path to approval with a low down payment.",
     minDown: "3.5%",
     minCredit: "580",
     highlights: [
@@ -134,7 +134,7 @@ export const loanPrograms: LoanProgram[] = [
     name: "USDA",
     slug: "usda",
     tagline: "Zero-down for rural & suburban areas.",
-    bestFor: "Moderate-income buyers in eligible areas.",
+    bestFor: "Buyers in eligible suburban and rural areas.",
     minDown: "0%",
     minCredit: "640",
     highlights: [

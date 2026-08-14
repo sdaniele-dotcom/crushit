@@ -22,38 +22,49 @@ const printCss = `*{box-sizing:border-box}
   .foot{margin-top:22px;font-size:11px;color:#666;text-align:center;border-top:1px solid #eee;padding-top:12px}
   @media print{body{padding:24px}}`;
 
-/** Print-ready sign-in sheet. */
+/** Print-ready sign-in sheet — 4 large, easy-to-write guest blocks per page. */
 const signInSheetHtml = `<!doctype html><html><head><meta charset="utf-8"/>
 <title>Open House Sign-In Sheet</title>
-<style>${printCss}
-  .fields{display:flex;gap:20px;margin:18px 0 10px;font-size:13px;color:#333}
-  table{width:100%;border-collapse:collapse;margin-top:10px}
-  th,td{border:1px solid #cfcfcf;padding:12px 8px;text-align:left;font-size:12px}
-  th{background:#111;color:#fff;font-weight:600;text-transform:uppercase;letter-spacing:.04em;font-size:11px}
-  td{height:34px}
-  tr:nth-child(even) td{background:#fafafa}
+<style>
+  *{box-sizing:border-box}
+  body{font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#111;margin:0;padding:38px}
+  .band{display:flex;justify-content:space-between;align-items:center;background:#e62c2c;color:#fff;border-radius:14px;padding:16px 22px}
+  .band h1{font-size:26px;margin:0}
+  .band .sub{font-size:12px;margin:2px 0 0;opacity:.9}
+  .band .brand{text-align:right;font-size:12px;line-height:1.4}
+  .band .brand strong{font-size:16px;display:block}
+  .meta{display:flex;gap:30px;margin:16px 2px 4px;font-size:14px;color:#333}
+  .row{border:1.5px solid #ddd;border-radius:12px;padding:14px 18px;margin-top:14px}
+  .num{font-size:12px;font-weight:800;color:#e62c2c;text-transform:uppercase;letter-spacing:.06em}
+  .grid{display:flex;gap:20px;margin-top:8px}
+  .fld{flex:1}
+  .fld label{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:#999}
+  .fld .line{border-bottom:2px solid #333;height:30px}
+  .opts{margin-top:12px;font-size:12px;color:#555;display:flex;gap:34px}
+  .foot{margin-top:20px;font-size:11px;color:#666;text-align:center;border-top:1px solid #eee;padding-top:12px}
+  @media print{body{padding:22px}}
 </style></head><body>
-  <div class="top">
-    <div>
-      <h1>Open House Sign-In</h1>
-      <p class="sub">Please sign in — we'd love to stay in touch.</p>
-      <div class="fields">
-        <span><strong>Property:</strong> _______________________________</span>
-        <span><strong>Date:</strong> ______________</span>
-      </div>
-    </div>
-    <div class="brand">${brandBlock}</div>
+  <div class="band">
+    <div><h1>Open House Sign-In</h1><p class="sub">Please sign in — we'd love to stay in touch.</p></div>
+    <div class="brand"><strong>${site.brand}</strong>${site.company}<br/>${site.phone} · NMLS #${site.companyNmls}</div>
   </div>
-  <table>
-    <thead><tr>
-      <th style="width:22%">Name</th><th style="width:20%">Phone</th>
-      <th style="width:24%">Email</th><th style="width:16%">Working with an agent?</th>
-      <th style="width:18%">Pre-approved?</th>
-    </tr></thead>
-    <tbody>${Array.from({ length: 14 })
-      .map(() => `<tr><td></td><td></td><td></td><td>Y / N</td><td>Y / N</td></tr>`)
-      .join("")}</tbody>
-  </table>
+  <div class="meta">
+    <span><strong>Property:</strong> _________________________________</span>
+    <span><strong>Date:</strong> ________________</span>
+  </div>
+  ${Array.from({ length: 4 })
+    .map(
+      (_, i) => `<div class="row">
+      <div class="num">Guest ${i + 1}</div>
+      <div class="grid"><div class="fld"><label>Name</label><div class="line"></div></div></div>
+      <div class="grid">
+        <div class="fld"><label>Phone number</label><div class="line"></div></div>
+        <div class="fld"><label>Email</label><div class="line"></div></div>
+      </div>
+      <div class="opts"><span>Working with an agent?&nbsp;&nbsp;<strong>Y / N</strong></span><span>Pre-approved?&nbsp;&nbsp;<strong>Y / N</strong></span></div>
+    </div>`,
+    )
+    .join("")}
   <p class="foot">Interested in what your monthly payment could look like? Ask about a free, same-day pre-approval with ${site.company}. ${site.website.replace(/^https?:\/\//, "")}</p>
 </body></html>`;
 
@@ -136,56 +147,87 @@ const checklistSheetHtml = `<!doctype html><html><head><meta charset="utf-8"/>
   <p class="foot">Financing questions on the day? ${site.company} · ${site.phone} · ${site.website.replace(/^https?:\/\//, "")}</p>
 </body></html>`;
 
-/** Print-ready neighbor invite (2 per page). */
-const neighborInviteCard = `<div class="card">
-    <div class="badge">You're invited</div>
-    <h2>Open House on your street</h2>
-    <p class="addr">____________________________________</p>
-    <p class="when"><strong>When:</strong> ______________  ·  ______________</p>
-    <p class="body">Curious what your home might be worth in today's market? Stop by, take a look, and say hello. Know someone who'd love this neighborhood? Send them our way!</p>
-    <div class="host">
-      <div><strong>Hosted by</strong><br/>____________________<br/>____________________</div>
-      <div class="brand2"><strong>${site.company}</strong><br/>${site.phone}<br/>NMLS #${site.companyNmls}</div>
-    </div>
-  </div>`;
+/** Print-ready neighbor invite — graphical, full-page, with photo spots. */
 const neighborInviteHtml = `<!doctype html><html><head><meta charset="utf-8"/>
-<title>Neighbor Open House Invite</title>
+<title>Open House Invite</title>
 <style>
   *{box-sizing:border-box}
-  body{font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#111;margin:0;padding:30px}
-  .card{border:2px solid #e62c2c;border-radius:14px;padding:26px 28px;height:44vh;margin-bottom:22px;display:flex;flex-direction:column;justify-content:center}
-  .badge{display:inline-block;align-self:flex-start;background:#e62c2c;color:#fff;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.08em;padding:4px 12px;border-radius:999px}
-  h2{font-size:26px;margin:12px 0 6px}
-  .addr{font-size:16px;color:#333;margin:0 0 6px}
-  .when{font-size:14px;margin:0 0 12px;color:#333}
-  .body{font-size:14px;color:#444;line-height:1.5;margin:0 0 18px;max-width:520px}
-  .host{display:flex;justify-content:space-between;font-size:12px;color:#333;line-height:1.5;border-top:1px solid #eee;padding-top:12px}
-  .brand2{text-align:right}
-  .brand2 strong{color:#e62c2c}
-  @media print{body{padding:18px}}
-</style></head><body>${neighborInviteCard}${neighborInviteCard}</body></html>`;
+  body{font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#111;margin:0;padding:0}
+  .sheet{padding:34px}
+  .hero{border-radius:18px;overflow:hidden;border:3px solid #e62c2c}
+  .photo{height:240px;background:repeating-linear-gradient(45deg,#f7f7f7,#f7f7f7 14px,#efefef 14px,#efefef 28px);display:flex;align-items:center;justify-content:center;color:#a5a5a5;font-size:14px;text-align:center;padding:0 20px}
+  .banner{background:#e62c2c;color:#fff;padding:8px 0;text-align:center;font-size:12px;letter-spacing:.34em;text-transform:uppercase;font-weight:800}
+  .kicker{text-align:center;color:#e62c2c;font-weight:800;font-size:15px;text-transform:uppercase;letter-spacing:.22em;margin:22px 0 0}
+  h1{font-size:52px;text-align:center;margin:2px 0 0;letter-spacing:-.02em}
+  .addr{text-align:center;font-size:16px;color:#555;margin:16px 0 0}
+  .addrline{width:72%;margin:8px auto 0;border-bottom:2px solid #333;height:26px}
+  .when{display:flex;gap:18px;justify-content:center;margin:22px 0 0}
+  .box{border:2px solid #e62c2c;border-radius:12px;padding:12px 24px;text-align:center;min-width:170px}
+  .box label{font-size:11px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:#e62c2c;display:block}
+  .box .line{border-bottom:2px solid #333;height:24px;margin-top:10px}
+  .msg{text-align:center;color:#444;font-size:15px;max-width:640px;margin:20px auto 0;line-height:1.55}
+  .thumbs{display:flex;gap:14px;margin:22px 0 0}
+  .thumb{flex:1;height:118px;border:2px dashed #ccc;border-radius:12px;display:flex;align-items:center;justify-content:center;color:#bbb;font-size:12px}
+  .host{display:flex;justify-content:space-between;border-top:2px solid #eee;padding-top:16px;margin-top:22px;font-size:13px;line-height:1.5}
+  .host .r{text-align:right}
+  .host strong.b{color:#e62c2c;font-size:16px;display:block}
+  @media print{.sheet{padding:22px}}
+</style></head><body>
+  <div class="sheet">
+    <div class="hero">
+      <div class="photo">📷  Tape or print your listing's best photo here</div>
+      <div class="banner">A special invitation for the neighborhood</div>
+    </div>
+    <p class="kicker">Open House</p>
+    <h1>You're Invited!</h1>
+    <p class="addr">Come tour the home at</p>
+    <div class="addrline"></div>
+    <div class="when">
+      <div class="box"><label>Date</label><div class="line"></div></div>
+      <div class="box"><label>Time</label><div class="line"></div></div>
+    </div>
+    <p class="msg">Curious what your own home might be worth in today's market? Stop by, take a tour, grab a treat, and say hello — no pressure at all. And if you know someone who'd love this street, bring them along!</p>
+    <div class="thumbs">
+      <div class="thumb">Add a photo</div><div class="thumb">Add a photo</div><div class="thumb">Add a photo</div>
+    </div>
+    <div class="host">
+      <div><strong>Hosted by</strong><br/>____________________<br/>____________________</div>
+      <div class="r"><strong class="b">${site.company}</strong>Financing questions? We're happy to help.<br/>${site.phone} · NMLS #${site.companyNmls}</div>
+    </div>
+  </div>
+</body></html>`;
 
-/** Print-ready visitor feedback form. */
+/** Print-ready visitor feedback form — Crush-branded. */
 const feedbackFormHtml = `<!doctype html><html><head><meta charset="utf-8"/>
 <title>Open House Feedback</title>
-<style>${printCss}
-  .q{margin:16px 0}
-  .q p{font-size:14px;font-weight:600;margin:0 0 6px}
-  .scale{display:flex;gap:18px;font-size:13px;color:#333}
-  .line{border-bottom:1px solid #bbb;height:26px;margin-top:4px}
+<style>
+  *{box-sizing:border-box}
+  body{font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#111;margin:0;padding:38px}
+  .band{display:flex;justify-content:space-between;align-items:center;background:#e62c2c;color:#fff;border-radius:14px;padding:16px 22px}
+  .band h1{font-size:24px;margin:0}
+  .band .sub{font-size:12px;margin:2px 0 0;opacity:.9}
+  .band .brand{text-align:right;font-size:12px;line-height:1.4}
+  .band .brand strong{font-size:16px;display:block}
+  .q{margin:18px 2px 0}
+  .q p{font-size:14px;font-weight:700;margin:0 0 7px}
+  .scale{display:flex;flex-wrap:wrap;gap:20px;font-size:13px;color:#333}
+  .line{border-bottom:1.5px solid #bbb;height:26px;margin-top:6px}
+  .foot{margin-top:24px;font-size:11px;color:#666;text-align:center;border-top:1px solid #eee;padding-top:12px}
+  .foot strong{color:#e62c2c}
+  @media print{body{padding:24px}}
 </style></head><body>
-  <div class="top">
+  <div class="band">
     <div><h1>How was the home?</h1><p class="sub">Property: ____________________  ·  Date: ____________</p></div>
-    <div class="brand">${brandBlock}</div>
+    <div class="brand"><strong>${site.brand}</strong>${site.company}<br/>${site.phone} · NMLS #${site.companyNmls}</div>
   </div>
-  <div class="q"><p>1. First impression of the home?</p><div class="scale">◻ Loved it&nbsp;&nbsp;◻ Liked it&nbsp;&nbsp;◻ It's okay&nbsp;&nbsp;◻ Not for me</div></div>
-  <div class="q"><p>2. What did you think of the price?</p><div class="scale">◻ Great value&nbsp;&nbsp;◻ About right&nbsp;&nbsp;◻ A bit high&nbsp;&nbsp;◻ Too high</div></div>
+  <div class="q"><p>1. First impression of the home?</p><div class="scale"><span>◻ Loved it</span><span>◻ Liked it</span><span>◻ It's okay</span><span>◻ Not for me</span></div></div>
+  <div class="q"><p>2. What did you think of the price?</p><div class="scale"><span>◻ Great value</span><span>◻ About right</span><span>◻ A bit high</span><span>◻ Too high</span></div></div>
   <div class="q"><p>3. How does it compare to other homes you've seen?</p><div class="line"></div></div>
   <div class="q"><p>4. What would make it a better fit for you?</p><div class="line"></div><div class="line"></div></div>
-  <div class="q"><p>5. Are you working with an agent?</p><div class="scale">◻ Yes&nbsp;&nbsp;◻ No</div></div>
-  <div class="q"><p>6. Are you pre-approved for financing?</p><div class="scale">◻ Yes&nbsp;&nbsp;◻ Not yet — I'd like info</div></div>
+  <div class="q"><p>5. Are you working with an agent?</p><div class="scale"><span>◻ Yes</span><span>◻ No</span></div></div>
+  <div class="q"><p>6. Are you pre-approved for financing?</p><div class="scale"><span>◻ Yes</span><span>◻ Not yet — I'd like info</span></div></div>
   <div class="q"><p>Name &amp; best contact (optional):</p><div class="line"></div></div>
-  <p class="foot">Not pre-approved yet? Ask about a free, same-day pre-approval with ${site.company} — ${site.phone}.</p>
+  <p class="foot">Not pre-approved yet? Ask about a free, same-day pre-approval with <strong>${site.company}</strong> — ${site.phone}.</p>
 </body></html>`;
 
 const followUps: { title: string; meta: string; text: string }[] = [
