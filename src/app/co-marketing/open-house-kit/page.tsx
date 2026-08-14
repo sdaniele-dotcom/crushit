@@ -236,9 +236,9 @@ export default function OpenHouseKitPage() {
           Every home for sale nearby
         </h2>
         <p className="mt-3 max-w-2xl text-muted">
-          Enter the listing address to pull the active homes for sale within
-          about a 5-minute drive. Speak to buyers with confidence — and print a
-          clean comparison sheet for the sign-in table.
+          Enter the listing address and pick a radius to pull the active homes
+          for sale nearby — grouped by beds/baths. Speak to buyers with
+          confidence, and print a clean comparison sheet for the sign-in table.
         </p>
         <div className="mt-6">
           <NearbyListingsTool />
