@@ -24,12 +24,12 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      # Project site is served at /crushit, so assets must be prefixed.
-      # If you later move to a custom domain or user/org root site,
-      # set BASE_PATH to "" (empty) instead.
+      # Served at the root of the custom domain (crushingitrealestate.com),
+      # so no path prefix. (If you ever revert to the github.io/crushit URL,
+      # set BASE_PATH: /crushit here again.)
       - run: npm run build
         env:
-          BASE_PATH: /crushit
+          BASE_PATH: ""
       - uses: actions/configure-pages@v5
       - uses: actions/upload-pages-artifact@v3
         with:
