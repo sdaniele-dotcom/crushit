@@ -23,6 +23,9 @@ export const site = {
   phone: "(562) 317-6112",
   email: "info@crushmortgage.com",
   website: "https://www.crushmortgage.com",
+  // The public home of this site (custom domain). Used for canonical URLs,
+  // Open Graph tags, the sitemap, and robots.txt.
+  siteUrl: "https://crushingitrealestate.com",
   address: "3750 Schaufele Ave, Suite 270A, Long Beach, CA 90808",
 
   // Where the contact / pre-approval form submits. Uses FormSubmit
