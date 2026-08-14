@@ -236,9 +236,9 @@ export default function OpenHouseKitPage() {
           Every home for sale nearby
         </h2>
         <p className="mt-3 max-w-2xl text-muted">
-          Enter the listing address and pick a radius to pull the active homes
-          for sale nearby — grouped by beds/baths. Speak to buyers with
-          confidence, and print a clean comparison sheet for the sign-in table.
+          Enter the area to pull up every active listing nearby on Zillow,
+          Realtor.com, or Homes.com, and print a co-branded comparison sheet for
+          the sign-in table. Live embedded listings arrive with the MLS feed.
         </p>
         <div className="mt-6">
           <NearbyListingsTool />
