@@ -152,27 +152,39 @@ export default function LoanProgramsPage() {
           ))}
         </div>
 
-        {/* Specialty & exclusive programs */}
-        <div className="mt-16">
-          <Eyebrow>Specialty &amp; exclusive programs</Eyebrow>
+        {/* Specialty & exclusive programs — highlighted band */}
+        <div className="mt-16 rounded-3xl border-2 border-crush-200 bg-gradient-to-b from-crush-50 to-white p-6 sm:p-10">
+          <div className="flex flex-wrap items-center gap-3">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-crush-500 px-3 py-1 text-xs font-bold uppercase tracking-wider text-white shadow-sm shadow-crush-500/30">
+              ⭐ Exclusive
+            </span>
+            <Eyebrow>Specialty programs</Eyebrow>
+          </div>
           <h2 className="mt-4 text-3xl font-bold tracking-tight text-ink-900">
             Programs most lenders don&apos;t offer
           </h2>
           <p className="mt-3 max-w-2xl text-muted">
             Niche solutions for self-employed borrowers, investors, ITIN buyers,
             and anyone who doesn&apos;t fit the traditional mold. These are what
-            make you the agent with answers.
+            make you the agent with answers — and they&apos;re our specialty.
           </p>
 
           <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
             {specialtyPrograms.map((p) => (
               <div
                 key={p.name}
-                className="flex flex-col rounded-2xl border border-border bg-white p-6"
+                className="card-hover relative flex flex-col overflow-hidden rounded-2xl border border-crush-100 bg-white p-6 shadow-sm ring-1 ring-crush-100/50"
               >
-                <span className="inline-flex w-fit items-center rounded-full bg-crush-50 px-3 py-1 text-xs font-semibold text-crush-700">
-                  {p.badge}
-                </span>
+                {/* Accent top bar */}
+                <span className="absolute inset-x-0 top-0 h-1 bg-gradient-to-r from-crush-500 to-crush-400" />
+                <div className="flex items-center justify-between gap-2">
+                  <span className="inline-flex w-fit items-center rounded-full bg-crush-500 px-3 py-1 text-xs font-bold text-white">
+                    {p.badge}
+                  </span>
+                  <span className="text-[10px] font-bold uppercase tracking-wider text-crush-400">
+                    Exclusive
+                  </span>
+                </div>
                 <h3 className="mt-3 text-lg font-bold text-ink-900">{p.name}</h3>
                 <p className="mt-1 text-sm font-medium text-crush-600">
                   {p.tagline}

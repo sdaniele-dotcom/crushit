@@ -12,11 +12,9 @@ export function Footer() {
             {site.shortDescription}
           </p>
           <p className="mt-4 text-sm text-slate-400">
-            <span className="font-semibold text-white">{site.loanOfficer}</span>
-            {" · "}
-            {site.title}
+            <span className="font-semibold text-white">Crush Mortgage Team</span>
             <br />
-            NMLS #{site.nmls}
+            Company NMLS #{site.companyNmls}
             <br />
             <a href={`tel:${site.phone}`} className="hover:text-crush-400">
               {site.phone}
