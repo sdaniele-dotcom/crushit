@@ -44,9 +44,10 @@ export function PropertyFlyerTool() {
   const [result, setResult] = useState<Result | null>(null);
   const [headshot, setHeadshot] = useState<string>("");
   const [officers, setOfficers] = useState<
-    { id: string; name: string; title: string }[]
+    { id: string; name: string; title: string; headshot?: string }[]
   >([]);
   const [officerId, setOfficerId] = useState<string>("");
+  const selectedOfficer = officers.find((o) => o.id === officerId);
 
   useEffect(() => {
     fetch(`${site.flyerApiBase}/api/public/loan-officers`)
@@ -152,18 +153,35 @@ export function PropertyFlyerTool() {
           {officers.length > 0 && (
             <label className="block sm:col-span-2">
               <span className={label}>Loan officer (co-brands with you)</span>
-              <select
-                value={officerId}
-                onChange={(e) => setOfficerId(e.target.value)}
-                className={inputCls}
-              >
-                {officers.map((o) => (
-                  <option key={o.id} value={o.id}>
-                    {o.name}
-                    {o.title ? ` — ${o.title}` : ""}
-                  </option>
-                ))}
-              </select>
+              <div className="flex items-center gap-3">
+                {selectedOfficer?.headshot ? (
+                  // eslint-disable-next-line @next/next/no-img-element
+                  <img
+                    src={selectedOfficer.headshot}
+                    alt={selectedOfficer.name}
+                    className="h-11 w-11 shrink-0 rounded-full object-cover ring-2 ring-crush-100"
+                  />
+                ) : (
+                  <span className="grid h-11 w-11 shrink-0 place-items-center rounded-full bg-surface-2 text-lg">
+                    🧑‍💼
+                  </span>
+                )}
+                <select
+                  value={officerId}
+                  onChange={(e) => setOfficerId(e.target.value)}
+                  className={`${inputCls} flex-1`}
+                >
+                  {officers.map((o) => (
+                    <option key={o.id} value={o.id}>
+                      {o.name}
+                      {o.title ? ` — ${o.title}` : ""}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <p className="mt-1 text-xs text-muted">
+                Their photo appears on the finished flyer next to yours.
+              </p>
             </label>
           )}
           <div className="sm:col-span-2">
