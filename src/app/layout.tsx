@@ -16,6 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(site.siteUrl),
   title: {
     default: `${site.brand} — ${site.tagline}`,
     template: `%s · ${site.brand}`,
@@ -29,6 +30,21 @@ export const metadata: Metadata = {
     "Crush Mortgage",
     "real estate tools",
   ],
+  alternates: {
+    canonical: "/",
+  },
+  openGraph: {
+    type: "website",
+    siteName: `${site.brand} — Realtors Suite`,
+    title: `${site.brand} — ${site.tagline}`,
+    description: site.shortDescription,
+    url: site.siteUrl,
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: `${site.brand} — ${site.tagline}`,
+    description: site.shortDescription,
+  },
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
