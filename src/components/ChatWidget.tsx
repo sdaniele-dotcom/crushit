@@ -24,6 +24,47 @@ export function ChatWidget() {
   const [loading, setLoading] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  const sessionId = useRef<string>("");
+  const sentCount = useRef(0);
+  const messagesRef = useRef<Msg[]>(messages);
+  messagesRef.current = messages;
+
+  if (!sessionId.current && typeof crypto !== "undefined") {
+    sessionId.current =
+      crypto.randomUUID?.() ?? Math.random().toString(36).slice(2);
+  }
+
+  // Email the full transcript to the team when the visitor closes the chat or
+  // leaves the page — but only if there's something new since the last send.
+  function sendTranscript() {
+    const convo = messagesRef.current.filter((m) => m !== GREETING);
+    if (convo.length <= sentCount.current) return;
+    if (!convo.some((m) => m.role === "user")) return;
+    sentCount.current = convo.length;
+    try {
+      fetch(`${site.flyerApiBase}/api/public/chat/transcript`, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain" },
+        body: JSON.stringify({ session_id: sessionId.current, messages: convo }),
+        keepalive: true,
+      }).catch(() => {});
+    } catch {
+      /* ignore */
+    }
+  }
+
+  useEffect(() => {
+    const onHide = () => {
+      if (document.visibilityState === "hidden") sendTranscript();
+    };
+    window.addEventListener("pagehide", sendTranscript);
+    document.addEventListener("visibilitychange", onHide);
+    return () => {
+      window.removeEventListener("pagehide", sendTranscript);
+      document.removeEventListener("visibilitychange", onHide);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
@@ -73,7 +114,10 @@ export function ChatWidget() {
       {/* Launcher */}
       <button
         type="button"
-        onClick={() => setOpen((o) => !o)}
+        onClick={() => {
+          if (open) sendTranscript();
+          setOpen((o) => !o);
+        }}
         aria-label={open ? "Close chat" : "Open chat assistant"}
         className="fixed bottom-5 right-5 z-50 grid h-14 w-14 place-items-center rounded-full bg-crush-500 text-white shadow-xl shadow-crush-500/30 transition-transform hover:scale-105 hover:bg-crush-600"
       >
