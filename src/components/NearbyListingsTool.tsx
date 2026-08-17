@@ -26,7 +26,7 @@ type ApiResult =
     }
   | { ok: false; error: string };
 
-const RADII = [2, 5, 10, 25, 50];
+const RADII = [1, 5, 10, 25];
 
 function money(n?: number): string {
   return n && n > 0 ? "$" + Math.round(n).toLocaleString("en-US") : "—";
