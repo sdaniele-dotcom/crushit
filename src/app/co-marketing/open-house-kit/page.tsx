@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Container, PageHero, Button, Eyebrow, Card } from "@/components/ui";
 import { CopyCard } from "@/components/CopyCard";
 import { PrintButton } from "@/components/PrintButton";
+import { NearbyListingsTool } from "@/components/NearbyListingsTool";
 import Link from "next/link";
 import { site } from "@/lib/site";
 import { crushLogoPrimaryDataUri } from "@/lib/brandLogo";
@@ -305,39 +306,27 @@ export default function OpenHouseKitPage() {
           Every home for sale nearby
         </h2>
         <p className="mt-3 max-w-2xl text-muted">
-          Search the CRMLS MLS to see the active homes for sale near your
-          listing — set your area or radius and filter by beds &amp; baths — then
-          print a co-branded comparison sheet for the sign-in table.
+          Enter your listing&apos;s address, pick a radius — 1, 5, 10, or 25
+          miles — and pull up the active homes for sale nearby from the MLS,
+          grouped by beds &amp; baths. Then hit{" "}
+          <strong>Print all on one page</strong> for a co-branded comparison
+          sheet for the sign-in table.
         </p>
-        <div className="mt-6 flex flex-col items-start justify-between gap-6 rounded-3xl border border-border bg-white p-8 sm:flex-row sm:items-center">
-          <div className="flex items-start gap-5">
-            <span className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-crush-50 text-3xl">
-              🏘️
-            </span>
-            <div>
-              <h3 className="text-xl font-bold text-ink-900">
-                Search the MLS for nearby homes
-              </h3>
-              <p className="mt-1 max-w-xl text-muted">
-                Open the CRMLS search, look up the area or ZIP around your
-                listing, and filter by beds &amp; baths to size up the
-                competition.
-              </p>
-            </div>
-          </div>
-          <div className="flex shrink-0 flex-col gap-3 sm:items-end">
-            <Link
-              href="/mls-search"
-              className="inline-flex items-center justify-center gap-2 rounded-full bg-crush-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-crush-500/20 transition-colors hover:bg-crush-600"
-            >
-              Open MLS search
-            </Link>
-            <PrintButton
-              html={comparisonWorksheetHtml}
-              label="Print comparison sheet"
-              className="inline-flex items-center justify-center gap-2 rounded-full border border-border bg-white px-6 py-3 text-sm font-semibold text-ink-900 transition-colors hover:bg-surface-2"
-            />
-          </div>
+        <div className="mt-6">
+          <NearbyListingsTool />
+        </div>
+        <div className="mt-4 flex flex-wrap items-center gap-3">
+          <Link
+            href="/mls-search"
+            className="inline-flex items-center gap-2 rounded-full border border-border bg-white px-5 py-2.5 text-sm font-semibold text-ink-900 transition-colors hover:bg-surface-2"
+          >
+            Or open the full CRMLS search →
+          </Link>
+          <PrintButton
+            html={comparisonWorksheetHtml}
+            label="Print a blank comparison sheet"
+            className="inline-flex items-center gap-2 rounded-full border border-border bg-white px-5 py-2.5 text-sm font-semibold text-ink-900 transition-colors hover:bg-surface-2"
+          />
         </div>
 
         {/* Sign-in sheet */}
