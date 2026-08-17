@@ -8,7 +8,6 @@ const routes = [
   "/",
   "/calculators",
   "/loan-programs",
-  "/tools",
   "/mls-search",
   "/resources",
   "/co-marketing",
