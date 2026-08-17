@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Container, PageHero, Button, Eyebrow, Card } from "@/components/ui";
 import { CopyCard } from "@/components/CopyCard";
 import { PrintButton } from "@/components/PrintButton";
-import { NearbyListingsTool } from "@/components/NearbyListingsTool";
+import Link from "next/link";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -21,6 +21,24 @@ const printCss = `*{box-sizing:border-box}
   .brand strong{color:#e62c2c;font-size:15px;display:block}
   .foot{margin-top:22px;font-size:11px;color:#666;text-align:center;border-top:1px solid #eee;padding-top:12px}
   @media print{body{padding:24px}}`;
+
+/** Blank "homes for sale nearby" comparison sheet — fill in from the MLS. */
+const comparisonWorksheetHtml = `<!doctype html><html><head><meta charset="utf-8"/>
+<title>Homes for sale nearby — comparison sheet</title>
+<style>${printCss}
+  table{width:100%;border-collapse:collapse;margin-top:16px}
+  th,td{border:1px solid #cfcfcf;padding:11px 8px;text-align:left;font-size:12px}
+  th{background:#111;color:#fff;font-weight:600;text-transform:uppercase;font-size:11px}
+  td{height:30px}tr:nth-child(even) td{background:#fafafa}
+</style></head><body>
+  <div class="top">
+    <div><h1>Homes for sale nearby</h1><p class="sub">Area: ____________________ · Date: ____________ · Fill in from your MLS search</p></div>
+    <div class="brand">${brandBlock}</div>
+  </div>
+  <table><thead><tr><th style="width:26%">Address</th><th>Price</th><th>Bd</th><th>Ba</th><th>SqFt</th><th>Days on mkt</th><th style="width:20%">Notes</th></tr></thead>
+  <tbody>${Array.from({ length: 12 }).map(() => `<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>`).join("")}</tbody></table>
+  <p class="foot">Want the monthly payment on any of these for a buyer? Ask ${site.company} · ${site.phone} · ${site.website.replace(/^https?:\/\//, "")}</p>
+</body></html>`;
 
 /** Print-ready sign-in sheet — 4 large, easy-to-write guest blocks per page. */
 const signInSheetHtml = `<!doctype html><html><head><meta charset="utf-8"/>
@@ -278,12 +296,39 @@ export default function OpenHouseKitPage() {
           Every home for sale nearby
         </h2>
         <p className="mt-3 max-w-2xl text-muted">
-          Enter the area to pull up every active listing nearby on Zillow,
-          Realtor.com, or Homes.com, and print a co-branded comparison sheet for
-          the sign-in table. Live embedded listings arrive with the MLS feed.
+          Search the CRMLS MLS to see the active homes for sale near your
+          listing — set your area or radius and filter by beds &amp; baths — then
+          print a co-branded comparison sheet for the sign-in table.
         </p>
-        <div className="mt-6">
-          <NearbyListingsTool />
+        <div className="mt-6 flex flex-col items-start justify-between gap-6 rounded-3xl border border-border bg-white p-8 sm:flex-row sm:items-center">
+          <div className="flex items-start gap-5">
+            <span className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-crush-50 text-3xl">
+              🏘️
+            </span>
+            <div>
+              <h3 className="text-xl font-bold text-ink-900">
+                Search the MLS for nearby homes
+              </h3>
+              <p className="mt-1 max-w-xl text-muted">
+                Open the CRMLS search, look up the area or ZIP around your
+                listing, and filter by beds &amp; baths to size up the
+                competition.
+              </p>
+            </div>
+          </div>
+          <div className="flex shrink-0 flex-col gap-3 sm:items-end">
+            <Link
+              href="/mls-search"
+              className="inline-flex items-center justify-center gap-2 rounded-full bg-crush-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-crush-500/20 transition-colors hover:bg-crush-600"
+            >
+              Open MLS search
+            </Link>
+            <PrintButton
+              html={comparisonWorksheetHtml}
+              label="Print comparison sheet"
+              className="inline-flex items-center justify-center gap-2 rounded-full border border-border bg-white px-6 py-3 text-sm font-semibold text-ink-900 transition-colors hover:bg-surface-2"
+            />
+          </div>
         </div>
 
         {/* Sign-in sheet */}

@@ -53,7 +53,7 @@ export type NavItem = { label: string; href: string };
 export const navItems: NavItem[] = [
   { label: "Calculators", href: "/calculators" },
   { label: "Loan Programs", href: "/loan-programs" },
-  { label: "Tools", href: "/tools" },
+  { label: "MLS Search", href: "/mls-search" },
   { label: "Resources", href: "/resources" },
   { label: "Co-Marketing", href: "/co-marketing" },
   { label: "Team", href: "/team" },
