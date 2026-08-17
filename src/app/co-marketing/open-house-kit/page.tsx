@@ -4,6 +4,7 @@ import { CopyCard } from "@/components/CopyCard";
 import { PrintButton } from "@/components/PrintButton";
 import Link from "next/link";
 import { site } from "@/lib/site";
+import { crushLogoPrimaryDataUri } from "@/lib/brandLogo";
 
 export const metadata: Metadata = {
   title: "Open House Kit",
@@ -26,6 +27,11 @@ const printCss = `*{box-sizing:border-box}
 const comparisonWorksheetHtml = `<!doctype html><html><head><meta charset="utf-8"/>
 <title>Homes for sale nearby — comparison sheet</title>
 <style>${printCss}
+  .top{align-items:center}
+  .logo{height:52px;width:auto;display:block}
+  .brand{display:flex;flex-direction:column;align-items:flex-end;gap:8px}
+  .brand .contact{color:#333;font-size:12px;line-height:1.5;text-align:right}
+  .brand .contact strong{color:#e62c2c;font-size:13px}
   table{width:100%;border-collapse:collapse;margin-top:16px}
   th,td{border:1px solid #cfcfcf;padding:11px 8px;text-align:left;font-size:12px}
   th{background:#111;color:#fff;font-weight:600;text-transform:uppercase;font-size:11px}
@@ -33,7 +39,10 @@ const comparisonWorksheetHtml = `<!doctype html><html><head><meta charset="utf-8
 </style></head><body>
   <div class="top">
     <div><h1>Homes for sale nearby</h1><p class="sub">Area: ____________________ · Date: ____________ · Fill in from your MLS search</p></div>
-    <div class="brand">${brandBlock}</div>
+    <div class="brand">
+      <img class="logo" src="${crushLogoPrimaryDataUri}" alt="Crush Mortgage"/>
+      <div class="contact"><strong>${site.phone}</strong><br/>NMLS #${site.companyNmls} · ${site.website.replace(/^https?:\/\//, "")}</div>
+    </div>
   </div>
   <table><thead><tr><th style="width:26%">Address</th><th>Price</th><th>Bd</th><th>Ba</th><th>SqFt</th><th>Days on mkt</th><th style="width:20%">Notes</th></tr></thead>
   <tbody>${Array.from({ length: 12 }).map(() => `<tr><td></td><td></td><td></td><td></td><td></td><td></td><td></td></tr>`).join("")}</tbody></table>

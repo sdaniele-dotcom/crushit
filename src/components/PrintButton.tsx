@@ -15,8 +15,32 @@ export function PrintButton({
     w.document.write(html);
     w.document.close();
     w.focus();
-    // Give the new window a tick to render before printing.
-    setTimeout(() => w.print(), 250);
+
+    let done = false;
+    const go = () => {
+      if (done) return;
+      done = true;
+      w.print();
+    };
+    // Wait for any images (logo, photos) to finish loading before printing so
+    // they appear in the PDF — with a safety timeout so we never hang.
+    const imgs = Array.from(w.document.images);
+    const pending = imgs.filter((img) => !img.complete);
+    if (pending.length === 0) {
+      setTimeout(go, 150);
+    } else {
+      let left = pending.length;
+      const tick = () => {
+        left -= 1;
+        if (left <= 0) setTimeout(go, 50);
+      };
+      pending.forEach((img) => {
+        img.addEventListener("load", tick);
+        img.addEventListener("error", tick);
+      });
+      // Safety net in case a load/error event never fires.
+      setTimeout(go, 2000);
+    }
   }
 
   return (
