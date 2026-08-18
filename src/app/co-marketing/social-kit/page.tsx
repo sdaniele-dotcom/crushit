@@ -166,7 +166,7 @@ export default function SocialKitPage() {
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-3">
             <Button href="/co-brand">Make a flyer</Button>
-            <Button href="/co-marketing" variant="secondary">
+            <Button href="/resources" variant="secondary">
               Back to toolkit
             </Button>
           </div>

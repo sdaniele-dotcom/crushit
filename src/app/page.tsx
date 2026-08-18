@@ -145,7 +145,7 @@ export default function Home() {
                 <Button href="/contact" className="w-full">
                   Become a partner agent
                 </Button>
-                <Button href="/co-marketing" variant="secondary" className="w-full">
+                <Button href="/resources" variant="secondary" className="w-full">
                   See co-marketing tools
                 </Button>
               </div>

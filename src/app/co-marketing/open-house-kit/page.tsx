@@ -515,7 +515,7 @@ export default function OpenHouseKitPage() {
             <Button href="/co-marketing/social-kit" variant="secondary">
               Get social captions
             </Button>
-            <Button href="/co-marketing" variant="secondary">
+            <Button href="/resources" variant="secondary">
               Back to toolkit
             </Button>
           </div>

@@ -77,7 +77,7 @@ export default function EmailTemplatesPage() {
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-3">
             <Button href="/contact">Connect a client</Button>
-            <Button href="/co-marketing" variant="secondary">
+            <Button href="/resources" variant="secondary">
               Back to toolkit
             </Button>
           </div>
