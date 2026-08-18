@@ -67,9 +67,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       await loadProfile(s?.user?.id);
     });
 
+    // Re-fetch the profile when rewards change it (updates stars in the header).
+    const handler = () => {
+      sb.auth.getSession().then(({ data }) => loadProfile(data.session?.user?.id));
+    };
+    window.addEventListener("crush:refresh-profile", handler);
+
     return () => {
       mounted = false;
       sub.subscription.unsubscribe();
+      window.removeEventListener("crush:refresh-profile", handler);
     };
   }, [loadProfile]);
 

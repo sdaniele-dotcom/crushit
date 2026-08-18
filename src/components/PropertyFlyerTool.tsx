@@ -2,6 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { site } from "@/lib/site";
+import { useAuth } from "@/components/auth/AuthProvider";
+import { fullName } from "@/lib/profile";
+import { getSupabase } from "@/lib/supabase";
+import { awardStars, logActivity, saveProject } from "@/lib/rewards";
 
 type Status = "idle" | "loading" | "success" | "error";
 
@@ -39,15 +43,27 @@ function resizeImage(file: File, max = 640): Promise<string> {
 }
 
 export function PropertyFlyerTool() {
+  const { user, profile, refreshProfile } = useAuth();
   const [status, setStatus] = useState<Status>("idle");
   const [error, setError] = useState<string>("");
   const [result, setResult] = useState<Result | null>(null);
-  const [headshot, setHeadshot] = useState<string>("");
+  const [headshot, setHeadshot] = useState<string>(""); // new upload for this flyer only
   const [officers, setOfficers] = useState<
     { id: string; name: string; title: string; headshot?: string }[]
   >([]);
   const [officerId, setOfficerId] = useState<string>("");
   const selectedOfficer = officers.find((o) => o.id === officerId);
+
+  // Agent fields — controlled so we can auto-fill them from the saved profile.
+  const [aName, setAName] = useState("");
+  const [aPhone, setAPhone] = useState("");
+  const [aEmail, setAEmail] = useState("");
+  const [aBrokerage, setABrokerage] = useState("");
+  const [aLicense, setALicense] = useState("");
+  const [headshotUrl, setHeadshotUrl] = useState(""); // from profile
+  const [logoUrl, setLogoUrl] = useState(""); // brokerage logo from profile
+  const [prefilled, setPrefilled] = useState(false);
+  const [saveToProfile, setSaveToProfile] = useState(false);
 
   useEffect(() => {
     fetch(`${site.flyerApiBase}/api/public/loan-officers`)
@@ -60,6 +76,20 @@ export function PropertyFlyerTool() {
       })
       .catch(() => {});
   }, []);
+
+  // Auto-fill from the logged-in agent's saved profile (once).
+  useEffect(() => {
+    if (profile && !prefilled) {
+      setAName(fullName(profile));
+      setAPhone(profile.phone ?? "");
+      setAEmail(profile.email ?? user?.email ?? "");
+      setABrokerage(profile.brokerage ?? "");
+      setALicense(profile.dre_license ?? "");
+      setHeadshotUrl(profile.headshot_url ?? "");
+      setLogoUrl(profile.brokerage_logo_url ?? profile.team_logo_url ?? "");
+      setPrefilled(true);
+    }
+  }, [profile, prefilled, user]);
 
   async function onPhoto(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -82,12 +112,14 @@ export function PropertyFlyerTool() {
 
     const payload = {
       agent: {
-        name: g("agent_name"),
-        email: g("agent_email"),
-        phone: g("agent_phone"),
-        dre_license: g("agent_license"),
-        brokerage: g("agent_brokerage"),
-        headshot_data: headshot,
+        name: aName.trim(),
+        email: aEmail.trim(),
+        phone: aPhone.trim(),
+        dre_license: aLicense.trim(),
+        brokerage: aBrokerage.trim(),
+        headshot_data: headshot, // a new upload takes priority
+        headshot_url: headshot ? "" : headshotUrl,
+        brokerage_logo_url: logoUrl,
       },
       property: {
         street_address: g("street_address"),
@@ -122,6 +154,38 @@ export function PropertyFlyerTool() {
       if (res.ok && data.ok) {
         setResult({ publicUrl: data.publicUrl, pdfUrl: data.pdfUrl });
         setStatus("success");
+
+        // Logged-in extras: rewards, activity, saved project, optional profile save.
+        if (user) {
+          const address = [payload.property.street_address, payload.property.city]
+            .filter(Boolean)
+            .join(", ");
+          awardStars("create_flyer", {
+            relatedType: "flyer",
+            relatedId: data.slug,
+            description: "Created a co-branded flyer",
+          });
+          logActivity("flyer_created", { slug: data.slug });
+          logActivity("marketing_piece_created", { kind: "property_flyer" });
+          saveProject({
+            kind: "property_flyer",
+            title: address || "Property flyer",
+            publicUrl: data.publicUrl,
+            pdfUrl: data.pdfUrl,
+          });
+          if (saveToProfile) {
+            const sb = getSupabase();
+            await sb
+              ?.from("profiles")
+              .update({
+                phone: aPhone.trim(),
+                brokerage: aBrokerage.trim(),
+                dre_license: aLicense.trim(),
+              })
+              .eq("id", user.id);
+            await refreshProfile();
+          }
+        }
       } else {
         setError(data.error || "Could not generate the flyer. Please try again.");
         setStatus("error");
@@ -137,18 +201,24 @@ export function PropertyFlyerTool() {
       {/* Form */}
       <form onSubmit={handleSubmit}>
         <h2 className="text-2xl font-bold text-ink-900">Your info</h2>
+        {user && prefilled && (
+          <p className="mt-2 rounded-xl border border-crush-200 bg-crush-50 px-3 py-2 text-xs text-crush-700">
+            ✓ Filled in from your saved profile. Edits here apply to this flyer
+            only — tick &ldquo;save to my profile&rdquo; below to keep them.
+          </p>
+        )}
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
           <label className="block sm:col-span-2">
             <span className={label}>Full name *</span>
-            <input name="agent_name" required className={inputCls} placeholder="Jane Agent" />
+            <input required className={inputCls} placeholder="Jane Agent" value={aName} onChange={(e) => setAName(e.target.value)} />
           </label>
           <label className="block">
             <span className={label}>Phone</span>
-            <input name="agent_phone" className={inputCls} placeholder="(555) 000-0000" />
+            <input className={inputCls} placeholder="(555) 000-0000" value={aPhone} onChange={(e) => setAPhone(e.target.value)} />
           </label>
           <label className="block">
             <span className={label}>Email</span>
-            <input name="agent_email" type="email" className={inputCls} placeholder="jane@brokerage.com" />
+            <input type="email" className={inputCls} placeholder="jane@brokerage.com" value={aEmail} onChange={(e) => setAEmail(e.target.value)} />
           </label>
           {officers.length > 0 && (
             <label className="block sm:col-span-2">
@@ -187,10 +257,10 @@ export function PropertyFlyerTool() {
           <div className="sm:col-span-2">
             <span className={label}>Headshot</span>
             <div className="mt-1.5 flex items-center gap-4">
-              {headshot ? (
+              {headshot || headshotUrl ? (
                 // eslint-disable-next-line @next/next/no-img-element
                 <img
-                  src={headshot}
+                  src={headshot || headshotUrl}
                   alt="Headshot preview"
                   className="h-16 w-16 rounded-full object-cover ring-2 ring-crush-500/40"
                 />
@@ -236,6 +306,12 @@ export function PropertyFlyerTool() {
 
         {/* Primary CTA — always visible right after the essentials */}
         <div className="mt-8">
+          {user && (
+            <label className="mb-3 flex items-center gap-2 text-sm text-ink-800">
+              <input type="checkbox" className="h-4 w-4 accent-crush-500" checked={saveToProfile} onChange={(e) => setSaveToProfile(e.target.checked)} />
+              Save these changes to my profile
+            </label>
+          )}
           <button
             type="submit"
             disabled={status === "loading"}
@@ -261,11 +337,11 @@ export function PropertyFlyerTool() {
             <div className="grid gap-4 sm:grid-cols-2">
               <label className="block">
                 <span className={label}>Brokerage</span>
-                <input name="agent_brokerage" className={inputCls} placeholder="Realty Group" />
+                <input className={inputCls} placeholder="Realty Group" value={aBrokerage} onChange={(e) => setABrokerage(e.target.value)} />
               </label>
               <label className="block">
                 <span className={label}>License # (DRE)</span>
-                <input name="agent_license" className={inputCls} placeholder="DRE #00000000" />
+                <input className={inputCls} placeholder="DRE #00000000" value={aLicense} onChange={(e) => setALicense(e.target.value)} />
               </label>
               <label className="block">
                 <span className={label}>Purchase price</span>
