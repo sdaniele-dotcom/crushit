@@ -11,6 +11,14 @@ export const metadata: Metadata = {
 
 const assets = [
   {
+    icon: "📘",
+    title: "Co-branded buyer & seller guides",
+    desc: "Beautiful First-Time Homebuyer's and Home Seller's guides — auto co-branded with your name, photo, and contact info. Add your details and save as a PDF to share.",
+    tags: ["Buyer guide", "Seller guide", "Save as PDF"],
+    href: "/co-marketing/guides",
+    cta: "Co-brand a guide",
+  },
+  {
     icon: "📄",
     title: "Co-branded flyers",
     desc: "Property flyers, financing highlight sheets, and 'just listed' one-pagers with your name and photo alongside ours.",

@@ -74,6 +74,31 @@ export default function DocumentChecklistPage() {
       />
 
       <Container className="py-14">
+        <div className="mb-10 overflow-hidden rounded-3xl border border-crush-200 bg-crush-50">
+          <div className="flex flex-col items-start gap-6 p-8 sm:flex-row sm:items-center sm:p-10">
+            <div className="grid h-16 w-16 shrink-0 place-items-center rounded-2xl bg-white text-4xl shadow-sm">
+              ⚡
+            </div>
+            <div className="flex-1">
+              <h2 className="text-xl font-bold text-ink-900 sm:text-2xl">
+                Good news: with today&apos;s technology, you may only need to fill
+                out a loan application
+              </h2>
+              <p className="mt-2 max-w-2xl text-sm text-ink-700 sm:text-base">
+                In many cases you won&apos;t have to dig up a single document up
+                front. Once you complete a quick application,{" "}
+                <strong>income, assets, and employment can be verified
+                electronically</strong> — securely and directly from the source.
+                The checklist below is simply a backup for anything that
+                can&apos;t be pulled automatically.
+              </p>
+            </div>
+            <div className="shrink-0">
+              <Button href="/contact">Start your application</Button>
+            </div>
+          </div>
+        </div>
+
         <div className="grid gap-6 md:grid-cols-2">
           {groups.map((g) => (
             <Card key={g.title}>

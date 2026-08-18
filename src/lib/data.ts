@@ -219,6 +219,21 @@ export type SpecialtyProgram = {
  */
 export const specialtyPrograms: SpecialtyProgram[] = [
   {
+    name: "Doctor Loans",
+    tagline: "Physician financing with little down and no PMI.",
+    bestFor:
+      "Doctors, dentists, and residents — strong future income, often with student debt.",
+    badge: "0–10% down · no PMI",
+    highlights: [
+      "As little as 0–10% down — up to 100% financing on some tiers",
+      "No monthly mortgage insurance (PMI), even under 20% down",
+      "Student-loan debt treated favorably (IBR/deferred payments often excluded)",
+      "MD, DO, DDS, DMD, and many residents & fellows eligible",
+      "Close up to 90 days before a new job starts — with a signed contract",
+      "High loan amounts for move-up and jumbo price points",
+    ],
+  },
+  {
     name: "Self-Employed FHA Special",
     tagline: "Qualify on your business, not just your taxes.",
     bestFor:

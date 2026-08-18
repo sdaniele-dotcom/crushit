@@ -2,18 +2,26 @@
 
 import { useState } from "react";
 import { Field, ResultCard, Row, StackBar } from "./fields";
-import { currency, purchaseBreakdown } from "@/lib/calc";
-import { site } from "@/lib/site";
+import {
+  currency,
+  purchaseBreakdown,
+  DEFAULT_TAX_RATE_PCT,
+  DEFAULT_INSURANCE_RATE_PCT,
+  DEFAULT_PMI_RATE_PCT,
+} from "@/lib/calc";
+import { openBrandedPdf } from "@/lib/pdf";
 
 export function PaymentCalculator() {
   const [price, setPrice] = useState(450000);
   const [downPct, setDownPct] = useState(10);
   const [ratePct, setRatePct] = useState(6.5);
   const [years, setYears] = useState(30);
-  const [taxRatePct, setTaxRatePct] = useState(1.1);
-  const [insuranceYr, setInsuranceYr] = useState(1800);
+  const [taxRatePct, setTaxRatePct] = useState(DEFAULT_TAX_RATE_PCT);
+  const [insuranceRatePct, setInsuranceRatePct] = useState(
+    DEFAULT_INSURANCE_RATE_PCT,
+  );
   const [hoaMonth, setHoaMonth] = useState(0);
-  const [pmiRatePct, setPmiRatePct] = useState(0.6);
+  const [pmiRatePct, setPmiRatePct] = useState(DEFAULT_PMI_RATE_PCT);
 
   const b = purchaseBreakdown({
     price,
@@ -21,63 +29,40 @@ export function PaymentCalculator() {
     ratePct,
     years,
     taxRatePct,
-    insuranceYr,
+    insuranceRatePct,
     hoaMonth,
     pmiRatePct,
   });
 
   function savePdf() {
-    const row = (label: string, value: string, strong = false) =>
-      `<tr${strong ? ' style="font-weight:700;border-top:2px solid #111"' : ""}><td>${label}</td><td style="text-align:right">${value}</td></tr>`;
-    const html = `<!doctype html><html><head><meta charset="utf-8"/>
-      <title>Estimated Monthly Payment</title>
-      <style>
-        *{box-sizing:border-box}
-        body{font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#111;margin:0;padding:44px}
-        .top{display:flex;justify-content:space-between;align-items:flex-start;border-bottom:3px solid #e62c2c;padding-bottom:14px}
-        h1{font-size:24px;margin:0 0 4px}
-        .sub{color:#555;font-size:13px;margin:0}
-        .brand{text-align:right;font-size:12px;color:#333;line-height:1.5}
-        .brand strong{color:#e62c2c;font-size:16px;display:block}
-        .big{margin:26px 0 6px;font-size:15px;color:#555}
-        .amt{font-size:42px;font-weight:800;color:#e62c2c;margin:0}
-        h2{font-size:13px;text-transform:uppercase;letter-spacing:.05em;color:#e62c2c;margin:26px 0 8px}
-        table{width:100%;border-collapse:collapse}
-        td{padding:8px 4px;font-size:14px;border-bottom:1px solid #eee}
-        .foot{margin-top:26px;font-size:10.5px;color:#777;line-height:1.5;border-top:1px solid #eee;padding-top:12px}
-        @media print{body{padding:28px}}
-      </style></head><body>
-      <div class="top">
-        <div><h1>Estimated Monthly Payment</h1><p class="sub">Prepared by ${site.company} · ${new Date().toLocaleDateString("en-US")}</p></div>
-        <div class="brand"><strong>${site.brand}</strong>${site.company}<br/>${site.phone} · NMLS #${site.companyNmls}<br/>${site.website.replace(/^https?:\/\//, "")}</div>
-      </div>
-      <p class="big">Estimated monthly payment</p>
-      <p class="amt">${currency(b.total)}</p>
-      <h2>Your scenario</h2>
-      <table>
-        ${row("Home price", currency(price))}
-        ${row("Down payment", `${downPct}%  ·  ${currency(b.down)}`)}
-        ${row("Loan amount", currency(b.loan))}
-        ${row("Interest rate", `${ratePct}%`)}
-        ${row("Loan term", `${years} years`)}
-      </table>
-      <h2>Monthly breakdown</h2>
-      <table>
-        ${row("Principal &amp; interest", currency(b.pi))}
-        ${row("Property taxes", currency(b.tax))}
-        ${row("Homeowners insurance", currency(b.insurance))}
-        ${b.pmi > 0 ? row("PMI", currency(b.pmi)) : ""}
-        ${b.hoa > 0 ? row("HOA dues", currency(b.hoa)) : ""}
-        ${row("Total monthly payment", currency(b.total), true)}
-      </table>
-      <p class="foot">This is an estimate for educational purposes only and is not a commitment to lend, a rate quote, or an offer of credit. Actual payment, rate, and APR depend on a full application, credit approval, and current market rates. Taxes and insurance are estimates. Ready for a real, personalized quote? Contact ${site.company} at ${site.phone}. Equal Housing Opportunity.</p>
-      </body></html>`;
-    const w = window.open("", "_blank", "width=850,height=1100");
-    if (!w) return;
-    w.document.write(html);
-    w.document.close();
-    w.focus();
-    setTimeout(() => w.print(), 250);
+    openBrandedPdf({
+      title: "Estimated Monthly Payment",
+      heroLabel: "Estimated monthly payment",
+      heroValue: currency(b.total),
+      sections: [
+        {
+          heading: "Your scenario",
+          rows: [
+            { label: "Home price", value: currency(price) },
+            { label: "Down payment", value: `${downPct}%  ·  ${currency(b.down)}` },
+            { label: "Loan amount", value: currency(b.loan) },
+            { label: "Interest rate", value: `${ratePct}%` },
+            { label: "Loan term", value: `${years} years` },
+          ],
+        },
+        {
+          heading: "Monthly breakdown",
+          rows: [
+            { label: "Principal &amp; interest", value: currency(b.pi) },
+            { label: "Property taxes", value: currency(b.tax) },
+            { label: "Homeowners insurance", value: currency(b.insurance) },
+            ...(b.pmi > 0 ? [{ label: "PMI", value: currency(b.pmi) }] : []),
+            ...(b.hoa > 0 ? [{ label: "HOA dues", value: currency(b.hoa) }] : []),
+            { label: "Total monthly payment", value: currency(b.total), strong: true },
+          ],
+        },
+      ],
+    });
   }
 
   return (
@@ -137,12 +122,13 @@ export function PaymentCalculator() {
         />
         <Field
           label="Homeowners insurance"
-          value={insuranceYr}
-          onChange={setInsuranceYr}
-          prefix="$"
-          suffix="/ yr"
+          value={insuranceRatePct}
+          onChange={setInsuranceRatePct}
+          suffix="% / yr"
           min={0}
-          step={100}
+          max={2}
+          step={0.05}
+          help={currency((price * (insuranceRatePct / 100)) / 12) + " / mo"}
         />
         <Field
           label="HOA dues"

@@ -57,7 +57,7 @@ export default function LoanProgramsPage() {
         </div>
 
         {/* Live rates (Optimal Blue OBMMI widget) */}
-        <div className="mt-16">
+        <div id="rates" className="mt-16 scroll-mt-24">
           <Eyebrow>Today&apos;s rates</Eyebrow>
           <h2 className="mt-4 text-3xl font-bold tracking-tight text-ink-900">
             Live market rates
