@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Container, PageHero, Button, Eyebrow, Card } from "@/components/ui";
+import { GuideLibrary } from "@/components/GuideLibrary";
 import { resources } from "@/lib/data";
 
 export const metadata: Metadata = {
@@ -33,6 +34,23 @@ export default function ResourcesPage() {
       />
 
       <Container className="py-14">
+        {/* Co-branded client guides */}
+        <div id="guides" className="mb-14 scroll-mt-24">
+          <Eyebrow>Co-branded client guides</Eyebrow>
+          <h2 className="mt-4 text-3xl font-bold tracking-tight text-ink-900">
+            Buyer &amp; seller guides — co-branded with you
+          </h2>
+          <p className="mt-3 max-w-2xl text-muted">
+            Beautiful, ready-to-share guides. Click download, add your name and
+            contact info, and we&apos;ll instantly co-brand it with you and Crush
+            Mortgage — no property details needed. Save it as a PDF and send it
+            to your clients.
+          </p>
+          <div className="mt-8">
+            <GuideLibrary />
+          </div>
+        </div>
+
         {/* Featured: full first-time buyer guide */}
         <Link
           href="/first-time-buyers"

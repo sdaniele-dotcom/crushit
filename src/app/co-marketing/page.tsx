@@ -15,7 +15,7 @@ const assets = [
     title: "Co-branded buyer & seller guides",
     desc: "Beautiful First-Time Homebuyer's and Home Seller's guides — auto co-branded with your name, photo, and contact info. Add your details and save as a PDF to share.",
     tags: ["Buyer guide", "Seller guide", "Save as PDF"],
-    href: "/co-marketing/guides",
+    href: "/resources#guides",
     cta: "Co-brand a guide",
   },
   {
