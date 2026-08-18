@@ -112,7 +112,7 @@ export default function TeamPage() {
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-3">
             <Button href="/contact">Get in touch</Button>
-            <Button href="/co-marketing" variant="secondary">
+            <Button href="/resources" variant="secondary">
               Partner with us
             </Button>
           </div>

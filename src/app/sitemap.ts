@@ -11,7 +11,6 @@ const routes = [
   "/loan-programs",
   "/mls-search",
   "/resources",
-  "/co-marketing",
   "/co-marketing/social-kit",
   "/co-marketing/email-templates",
   "/co-marketing/video-scripts",
