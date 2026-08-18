@@ -23,6 +23,11 @@ export const currency = (n: number, digits = 0) =>
 
 export const pct = (n: number, digits = 1) => `${n.toFixed(digits)}%`;
 
+/** Crush Mortgage default estimating assumptions (annual, as % of home price). */
+export const DEFAULT_TAX_RATE_PCT = 1.25;
+export const DEFAULT_INSURANCE_RATE_PCT = 0.25;
+export const DEFAULT_PMI_RATE_PCT = 0.6;
+
 /** Full monthly payment breakdown for a purchase. */
 export function purchaseBreakdown(opts: {
   price: number;
@@ -30,7 +35,7 @@ export function purchaseBreakdown(opts: {
   ratePct: number;
   years: number;
   taxRatePct: number; // annual property tax as % of price
-  insuranceYr: number; // annual homeowners insurance $
+  insuranceRatePct: number; // annual homeowners insurance as % of price
   hoaMonth: number; // monthly HOA $
   pmiRatePct: number; // annual PMI as % of loan (applies if down < 20%)
 }) {
@@ -38,7 +43,7 @@ export function purchaseBreakdown(opts: {
   const loan = opts.price - down;
   const pi = monthlyPI(loan, opts.ratePct, opts.years);
   const tax = (opts.price * (opts.taxRatePct / 100)) / 12;
-  const insurance = opts.insuranceYr / 12;
+  const insurance = (opts.price * (opts.insuranceRatePct / 100)) / 12;
   const pmi =
     opts.downPct < 20 ? (loan * (opts.pmiRatePct / 100)) / 12 : 0;
   const hoa = opts.hoaMonth;
@@ -56,7 +61,7 @@ export function affordablePrice(opts: {
   ratePct: number;
   years: number;
   taxRatePct: number;
-  insuranceYr: number;
+  insuranceRatePct: number;
   hoaMonth: number;
   pmiRatePct: number;
 }): number {

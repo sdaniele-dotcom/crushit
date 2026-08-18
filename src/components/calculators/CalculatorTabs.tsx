@@ -3,13 +3,11 @@
 import { useState } from "react";
 import { PaymentCalculator } from "./PaymentCalculator";
 import { AffordabilityCalculator } from "./AffordabilityCalculator";
-import { RentVsBuyCalculator } from "./RentVsBuyCalculator";
 import { RefinanceCalculator } from "./RefinanceCalculator";
 
 const tabs = [
   { id: "payment", label: "Monthly Payment", icon: "🏠", C: PaymentCalculator },
   { id: "afford", label: "Affordability", icon: "💰", C: AffordabilityCalculator },
-  { id: "rentbuy", label: "Rent vs. Buy", icon: "⚖️", C: RentVsBuyCalculator },
   { id: "refi", label: "Refinance", icon: "🔁", C: RefinanceCalculator },
 ] as const;
 

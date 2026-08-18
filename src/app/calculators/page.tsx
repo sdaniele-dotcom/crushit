@@ -5,7 +5,7 @@ import { Container, PageHero, Button } from "@/components/ui";
 export const metadata: Metadata = {
   title: "Mortgage Calculators",
   description:
-    "Run monthly payment, affordability, rent-vs-buy, and refinance numbers instantly — perfect for real-time client conversations.",
+    "Run monthly payment, affordability, and refinance numbers instantly — perfect for real-time client conversations. Save any result as a Crush-branded PDF.",
 };
 
 export default function CalculatorsPage() {
@@ -23,6 +23,15 @@ export default function CalculatorsPage() {
       />
 
       <Container className="py-14">
+        <div className="mb-6 flex flex-col items-start justify-between gap-3 rounded-2xl border border-border bg-surface p-4 sm:flex-row sm:items-center">
+          <p className="text-sm text-muted">
+            Plug in today&apos;s numbers for the most accurate estimate.
+          </p>
+          <Button href="/loan-programs#rates" variant="secondary">
+            See today&apos;s rates →
+          </Button>
+        </div>
+
         <CalculatorTabs />
 
         <div className="mt-14 rounded-3xl border border-border bg-surface p-8 text-center sm:p-12">
