@@ -11,6 +11,11 @@ import {
   PROPERTY_DEFAULTS,
   type PropertyInput,
 } from "@/lib/wealth";
+import {
+  CA_APPRECIATION,
+  CA_HEADLINE,
+  CA_MEDIAN_2025,
+} from "@/lib/appreciationData";
 
 const PDF_BTN =
   "inline-flex items-center justify-center gap-2 rounded-full bg-crush-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-crush-500/20 transition-colors hover:bg-crush-600";
@@ -32,6 +37,7 @@ const TABS = [
   { id: "rent", label: "Rent vs. Own", icon: "⚖️" },
   { id: "invest", label: "Investment Properties", icon: "🏘️" },
   { id: "income", label: "Rental Income", icon: "💵" },
+  { id: "history", label: "CA Appreciation", icon: "📈" },
 ] as const;
 type TabId = (typeof TABS)[number]["id"];
 
@@ -212,7 +218,110 @@ export function WealthBuilder() {
             setProjYears={setProjYears}
           />
         )}
+
+        {tab === "history" && <AppreciationPanel />}
       </div>
+    </div>
+  );
+}
+
+/* ─────────────────────────── CA appreciation ───────────────────────────── */
+function AppreciationPanel() {
+  const h = CA_HEADLINE;
+
+  function savePdf() {
+    const rowsHtml = CA_APPRECIATION.map(
+      (r) =>
+        `<tr><td class="strong">${r.period}</td><td class="c">${r.startYear}</td><td class="r">${money0(r.startMedian)}</td><td class="r">${money0(CA_MEDIAN_2025)}</td><td class="r strong">${r.annualizedPct.toFixed(2)}%</td></tr>`,
+    ).join("");
+    const body = `<div class="hero">California Real Estate: 57 Years of Appreciation
+      <div class="big">${money0(h.startMedian)} → ${money0(h.endMedian)}</div>
+      <div class="subttl">1968 to 2025 · +${h.increasePct.toLocaleString()}% · ${h.multiple}× · ${h.annualizedPct}% compounded per year</div></div>
+      <h2>Annualized appreciation (CAGR ending 2025)</h2>
+      <table><thead><tr><th>Period</th><th class="c">Starting year</th><th class="r">Starting median</th><th class="r">2025 median</th><th class="r">Annualized</th></tr></thead><tbody>${rowsHtml}</tbody></table>`;
+    openBrandedHtmlPdf({
+      title: "California Real Estate — 57 Years of Appreciation",
+      subtitle: "Source: C.A.R. 2026 Annual Historical Data Summary · California Existing Single-Family Homes",
+      bodyHtml: body,
+      disclaimer:
+        "Appreciation only — these figures reflect the change in California's median single-family sales price and do NOT include mortgage leverage, principal paydown, rental income, or tax benefits (separate components of an owner/investor's total return). Median-price data from the California Association of REALTORS® (C.A.R.) 2026 Annual Historical Data Summary. Past performance is not a guarantee of future results. For education only — not investment advice. Equal Housing Opportunity.",
+    });
+  }
+
+  return (
+    <div>
+      <div className="rounded-3xl border border-crush-200 bg-gradient-to-br from-crush-50 to-white p-7">
+        <p className="text-sm font-semibold uppercase tracking-wide text-crush-700">
+          California Real Estate · 57 Years
+        </p>
+        <p className="mt-2 text-4xl font-extrabold text-crush-600 sm:text-5xl">
+          {money0(h.startMedian)} → {money0(h.endMedian)}
+        </p>
+        <div className="mt-4 flex flex-wrap gap-x-8 gap-y-3 text-sm">
+          <Stat k="Increase" v={`+${h.increasePct.toLocaleString()}%`} />
+          <Stat k="Value multiplied" v={`${h.multiple}×`} />
+          <Stat k="Annualized (compounded)" v={`${h.annualizedPct}% / yr`} />
+          <Stat k="Span" v={`${h.startYear}–${h.endYear}`} />
+        </div>
+      </div>
+
+      <div className="mt-6 rounded-2xl border border-border bg-surface p-4 text-sm text-muted">
+        The Wealth Builder uses a conservative <strong className="text-ink-800">5%/yr</strong>{" "}
+        appreciation default — below California&apos;s 57-year average of{" "}
+        <strong className="text-ink-800">{h.annualizedPct}%</strong>. These are
+        compound (CAGR) figures, not a simple average of yearly changes.
+      </div>
+
+      <div className="mt-6 overflow-x-auto rounded-2xl border border-border bg-white">
+        <table className="w-full min-w-[560px] text-sm">
+          <thead>
+            <tr className="border-b border-border bg-surface-2 text-left text-xs uppercase text-muted">
+              <th className="px-3 py-2 font-semibold">Period</th>
+              <th className="px-3 py-2 text-center font-semibold">Starting year</th>
+              <th className="px-3 py-2 text-right font-semibold">Starting median</th>
+              <th className="px-3 py-2 text-right font-semibold">2025 median</th>
+              <th className="px-3 py-2 text-right font-semibold">Annualized</th>
+            </tr>
+          </thead>
+          <tbody>
+            {CA_APPRECIATION.map((r) => (
+              <tr key={r.period} className="border-b border-border/60 last:border-0">
+                <td className="px-3 py-2 font-medium text-ink-900">{r.period}</td>
+                <td className="px-3 py-2 text-center text-ink-700">{r.startYear}</td>
+                <td className="px-3 py-2 text-right text-ink-700">{money0(r.startMedian)}</td>
+                <td className="px-3 py-2 text-right text-ink-700">{money0(CA_MEDIAN_2025)}</td>
+                <td className="px-3 py-2 text-right font-semibold text-crush-700">{r.annualizedPct.toFixed(2)}%</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <p className="mt-4 text-xs leading-relaxed text-muted">
+        <strong>Appreciation only.</strong> These figures reflect the change in
+        California&apos;s median single-family sales price — they do{" "}
+        <em>not</em> include mortgage leverage, principal paydown, rental income,
+        or tax benefits, which are separate components of an owner/investor&apos;s
+        total return. Source: California Association of REALTORS® (C.A.R.) 2026
+        Annual Historical Data Summary. Past performance is not a guarantee of
+        future results.
+      </p>
+
+      <div className="mt-6">
+        <button type="button" onClick={savePdf} className={PDF_BTN}>
+          <PdfIcon />
+          Save as PDF (Crush-branded)
+        </button>
+      </div>
+    </div>
+  );
+}
+
+function Stat({ k, v }: { k: string; v: string }) {
+  return (
+    <div>
+      <p className="text-xs font-semibold uppercase tracking-wide text-muted">{k}</p>
+      <p className="mt-0.5 text-lg font-bold text-ink-900">{v}</p>
     </div>
   );
 }
