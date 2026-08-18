@@ -1,10 +1,11 @@
 import type { Metadata } from "next";
 import { Container, PageHero, Button } from "@/components/ui";
+import { RentVsOwnCalculator } from "@/components/RentVsOwnCalculator";
 
 export const metadata: Metadata = {
   title: "Rent vs. Own",
   description:
-    "A side-by-side look at renting versus owning — see how monthly cost, equity, and long-term wealth compare. Full interactive tool coming soon.",
+    "See exactly how renting compares to owning over time — monthly cost after tax savings, equity built, and how much wealth you'd give up by renting. Crush Mortgage's full rent-vs-own model.",
 };
 
 export default function RentVsOwnPage() {
@@ -17,26 +18,24 @@ export default function RentVsOwnPage() {
             Rent vs. <span className="text-gradient">Own</span>
           </>
         }
-        subtitle="See how renting stacks up against owning over time — monthly cost, equity built, tax benefits, and the real cost of waiting."
+        subtitle="The real cost of renting isn't just the rent — it's the equity you never build. Plug in a home and today's rent to see how far ahead owning puts your client over time."
       />
 
-      <Container className="py-16">
-        <div className="mx-auto max-w-2xl rounded-3xl border border-border bg-surface p-10 text-center sm:p-14">
-          <div className="mx-auto grid h-16 w-16 place-items-center rounded-2xl bg-crush-50 text-4xl">
-            ⚖️
-          </div>
-          <h2 className="mt-6 text-2xl font-bold text-ink-900">
-            The full Rent vs. Own tool is coming soon
+      <Container className="py-14">
+        <RentVsOwnCalculator />
+
+        <div className="mt-14 rounded-3xl border border-border bg-surface p-8 text-center sm:p-12">
+          <h2 className="text-2xl font-bold text-ink-900">
+            Ready to turn the numbers into a real plan?
           </h2>
-          <p className="mx-auto mt-3 max-w-md text-muted">
-            We&apos;re building a detailed, side-by-side breakdown that shows
-            your clients exactly how owning compares to renting over 5, 10, and
-            30 years — equity, appreciation, tax benefits, and all.
+          <p className="mx-auto mt-3 max-w-xl text-muted">
+            Get your buyer pre-approved so they know their true budget — and stop
+            paying someone else&apos;s mortgage.
           </p>
-          <div className="mt-8 flex flex-wrap justify-center gap-3">
-            <Button href="/calculators">Use the payment calculator</Button>
-            <Button href="/contact" variant="secondary">
-              Talk to Crush Mortgage
+          <div className="mt-6 flex flex-wrap justify-center gap-3">
+            <Button href="/contact">Start a pre-approval</Button>
+            <Button href="/calculators" variant="secondary">
+              Try the payment calculator
             </Button>
           </div>
         </div>
