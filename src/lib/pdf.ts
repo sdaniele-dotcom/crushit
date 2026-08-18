@@ -74,7 +74,12 @@ export function openBrandedPdf(opts: {
     <p class="foot">${opts.disclaimer ?? DEFAULT_DISCLAIMER}</p>
     </body></html>`;
 
-  const w = window.open("", "_blank", "width=850,height=1100");
+  printHtml(html);
+}
+
+/** Open a print window and trigger print once images (the logo) have loaded. */
+export function printHtml(html: string) {
+  const w = window.open("", "_blank", "width=900,height=1100");
   if (!w) return;
   w.document.write(html);
   w.document.close();
@@ -101,4 +106,54 @@ export function openBrandedPdf(opts: {
     });
     setTimeout(go, 2000);
   }
+}
+
+/**
+ * Branded PDF for custom layouts (multi-column tables, per-section HTML). Wraps
+ * `bodyHtml` in the Crush Mortgage header/footer chrome and prints it. Provides
+ * helper classes: table/.r (right)/.c (center)/.strong, h2 headings, and a
+ * .hero block.
+ */
+export function openBrandedHtmlPdf(opts: {
+  title: string;
+  subtitle?: string;
+  bodyHtml: string;
+  disclaimer?: string;
+}) {
+  const html = `<!doctype html><html><head><meta charset="utf-8"/>
+    <title>${opts.title}</title>
+    <style>
+      *{box-sizing:border-box}
+      body{font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#111;margin:0;padding:40px}
+      .top{display:flex;justify-content:space-between;align-items:center;border-bottom:3px solid #e62c2c;padding-bottom:14px}
+      h1{font-size:23px;margin:0 0 4px}.subttl{color:#555;font-size:13px;margin:0}
+      .brand{display:flex;flex-direction:column;align-items:flex-end;gap:8px}
+      .brand img{height:50px;width:auto;display:block}
+      .brand .contact{color:#333;font-size:12px;line-height:1.5;text-align:right}
+      .brand .contact strong{color:#e62c2c;font-size:13px}
+      h2{font-size:13px;text-transform:uppercase;letter-spacing:.04em;color:#e62c2c;margin:20px 0 6px}
+      table{width:100%;border-collapse:collapse;margin-top:2px}
+      th,td{border:1px solid #d8d8d8;padding:6px 8px;font-size:11.5px;text-align:left}
+      td.r,th.r{text-align:right}td.c,th.c{text-align:center}.strong{font-weight:700}
+      th{background:#111;color:#fff;text-transform:uppercase;font-size:10px}
+      tr:nth-child(even) td{background:#fafafa}
+      .hero{margin:18px 0;padding:14px 16px;border-radius:12px;background:#fff5f5;border:1px solid #f6caca}
+      .hero .big{font-size:28px;font-weight:800;color:#e62c2c;margin:2px 0 0}
+      .grid4{display:flex;flex-wrap:wrap;gap:14px}.grid4 .cell{flex:1;min-width:120px}
+      .grid4 .k{font-size:10px;text-transform:uppercase;color:#888;letter-spacing:.04em}
+      .grid4 .v{font-size:18px;font-weight:800;color:#e62c2c}
+      .foot{margin-top:20px;font-size:10.5px;color:#777;border-top:1px solid #eee;padding-top:12px;line-height:1.5}
+      @media print{body{padding:24px}h2{page-break-after:avoid}tr{page-break-inside:avoid}}
+    </style></head><body>
+    <div class="top">
+      <div><h1>${opts.title}</h1>${opts.subtitle ? `<p class="subttl">${opts.subtitle}</p>` : ""}</div>
+      <div class="brand">
+        <img src="${crushLogoPrimaryDataUri}" alt="Crush Mortgage"/>
+        <div class="contact"><strong>${site.phone}</strong><br/>NMLS #${site.companyNmls} · ${site.website.replace(/^https?:\/\//, "")}</div>
+      </div>
+    </div>
+    ${opts.bodyHtml}
+    <p class="foot">${opts.disclaimer ?? DEFAULT_DISCLAIMER}</p>
+    </body></html>`;
+  printHtml(html);
 }
