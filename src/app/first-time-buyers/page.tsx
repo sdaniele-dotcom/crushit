@@ -116,8 +116,6 @@ const faqs = [
   ["What if I've had credit bumps in the past?", "You still have options. FHA loans, in particular, are more forgiving of past issues. Let's talk through your specific situation."],
 ];
 
-const guidePdf = `${process.env.BASE_PATH || ""}/crush-mortgage-first-time-homebuyer-guide.pdf`;
-
 export default function FirstTimeBuyersPage() {
   return (
     <>
@@ -133,53 +131,6 @@ export default function FirstTimeBuyersPage() {
       />
 
       <Container className="py-14">
-        {/* Download the printable guide + co-branding */}
-        <div className="mb-12 overflow-hidden rounded-3xl border border-border bg-ink-900 text-white">
-          <div className="flex flex-col gap-6 p-8 sm:flex-row sm:items-center sm:justify-between sm:p-10">
-            <div className="flex items-start gap-5">
-              <span className="grid h-14 w-14 shrink-0 place-items-center rounded-2xl bg-crush-500 text-2xl">
-                📘
-              </span>
-              <div>
-                <h2 className="text-2xl font-bold">
-                  The Crush Mortgage First-Time Homebuyer Guide
-                </h2>
-                <p className="mt-2 max-w-xl text-slate-300">
-                  A polished, share-ready PDF from the {site.company} team — hand
-                  it or email it to any buyer.
-                </p>
-              </div>
-            </div>
-            <div className="flex shrink-0 flex-col gap-3 sm:items-end">
-              <a
-                href={guidePdf}
-                download
-                className="inline-flex items-center justify-center gap-2 rounded-full bg-crush-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-crush-500/20 transition-colors hover:bg-crush-600"
-              >
-                <svg
-                  viewBox="0 0 20 20"
-                  className="h-4 w-4"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="2"
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  aria-hidden
-                >
-                  <path d="M10 3v10m0 0l4-4m-4 4l-4-4M4 17h12" />
-                </svg>
-                Download the guide (PDF)
-              </a>
-              <Link
-                href="/co-brand"
-                className="text-center text-sm font-semibold text-crush-400 hover:text-crush-300 sm:text-right"
-              >
-                Agents: make a co-branded flyer →
-              </Link>
-            </div>
-          </div>
-        </div>
-
         {/* Intro + quick actions */}
         <div className="grid gap-6 sm:grid-cols-3">
           <Card className="sm:col-span-2">
