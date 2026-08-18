@@ -4,12 +4,21 @@ import { useState } from "react";
 import { Field } from "@/components/calculators/fields";
 import { currency } from "@/lib/calc";
 import { RentVsOwnCalculator } from "@/components/RentVsOwnCalculator";
+import { openBrandedHtmlPdf } from "@/lib/pdf";
 import {
   analyzeProperty,
   projectRentalIncome,
   PROPERTY_DEFAULTS,
   type PropertyInput,
 } from "@/lib/wealth";
+
+const PDF_BTN =
+  "inline-flex items-center justify-center gap-2 rounded-full bg-crush-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-crush-500/20 transition-colors hover:bg-crush-600";
+const PdfIcon = () => (
+  <svg viewBox="0 0 20 20" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+    <path d="M6 9V3h8v6M6 15h8v3H6zM4 9h12a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1h-1" />
+  </svg>
+);
 
 const money0 = (n: number) => currency(Math.round(n));
 function bigMoney(n: number): string {
@@ -49,6 +58,48 @@ export function WealthBuilder() {
   function setProp(idx: number, key: keyof PropertyInput) {
     return (v: number) =>
       setProps((s) => s.map((p, i) => (i === idx ? { ...p, [key]: v } : p)));
+  }
+
+  function savePdfInvest() {
+    const invested = analyzed.reduce((s, a) => s + a.result.totalInvestment, 0);
+    const equity = analyzed.reduce((s, a) => s + a.result.atRental.equity, 0);
+    const heloc = analyzed.reduce((s, a) => s + a.result.helocAvailable, 0);
+    const withTax = analyzed.reduce((s, a) => s + a.result.returnWithTaxSavings, 0);
+    const summary = `<div class="grid4">
+      <div class="cell"><div class="k">Total invested</div><div class="v">${money0(invested)}</div></div>
+      <div class="cell"><div class="k">Equity at rental</div><div class="v">${bigMoney(equity)}</div></div>
+      <div class="cell"><div class="k">Return incl. tax savings</div><div class="v">${bigMoney(withTax)}</div></div>
+      <div class="cell"><div class="k">HELOC available (75% LTV)</div><div class="v">${bigMoney(heloc)}</div></div>
+    </div>`;
+    const sections = analyzed
+      .map((a, i) => {
+        const m = a.result.monthly;
+        const r = a.result.atRental;
+        const row = (l: string, v: string, strong = false) =>
+          `<tr><td${strong ? ' class="strong"' : ""}>${l}</td><td class="r${strong ? " strong" : ""}">${v}</td></tr>`;
+        return `<h2>Property ${i + 1} — ${money0(a.input.purchasePrice)}, ${a.input.downPct}% down, held ${a.input.yearsUntilRental} yrs</h2>
+        <table>
+          ${row("Down payment", money0(a.result.downPayment))}
+          ${row("Closing costs", money0(a.result.closingCosts))}
+          ${row("Total invested", money0(a.result.totalInvestment), true)}
+          ${row("Loan amount", money0(a.result.loanAmount))}
+          ${row("Monthly payment", money0(m.total))}
+          ${row(`Estimated value (yr ${a.input.yearsUntilRental})`, money0(r.estimatedValue))}
+          ${row("Loan balance", money0(r.firstLoanBalance + r.helocBalance))}
+          ${row("Equity", money0(r.equity), true)}
+          ${row("Return incl. tax savings", money0(a.result.returnWithTaxSavings))}
+          ${row("HELOC available (75% LTV)", money0(a.result.helocAvailable))}
+        </table>`;
+      })
+      .join("");
+    openBrandedHtmlPdf({
+      title: "Wealth Builder — Investment Properties",
+      subtitle: `${count} propert${count === 1 ? "y" : "ies"} · prepared ${new Date().toLocaleDateString("en-US")}`,
+      bodyHtml: summary + sections,
+      disclaimer:
+        "Estimates for educational use only — not a commitment to lend, a rate quote, investment advice, or tax advice. Returns assume the stated appreciation and hold periods hold steady, which they may not. Consult a tax and financial professional. Contact " +
+        "Crush Mortgage at (562) 317-6112. Equal Housing Opportunity.",
+    });
   }
 
   return (
@@ -133,6 +184,16 @@ export function WealthBuilder() {
                 result={analyzed[active].result}
               />
             )}
+
+            <div className="mt-6">
+              <button type="button" onClick={savePdfInvest} className={PDF_BTN}>
+                <PdfIcon />
+                Save portfolio as PDF (Crush-branded)
+              </button>
+              <p className="mt-2 text-xs text-muted">
+                Includes the portfolio summary and every property&apos;s numbers.
+              </p>
+            </div>
           </div>
         )}
 
@@ -317,6 +378,33 @@ function RentalIncomePanel({
   const last = rows[rows.length - 1];
   const firstRentalYear = Math.min(...analyzed.map((a) => Math.round(a.input.yearsUntilRental)));
 
+  function savePdf() {
+    const assumptions = `<h2>Assumptions</h2><table>
+      <tr><td>Rental income</td><td class="r">${rentalPct}% of value / yr</td></tr>
+      <tr><td>Rent increase</td><td class="r">${rentInc}% / yr</td></tr>
+      <tr><td>Your income</td><td class="r">${money0(payroll)} / mo</td></tr>
+      <tr><td>Income increase</td><td class="r">${payrollInc}% / yr</td></tr>
+    </table>`;
+    const rowsHtml = rows
+      .map(
+        (r) =>
+          `<tr><td>${r.year}</td><td class="r">${money0(r.rentalIncome)}</td><td class="r">${money0(r.mortgagePayments)}</td><td class="r">${money0(r.netRentalIncome)}</td><td class="r">${money0(r.payrollIncome)}</td><td class="r strong">${money0(r.totalMonthlyIncome)}</td></tr>`,
+      )
+      .join("");
+    const body = `<div class="hero">By year ${projYears}, your rentals + income could generate<div class="big">${money0(last.totalMonthlyIncome)}/mo</div>
+      <div class="subttl">Including ${money0(last.netRentalIncome)}/mo net rental cash flow. First rental around year ${firstRentalYear}.</div></div>
+      ${assumptions}
+      <h2>Year by year (monthly)</h2>
+      <table><thead><tr><th>Year</th><th class="r">Rental income</th><th class="r">Mortgages</th><th class="r">Net rental</th><th class="r">Your income</th><th class="r">Total</th></tr></thead><tbody>${rowsHtml}</tbody></table>`;
+    openBrandedHtmlPdf({
+      title: "Wealth Builder — Rental Income Projection",
+      subtitle: `${projYears}-year projection · prepared ${new Date().toLocaleDateString("en-US")}`,
+      bodyHtml: body,
+      disclaimer:
+        "Estimates for educational use only — not a commitment to lend, investment advice, or tax advice. Projections assume rental income, rent growth, and income growth hold steady, which they may not. Consult a tax and financial professional. Contact Crush Mortgage at (562) 317-6112. Equal Housing Opportunity.",
+    });
+  }
+
   // simple line chart of total monthly income
   const W = 640, H = 200, padL = 56, padB = 24, padT = 10, padR = 10;
   const maxV = Math.max(1, ...rows.map((r) => r.totalMonthlyIncome));
@@ -400,6 +488,13 @@ function RentalIncomePanel({
             ))}
           </tbody>
         </table>
+      </div>
+
+      <div className="mt-6">
+        <button type="button" onClick={savePdf} className={PDF_BTN}>
+          <PdfIcon />
+          Save projection as PDF (Crush-branded)
+        </button>
       </div>
     </div>
   );
