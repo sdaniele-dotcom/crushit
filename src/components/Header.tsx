@@ -79,7 +79,7 @@ export function Header() {
             </>
           ) : (
             <Link
-              href="/contact"
+              href="/about/#contact"
               className="ml-2 inline-flex items-center rounded-full bg-crush-500 px-5 py-2 text-sm font-semibold text-white shadow-lg shadow-crush-500/20 transition-colors hover:bg-crush-600"
             >
               Get Pre-Approved
@@ -159,7 +159,7 @@ export function Header() {
               </>
             ) : (
               <Link
-                href="/contact"
+                href="/about/#contact"
                 onClick={() => setOpen(false)}
                 className="mt-2 block rounded-full bg-crush-500 px-4 py-2.5 text-center text-sm font-semibold text-white"
               >

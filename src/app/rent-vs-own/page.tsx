@@ -33,7 +33,7 @@ export default function RentVsOwnPage() {
             paying someone else&apos;s mortgage.
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-3">
-            <Button href="/contact">Start a pre-approval</Button>
+            <Button href="/about/#contact">Start a pre-approval</Button>
             <Button href="/calculators" variant="secondary">
               Try the payment calculator
             </Button>

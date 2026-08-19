@@ -43,7 +43,7 @@ export default function CalculatorsPage() {
             offer real strength.
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-3">
-            <Button href="/contact">Start a pre-approval</Button>
+            <Button href="/about/#contact">Start a pre-approval</Button>
             <Button href="/loan-programs" variant="secondary">
               Compare loan programs
             </Button>

@@ -136,7 +136,7 @@ export default function ClosingDayPage() {
             don&apos;t always happen 9 to 5.
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-3">
-            <Button href="/contact">Get in touch</Button>
+            <Button href="/about/#contact">Get in touch</Button>
             <Button href="/guides/document-checklist" variant="secondary">
               See the document checklist
             </Button>

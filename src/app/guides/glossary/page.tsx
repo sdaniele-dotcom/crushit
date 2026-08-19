@@ -98,7 +98,7 @@ export default function GlossaryPage() {
             jargon, no pressure.
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-3">
-            <Button href="/contact">Ask us anything</Button>
+            <Button href="/about/#contact">Ask us anything</Button>
             <Button href="/calculators" variant="secondary">
               Run the numbers
             </Button>

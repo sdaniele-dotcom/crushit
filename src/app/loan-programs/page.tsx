@@ -89,7 +89,7 @@ export default function LoanProgramsPage() {
           </p>
 
           <div className="mt-6">
-            <Button href="/contact">Get your custom rate quote</Button>
+            <Button href="/about/#contact">Get your custom rate quote</Button>
           </div>
         </div>
 
@@ -241,7 +241,7 @@ export default function LoanProgramsPage() {
             Don&apos;t see the fit? We have access to dozens more niche and
             down-payment-assistance programs —{" "}
             <Link
-              href="/contact"
+              href="/about/#contact"
               className="font-semibold text-crush-600 hover:text-crush-700"
             >
               just ask
@@ -260,7 +260,7 @@ export default function LoanProgramsPage() {
             same-day pre-approval.
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-3">
-            <Button href="/contact">Get your buyer pre-approved</Button>
+            <Button href="/about/#contact">Get your buyer pre-approved</Button>
             <Button href="/calculators" variant="secondary">
               Estimate a payment
             </Button>

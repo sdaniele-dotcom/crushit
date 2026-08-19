@@ -94,7 +94,7 @@ export default function DocumentChecklistPage() {
               </p>
             </div>
             <div className="shrink-0">
-              <Button href="/contact">Start your application</Button>
+              <Button href="/about/#contact">Start your application</Button>
             </div>
           </div>
         </div>
@@ -143,7 +143,7 @@ export default function DocumentChecklistPage() {
             same-day.
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-3">
-            <Button href="/contact">Start a pre-approval</Button>
+            <Button href="/about/#contact">Start a pre-approval</Button>
             <Button href="/first-time-buyers" variant="secondary">
               See the full buyer guide
             </Button>

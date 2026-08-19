@@ -13,7 +13,7 @@ const steps = [
   {
     t: "Get pre-approved first",
     d: "Before you tour a single home, a pre-approval tells you your real budget and shows sellers you're serious. It's free and usually same-day.",
-    link: { href: "/contact", label: "Start a pre-approval" },
+    link: { href: "/about/#contact", label: "Start a pre-approval" },
   },
   {
     t: "Know your true monthly number",
@@ -154,7 +154,7 @@ export default function FirstTimeBuyersPage() {
               obligation.
             </p>
             <div className="mt-4">
-              <Button href="/contact">Get pre-approved</Button>
+              <Button href="/about/#contact">Get pre-approved</Button>
             </div>
           </Card>
         </div>
@@ -352,7 +352,7 @@ export default function FirstTimeBuyersPage() {
                 you can afford.
               </p>
               <div className="mt-8 flex flex-wrap justify-center gap-4">
-                <Button href="/contact">Get pre-approved</Button>
+                <Button href="/about/#contact">Get pre-approved</Button>
                 <Button href="/calculators" variant="secondary">
                   Estimate my payment
                 </Button>
