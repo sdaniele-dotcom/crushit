@@ -58,7 +58,18 @@ export async function uploadAgentImage(
   const { error } = await sb.storage
     .from("agent-assets")
     .upload(path, blob, { contentType: "image/jpeg", upsert: true });
-  if (error) throw error;
+  if (error) {
+    const m = error.message || "";
+    if (/bucket not found|not found/i.test(m)) {
+      throw new Error(
+        "Image storage isn't set up yet. Ask your admin to run the agent-assets storage setup in Supabase.",
+      );
+    }
+    if (/row-level security|policy|not authorized|permission/i.test(m)) {
+      throw new Error("Not allowed to upload. Please log out and back in, then try again.");
+    }
+    throw new Error(m || "Upload failed. Please try again.");
+  }
   const { data } = sb.storage.from("agent-assets").getPublicUrl(path);
   return data.publicUrl;
 }
