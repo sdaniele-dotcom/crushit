@@ -1,6 +1,8 @@
 "use client";
 
 import { recordUse } from "@/lib/rewards";
+import { useAuth } from "@/components/auth/AuthProvider";
+import { fillAgentTokens } from "@/lib/agentTokens";
 
 export function PrintButton({
   html,
@@ -15,11 +17,13 @@ export function PrintButton({
   rewardAction?: string;
   rewardEvents?: string[];
 }) {
+  const { profile } = useAuth();
+
   function print() {
     if (rewardAction) void recordUse(rewardAction, { events: rewardEvents });
     const w = window.open("", "_blank", "width=850,height=1100");
     if (!w) return;
-    w.document.write(html);
+    w.document.write(fillAgentTokens(html, profile));
     w.document.close();
     w.focus();
 

@@ -2,6 +2,8 @@
 
 import { useRef, useState } from "react";
 import { recordUse } from "@/lib/rewards";
+import { useAuth } from "@/components/auth/AuthProvider";
+import { fillAgentTokens } from "@/lib/agentTokens";
 
 export function CopyCard({
   title,
@@ -18,10 +20,12 @@ export function CopyCard({
 }) {
   const [copied, setCopied] = useState(false);
   const rewarded = useRef(false);
+  const { profile } = useAuth();
+  const filled = fillAgentTokens(text, profile);
 
   function copy() {
     navigator.clipboard
-      .writeText(text)
+      .writeText(filled)
       .then(() => {
         setCopied(true);
         setTimeout(() => setCopied(false), 1600);
@@ -68,7 +72,7 @@ export function CopyCard({
         </button>
       </div>
       <pre className="mt-3 whitespace-pre-wrap font-sans text-sm leading-relaxed text-ink-800">
-        {text}
+        {filled}
       </pre>
     </div>
   );
