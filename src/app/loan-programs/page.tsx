@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Container, PageHero, Button, Eyebrow } from "@/components/ui";
+import { site } from "@/lib/site";
 import {
   loanPrograms,
   specialtyPrograms,
@@ -260,7 +261,7 @@ export default function LoanProgramsPage() {
             same-day pre-approval.
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-3">
-            <Button href="/about/#contact">Get your buyer pre-approved</Button>
+            <Button href={site.applyUrl}>Get your buyer pre-approved</Button>
             <Button href="/calculators" variant="secondary">
               Estimate a payment
             </Button>

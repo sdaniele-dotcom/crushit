@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Container, PageHero, Button } from "@/components/ui";
+import { site } from "@/lib/site";
 import { RentVsOwnCalculator } from "@/components/RentVsOwnCalculator";
 
 export const metadata: Metadata = {
@@ -33,7 +34,7 @@ export default function RentVsOwnPage() {
             paying someone else&apos;s mortgage.
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-3">
-            <Button href="/about/#contact">Start a pre-approval</Button>
+            <Button href={site.applyUrl}>Start a pre-approval</Button>
             <Button href="/calculators" variant="secondary">
               Try the payment calculator
             </Button>

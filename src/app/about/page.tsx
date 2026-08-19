@@ -130,9 +130,14 @@ export default function AboutPage() {
                   Call or text {site.loanOfficer} directly. Evenings and weekends welcome —
                   we know deals don&apos;t wait for business hours.
                 </p>
-                <a href={`tel:${site.phone}`} className="mt-4 inline-flex items-center justify-center rounded-full border border-border px-5 py-2.5 text-sm font-semibold text-ink-900 hover:bg-surface">
-                  Call {site.phone}
-                </a>
+                <div className="mt-4 flex flex-wrap gap-2">
+                  <a href={site.applyUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center rounded-full bg-crush-500 px-5 py-2.5 text-sm font-semibold text-white hover:bg-crush-600">
+                    Apply online →
+                  </a>
+                  <a href={`tel:${site.phone}`} className="inline-flex items-center justify-center rounded-full border border-border px-5 py-2.5 text-sm font-semibold text-ink-900 hover:bg-surface">
+                    Call {site.phone}
+                  </a>
+                </div>
               </Card>
 
               <Card className="bg-surface">

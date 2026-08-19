@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Container, PageHero, Button, Card, Eyebrow } from "@/components/ui";
+import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Document Checklist",
@@ -94,7 +95,7 @@ export default function DocumentChecklistPage() {
               </p>
             </div>
             <div className="shrink-0">
-              <Button href="/about/#contact">Start your application</Button>
+              <Button href={site.applyUrl}>Start your application</Button>
             </div>
           </div>
         </div>
@@ -143,7 +144,7 @@ export default function DocumentChecklistPage() {
             same-day.
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-3">
-            <Button href="/about/#contact">Start a pre-approval</Button>
+            <Button href={site.applyUrl}>Start a pre-approval</Button>
             <Button href="/first-time-buyers" variant="secondary">
               See the full buyer guide
             </Button>

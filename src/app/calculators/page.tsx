@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { CalculatorTabs } from "@/components/calculators/CalculatorTabs";
 import { Container, PageHero, Button } from "@/components/ui";
+import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Mortgage Calculators",
@@ -43,7 +44,7 @@ export default function CalculatorsPage() {
             offer real strength.
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-3">
-            <Button href="/about/#contact">Start a pre-approval</Button>
+            <Button href={site.applyUrl}>Start a pre-approval</Button>
             <Button href="/loan-programs" variant="secondary">
               Compare loan programs
             </Button>

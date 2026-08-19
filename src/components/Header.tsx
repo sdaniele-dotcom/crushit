@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { Logo } from "./Logo";
-import { navItems } from "@/lib/site";
+import { navItems, site } from "@/lib/site";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { fullName } from "@/lib/profile";
 
@@ -78,12 +78,14 @@ export function Header() {
               </Link>
             </>
           ) : (
-            <Link
-              href="/about/#contact"
+            <a
+              href={site.applyUrl}
+              target="_blank"
+              rel="noopener noreferrer"
               className="ml-2 inline-flex items-center rounded-full bg-crush-500 px-5 py-2 text-sm font-semibold text-white shadow-lg shadow-crush-500/20 transition-colors hover:bg-crush-600"
             >
               Get Pre-Approved
-            </Link>
+            </a>
           )}
         </nav>
 
@@ -158,13 +160,15 @@ export function Header() {
                 </Link>
               </>
             ) : (
-              <Link
-                href="/about/#contact"
+              <a
+                href={site.applyUrl}
+                target="_blank"
+                rel="noopener noreferrer"
                 onClick={() => setOpen(false)}
                 className="mt-2 block rounded-full bg-crush-500 px-4 py-2.5 text-center text-sm font-semibold text-white"
               >
                 Get Pre-Approved
-              </Link>
+              </a>
             )}
           </div>
         </nav>
