@@ -72,7 +72,12 @@ export function AppFrame({ children }: { children: ReactNode }) {
   } else if (!ready) {
     content = <Spinner />; // wait for the session check before deciding
   } else if (isHome) {
-    content = user ? <Spinner /> : children; // logged-in → redirecting; logged-out → landing
+    if (user) {
+      content = <Spinner />; // signed-in → redirecting to dashboard
+    } else {
+      content = children; // logged-out → full marketing homepage
+      chrome = true; // marketing page gets the footer + chat
+    }
   } else if (!user) {
     content = <Spinner />; // redirecting to /login
   } else {
