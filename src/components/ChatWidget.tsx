@@ -1,70 +1,99 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
+import Link from "next/link";
 import { site } from "@/lib/site";
+import { useAuth } from "@/components/auth/AuthProvider";
 
-type Msg = { role: "user" | "assistant"; content: string };
+type Action = { label: string; href: string };
+type Msg = { role: "user" | "assistant"; content: string; actions?: Action[] };
 
-const GREETING: Msg = {
-  role: "assistant",
-  content:
-    "Hi! 👋 I'm the CRUSH IT assistant. Ask me anything about mortgages, loan programs, or how to use the tools on this site.",
-};
-
-const SUGGESTIONS = [
-  "How much do I need for a down payment?",
-  "What loan programs do you offer?",
-  "How do I get pre-approved?",
+/** "What are you working on?" starters — curated tool guidance (no AI call). */
+const SCENARIOS: { label: string; reply: string; actions: Action[] }[] = [
+  {
+    label: "I have an open house",
+    reply:
+      "Love it. Here's your open house toolkit — a branded sign-in sheet, neighbor invites, and ready-to-send follow-ups. Add a co-branded flyer with financing scenarios to leave on the counter:",
+    actions: [
+      { label: "🏡 Open House Kit", href: "/co-marketing/open-house-kit" },
+      { label: "🎨 Co-branded flyer", href: "/co-brand" },
+      { label: "✉️ Follow-up emails", href: "/co-marketing/email-templates" },
+    ],
+  },
+  {
+    label: "I have a new listing",
+    reply:
+      "Let's make it shine. Start with a co-branded property flyer, then grab social posts and a quick video script to promote it:",
+    actions: [
+      { label: "🎨 Co-branded flyer", href: "/co-brand" },
+      { label: "📱 Social media kit", href: "/co-marketing/social-kit" },
+      { label: "🎬 Video scripts", href: "/co-marketing/video-scripts" },
+    ],
+  },
+  {
+    label: "I'm working with a buyer",
+    reply:
+      "Here's what helps a buyer feel confident and move fast — a co-branded guide, plus the numbers so there are no surprises:",
+    actions: [
+      { label: "📘 Buyer guide", href: "/resources" },
+      { label: "🧮 Payment calculator", href: "/calculators" },
+      { label: "🏠 Rent vs Own", href: "/rent-vs-own" },
+      { label: "🏦 Loan programs", href: "/loan-programs" },
+    ],
+  },
+  {
+    label: "I have a listing appointment",
+    reply:
+      "Win the listing — hand them a polished, co-branded seller guide and show up looking buttoned-up:",
+    actions: [
+      { label: "📗 Seller guide", href: "/resources" },
+      { label: "🎨 Co-branded flyer", href: "/co-brand" },
+    ],
+  },
+  {
+    label: "I want to make social content",
+    reply:
+      "Here's ready-to-post content and short scripts you can film in a few minutes — all brandable to you:",
+    actions: [
+      { label: "📱 Social media kit", href: "/co-marketing/social-kit" },
+      { label: "🎬 Video scripts", href: "/co-marketing/video-scripts" },
+    ],
+  },
+  {
+    label: "Just have a question",
+    reply: "Go for it — type your question below and I'll help. 👇",
+    actions: [],
+  },
 ];
 
 export function ChatWidget() {
+  const { profile } = useAuth();
+  const firstName = profile?.first_name?.trim() || "";
+  const agentName =
+    (profile?.display_name?.trim() ||
+      [profile?.first_name, profile?.last_name].filter(Boolean).join(" ").trim()) ||
+    "";
+
+  const greeting: Msg = {
+    role: "assistant",
+    content: firstName
+      ? `Hi ${firstName}! 👋 What are you working on today?`
+      : "Hi! 👋 What are you working on today?",
+  };
+
   const [open, setOpen] = useState(false);
-  const [messages, setMessages] = useState<Msg[]>([GREETING]);
+  const [messages, setMessages] = useState<Msg[]>([greeting]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
+  const [started, setStarted] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const sessionId = useRef<string>("");
-  const sentCount = useRef(0);
-  const messagesRef = useRef<Msg[]>(messages);
-  messagesRef.current = messages;
 
-  if (!sessionId.current && typeof crypto !== "undefined") {
-    sessionId.current =
-      crypto.randomUUID?.() ?? Math.random().toString(36).slice(2);
-  }
-
-  // Email the full transcript to the team when the visitor closes the chat or
-  // leaves the page — but only if there's something new since the last send.
-  function sendTranscript() {
-    const convo = messagesRef.current.filter((m) => m !== GREETING);
-    if (convo.length <= sentCount.current) return;
-    if (!convo.some((m) => m.role === "user")) return;
-    sentCount.current = convo.length;
-    try {
-      fetch(`${site.flyerApiBase}/api/public/chat/transcript`, {
-        method: "POST",
-        headers: { "Content-Type": "text/plain" },
-        body: JSON.stringify({ session_id: sessionId.current, messages: convo }),
-        keepalive: true,
-      }).catch(() => {});
-    } catch {
-      /* ignore */
-    }
-  }
-
+  // Keep the greeting personalized once the profile loads (before any chat).
   useEffect(() => {
-    const onHide = () => {
-      if (document.visibilityState === "hidden") sendTranscript();
-    };
-    window.addEventListener("pagehide", sendTranscript);
-    document.addEventListener("visibilitychange", onHide);
-    return () => {
-      window.removeEventListener("pagehide", sendTranscript);
-      document.removeEventListener("visibilitychange", onHide);
-    };
+    if (!started) setMessages([greeting]);
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [firstName]);
 
   useEffect(() => {
     scrollRef.current?.scrollTo({ top: scrollRef.current.scrollHeight, behavior: "smooth" });
@@ -74,9 +103,19 @@ export function ChatWidget() {
     if (open) inputRef.current?.focus();
   }, [open]);
 
+  function pickScenario(s: (typeof SCENARIOS)[number]) {
+    setStarted(true);
+    setMessages((m) => [
+      ...m,
+      { role: "user", content: s.label },
+      { role: "assistant", content: s.reply, actions: s.actions.length ? s.actions : undefined },
+    ]);
+  }
+
   async function send(text: string) {
     const q = text.trim();
     if (!q || loading) return;
+    setStarted(true);
     const next: Msg[] = [...messages, { role: "user", content: q }];
     setMessages(next);
     setInput("");
@@ -85,15 +124,20 @@ export function ChatWidget() {
       const res = await fetch(`${site.flyerApiBase}/api/public/chat`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        // Drop the canned greeting before sending; keep the real turns.
-        body: JSON.stringify({ messages: next.filter((m) => m !== GREETING) }),
+        body: JSON.stringify({
+          agentName: agentName || undefined,
+          // Send only real chat turns (strip greeting + curated tool replies).
+          messages: next
+            .filter((m) => !m.actions && m !== greeting)
+            .map((m) => ({ role: m.role, content: m.content })),
+        }),
       });
       const data: { ok: boolean; reply?: string; error?: string } = await res.json();
       const reply =
         data.ok && data.reply
           ? data.reply
           : data.error ||
-            "Sorry — I'm having trouble right now. Please call (562) 317-6112 or use the contact form.";
+            "Sorry — I'm having trouble right now. Please call (562) 317-6112.";
       setMessages((m) => [...m, { role: "assistant", content: reply }]);
     } catch {
       setMessages((m) => [
@@ -109,15 +153,14 @@ export function ChatWidget() {
     }
   }
 
+  const showScenarios = !started && !loading;
+
   return (
     <>
       {/* Launcher */}
       <button
         type="button"
-        onClick={() => {
-          if (open) sendTranscript();
-          setOpen((o) => !o);
-        }}
+        onClick={() => setOpen((o) => !o)}
         aria-label={open ? "Close chat" : "Open chat assistant"}
         className="fixed bottom-5 right-5 z-50 grid h-14 w-14 place-items-center rounded-full bg-crush-500 text-white shadow-xl shadow-crush-500/30 transition-transform hover:scale-105 hover:bg-crush-600"
       >
@@ -137,31 +180,38 @@ export function ChatWidget() {
         <div className="fixed bottom-24 right-5 z-50 flex h-[70vh] max-h-[560px] w-[calc(100vw-2.5rem)] max-w-sm flex-col overflow-hidden rounded-3xl border border-border bg-white shadow-2xl">
           {/* Header */}
           <div className="flex items-center gap-3 bg-ink-900 px-5 py-4 text-white">
-            <span className="grid h-9 w-9 place-items-center rounded-full bg-crush-500 text-lg">
-              💬
-            </span>
+            <span className="grid h-9 w-9 place-items-center rounded-full bg-crush-500 text-lg">💬</span>
             <div className="leading-tight">
               <p className="text-sm font-bold">CRUSH IT Assistant</p>
-              <p className="text-xs text-slate-300">Mortgage &amp; homebuying help</p>
+              <p className="text-xs text-slate-300">Find the right tool, fast</p>
             </div>
           </div>
 
           {/* Messages */}
           <div ref={scrollRef} className="flex-1 space-y-3 overflow-y-auto bg-surface px-4 py-4">
             {messages.map((m, i) => (
-              <div
-                key={i}
-                className={`flex ${m.role === "user" ? "justify-end" : "justify-start"}`}
-              >
+              <div key={i} className={`flex flex-col ${m.role === "user" ? "items-end" : "items-start"}`}>
                 <div
                   className={`max-w-[85%] whitespace-pre-wrap rounded-2xl px-4 py-2.5 text-sm leading-relaxed ${
-                    m.role === "user"
-                      ? "bg-crush-500 text-white"
-                      : "border border-border bg-white text-ink-800"
+                    m.role === "user" ? "bg-crush-500 text-white" : "border border-border bg-white text-ink-800"
                   }`}
                 >
                   {m.content}
                 </div>
+                {m.actions && m.actions.length > 0 && (
+                  <div className="mt-2 flex max-w-[85%] flex-wrap gap-1.5">
+                    {m.actions.map((a) => (
+                      <Link
+                        key={a.href + a.label}
+                        href={a.href}
+                        onClick={() => setOpen(false)}
+                        className="rounded-full border border-crush-200 bg-crush-50 px-3 py-1.5 text-xs font-semibold text-crush-700 transition-colors hover:bg-crush-100"
+                      >
+                        {a.label}
+                      </Link>
+                    ))}
+                  </div>
+                )}
               </div>
             ))}
 
@@ -175,17 +225,17 @@ export function ChatWidget() {
               </div>
             )}
 
-            {/* Suggestions (only before the first user turn) */}
-            {messages.length === 1 && !loading && (
+            {/* Scenario starters (before the first turn) */}
+            {showScenarios && (
               <div className="flex flex-wrap gap-2 pt-1">
-                {SUGGESTIONS.map((s) => (
+                {SCENARIOS.map((s) => (
                   <button
-                    key={s}
+                    key={s.label}
                     type="button"
-                    onClick={() => send(s)}
+                    onClick={() => pickScenario(s)}
                     className="rounded-full border border-crush-100 bg-crush-50 px-3 py-1.5 text-xs font-medium text-crush-700 transition-colors hover:bg-crush-100"
                   >
-                    {s}
+                    {s.label}
                   </button>
                 ))}
               </div>
@@ -205,7 +255,7 @@ export function ChatWidget() {
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Type your question…"
+              placeholder="Ask a question…"
               className="flex-1 rounded-full border border-border bg-white px-4 py-2.5 text-sm text-ink-900 outline-none placeholder:text-muted focus:border-crush-400 focus:ring-2 focus:ring-crush-100"
             />
             <button
