@@ -1,7 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { recordUse } from "@/lib/rewards";
+import { useAuth } from "@/components/auth/AuthProvider";
+import { fullName } from "@/lib/profile";
 
 type GuideKey = "buyer" | "seller";
 
@@ -49,6 +51,23 @@ export function GuideLibrary() {
   const [photo, setPhoto] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+
+  // Prefill the co-branding form from the logged-in agent's saved profile —
+  // "enter it once, reused everywhere." Edits here are local to this guide and
+  // never change the saved profile.
+  const { profile } = useAuth();
+  const prefilled = useRef(false);
+  useEffect(() => {
+    if (!profile || prefilled.current) return;
+    prefilled.current = true;
+    const nm = fullName(profile);
+    if (nm) setName(nm);
+    if (profile.phone) setPhone(profile.phone);
+    if (profile.email) setEmail(profile.email);
+    if (profile.brokerage) setBrokerage(profile.brokerage);
+    if (profile.dre_license) setLicense(profile.dre_license);
+    if (profile.headshot_url) setPhoto(profile.headshot_url);
+  }, [profile]);
 
   const active = GUIDES.find((g) => g.key === openKey) || null;
   const ready = name.trim().length >= 2;
@@ -223,6 +242,11 @@ export function GuideLibrary() {
               Mortgage — then it opens ready to save as a PDF. No property info
               needed.
             </p>
+            {profile && (
+              <p className="mt-2 rounded-lg bg-crush-50 px-3 py-2 text-xs font-medium text-crush-700">
+                ✨ Filled in from your profile — edit anything below just for this guide (your saved profile won&apos;t change).
+              </p>
+            )}
 
             <div className="mt-5 grid gap-4">
               <div className="grid gap-4 sm:grid-cols-2">
