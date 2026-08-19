@@ -13,7 +13,7 @@ const steps = [
   {
     t: "Get pre-approved first",
     d: "Before you tour a single home, a pre-approval tells you your real budget and shows sellers you're serious. It's free and usually same-day.",
-    link: { href: "/about/#contact", label: "Start a pre-approval" },
+    link: { href: site.applyUrl, label: "Start a pre-approval" },
   },
   {
     t: "Know your true monthly number",
@@ -154,7 +154,7 @@ export default function FirstTimeBuyersPage() {
               obligation.
             </p>
             <div className="mt-4">
-              <Button href="/about/#contact">Get pre-approved</Button>
+              <Button href={site.applyUrl}>Get pre-approved</Button>
             </div>
           </Card>
         </div>
@@ -178,12 +178,14 @@ export default function FirstTimeBuyersPage() {
                   <h3 className="text-lg font-bold text-ink-900">{s.t}</h3>
                   <p className="mt-1 text-muted">{s.d}</p>
                   {s.link && (
-                    <Link
+                    <a
                       href={s.link.href}
+                      target="_blank"
+                      rel="noopener noreferrer"
                       className="mt-2 inline-flex items-center gap-1 text-sm font-semibold text-crush-600 hover:text-crush-700"
                     >
                       {s.link.label} →
-                    </Link>
+                    </a>
                   )}
                 </div>
               </li>
@@ -352,7 +354,7 @@ export default function FirstTimeBuyersPage() {
                 you can afford.
               </p>
               <div className="mt-8 flex flex-wrap justify-center gap-4">
-                <Button href="/about/#contact">Get pre-approved</Button>
+                <Button href={site.applyUrl}>Get pre-approved</Button>
                 <Button href="/calculators" variant="secondary">
                   Estimate my payment
                 </Button>

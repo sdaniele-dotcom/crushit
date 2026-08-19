@@ -23,6 +23,9 @@ export const site = {
   phone: "(562) 317-6112",
   email: "info@crushmortgage.com",
   website: "https://www.crushmortgage.com",
+  // Online mortgage application / pre-approval portal (Floify). Every
+  // "apply / get pre-approved" button links here.
+  applyUrl: "https://crushmortgage.floify.com/",
   // The public home of this site (custom domain). Used for canonical URLs,
   // Open Graph tags, the sitemap, and robots.txt.
   siteUrl: "https://crushingitrealestate.com",

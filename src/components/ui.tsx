@@ -41,8 +41,13 @@ export function Button({
   const isExternal = href.startsWith("http") || href.startsWith("tel:") || href.startsWith("mailto:");
   const cls = `${base} ${variants[variant]} ${className}`;
   if (isExternal) {
+    const newTab = href.startsWith("http");
     return (
-      <a href={href} className={cls}>
+      <a
+        href={href}
+        className={cls}
+        {...(newTab ? { target: "_blank", rel: "noopener noreferrer" } : {})}
+      >
         {children}
       </a>
     );
