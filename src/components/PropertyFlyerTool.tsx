@@ -6,6 +6,7 @@ import { useAuth } from "@/components/auth/AuthProvider";
 import { fullName } from "@/lib/profile";
 import { getSupabase } from "@/lib/supabase";
 import { awardStars, logActivity, saveProject } from "@/lib/rewards";
+import { getListing, upsertListing, type Listing } from "@/lib/listings";
 
 type Status = "idle" | "loading" | "success" | "error";
 
@@ -64,6 +65,14 @@ export function PropertyFlyerTool() {
   const [logoUrl, setLogoUrl] = useState(""); // brokerage logo from profile
   const [prefilled, setPrefilled] = useState(false);
   const [saveToProfile, setSaveToProfile] = useState(false);
+  const [listing, setListing] = useState<Listing | null>(null);
+
+  // If we arrived from a saved listing (?listing=<id>), load it to prefill the
+  // property fields — enter the property once, reuse it everywhere.
+  useEffect(() => {
+    const id = new URLSearchParams(window.location.search).get("listing");
+    if (id) getListing(id).then(setListing);
+  }, []);
 
   useEffect(() => {
     fetch(`${site.flyerApiBase}/api/public/loan-officers`)
@@ -167,11 +176,20 @@ export function PropertyFlyerTool() {
           });
           logActivity("flyer_created", { slug: data.slug });
           logActivity("marketing_piece_created", { kind: "property_flyer" });
+          // Save/reuse the listing so the property is available in other tools.
+          const savedListing = await upsertListing({
+            address: payload.property.street_address,
+            city: payload.property.city || undefined,
+            state: payload.property.state || undefined,
+            zip: payload.property.zip || undefined,
+            price: payload.property.purchase_price ?? undefined,
+          }).catch(() => null);
           saveProject({
             kind: "property_flyer",
             title: address || "Property flyer",
             publicUrl: data.publicUrl,
             pdfUrl: data.pdfUrl,
+            listingId: savedListing?.id ?? listing?.id,
           });
           if (saveToProfile) {
             const sb = getSupabase();
@@ -198,8 +216,8 @@ export function PropertyFlyerTool() {
 
   return (
     <div className="grid gap-10 lg:grid-cols-[1.4fr_1fr]">
-      {/* Form */}
-      <form onSubmit={handleSubmit}>
+      {/* Form (re-keyed so a loaded listing prefills the uncontrolled fields) */}
+      <form onSubmit={handleSubmit} key={listing?.id ?? "blank"}>
         <h2 className="text-2xl font-bold text-ink-900">Your info</h2>
         {user && prefilled && (
           <p className="mt-2 rounded-xl border border-crush-200 bg-crush-50 px-3 py-2 text-xs text-crush-700">
@@ -286,23 +304,28 @@ export function PropertyFlyerTool() {
         <div className="mt-4 grid gap-4 sm:grid-cols-2">
           <label className="block sm:col-span-2">
             <span className={label}>Street address *</span>
-            <input name="street_address" required className={inputCls} placeholder="123 Main St" />
+            <input name="street_address" required className={inputCls} placeholder="123 Main St" defaultValue={listing?.address ?? ""} />
           </label>
           <label className="block">
             <span className={label}>City</span>
-            <input name="city" className={inputCls} placeholder="Long Beach" />
+            <input name="city" className={inputCls} placeholder="Long Beach" defaultValue={listing?.city ?? ""} />
           </label>
           <div className="grid grid-cols-2 gap-4">
             <label className="block">
               <span className={label}>State</span>
-              <input name="state" className={inputCls} placeholder="CA" />
+              <input name="state" className={inputCls} placeholder="CA" defaultValue={listing?.state ?? ""} />
             </label>
             <label className="block">
               <span className={label}>ZIP</span>
-              <input name="zip" className={inputCls} placeholder="90808" />
+              <input name="zip" className={inputCls} placeholder="90808" defaultValue={listing?.zip ?? ""} />
             </label>
           </div>
         </div>
+        {listing && (
+          <p className="mt-3 rounded-xl border border-crush-200 bg-crush-50 px-3 py-2 text-xs text-crush-700">
+            🏠 Using your saved listing — {listing.address}. Edits here apply to this flyer only.
+          </p>
+        )}
 
         {/* Primary CTA — always visible right after the essentials */}
         <div className="mt-8">
@@ -345,7 +368,7 @@ export function PropertyFlyerTool() {
               </label>
               <label className="block">
                 <span className={label}>Purchase price</span>
-                <input name="purchase_price" className={inputCls} placeholder="Auto-filled from MLS" inputMode="decimal" />
+                <input name="purchase_price" className={inputCls} placeholder="Auto-filled from MLS" inputMode="decimal" defaultValue={listing?.price != null ? String(listing.price) : ""} />
               </label>
               <label className="block">
                 <span className={label}>Property type</span>

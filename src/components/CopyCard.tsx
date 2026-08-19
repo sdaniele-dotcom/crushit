@@ -3,7 +3,8 @@
 import { useRef, useState } from "react";
 import { recordUse } from "@/lib/rewards";
 import { useAuth } from "@/components/auth/AuthProvider";
-import { fillAgentTokens } from "@/lib/agentTokens";
+import { fillTokens } from "@/lib/agentTokens";
+import { useActiveListing } from "@/components/ActiveListing";
 
 export function CopyCard({
   title,
@@ -21,7 +22,8 @@ export function CopyCard({
   const [copied, setCopied] = useState(false);
   const rewarded = useRef(false);
   const { profile } = useAuth();
-  const filled = fillAgentTokens(text, profile);
+  const { listing } = useActiveListing();
+  const filled = fillTokens(text, profile, listing);
 
   function copy() {
     navigator.clipboard

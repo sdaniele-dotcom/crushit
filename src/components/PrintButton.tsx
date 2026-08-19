@@ -2,7 +2,8 @@
 
 import { recordUse } from "@/lib/rewards";
 import { useAuth } from "@/components/auth/AuthProvider";
-import { fillAgentTokens } from "@/lib/agentTokens";
+import { fillTokens } from "@/lib/agentTokens";
+import { useActiveListing } from "@/components/ActiveListing";
 
 export function PrintButton({
   html,
@@ -18,12 +19,13 @@ export function PrintButton({
   rewardEvents?: string[];
 }) {
   const { profile } = useAuth();
+  const { listing } = useActiveListing();
 
   function print() {
     if (rewardAction) void recordUse(rewardAction, { events: rewardEvents });
     const w = window.open("", "_blank", "width=850,height=1100");
     if (!w) return;
-    w.document.write(fillAgentTokens(html, profile));
+    w.document.write(fillTokens(html, profile, listing));
     w.document.close();
     w.focus();
 

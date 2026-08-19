@@ -1,0 +1,121 @@
+"use client";
+
+import { getSupabase } from "@/lib/supabase";
+
+export type LoanProgramRow = {
+  id: string;
+  slug: string;
+  name: string;
+  category: string | null;
+  tagline: string | null;
+  description: string | null;
+  min_credit: number | null;
+  min_down_pct: number | null;
+  max_loan: number | null;
+  dti_note: string | null;
+  occupancy: string[];
+  property_types: string[];
+  professions: string[];
+  benefits: string[];
+  restrictions: string | null;
+  disclaimer: string | null;
+  veteran_only: boolean;
+  self_employed_ok: boolean;
+  first_time_friendly: boolean;
+  active: boolean;
+  sort: number;
+  updated_at: string;
+};
+
+export async function fetchLoanPrograms(activeOnly = true): Promise<LoanProgramRow[]> {
+  const sb = getSupabase();
+  if (!sb) return [];
+  let q = sb.from("loan_programs").select("*").order("sort");
+  if (activeOnly) q = q.eq("active", true);
+  const { data } = await q;
+  return (data as LoanProgramRow[]) ?? [];
+}
+
+export type BuyerAnswers = {
+  creditRange: string; // "740+" | "680-739" | "620-679" | "580-619" | "<580"
+  price: number;
+  down: number; // dollars
+  firstTime: boolean;
+  veteran: boolean;
+  selfEmployed: boolean;
+  propertyType: string; // single-family | condo | townhome | multi-unit
+  occupancy: string; // primary | second | investment
+  income?: number;
+};
+
+const CREDIT_NUM: Record<string, number> = {
+  "740+": 760, "680-739": 700, "620-679": 640, "580-619": 590, "<580": 550,
+};
+
+export type Match = { program: LoanProgramRow; reasons: string[]; considerations: string[]; score: number };
+
+/** Compare a buyer's answers to the stored programs. Never states qualification —
+ *  returns programs "worth exploring" with reasons and considerations. */
+export function matchPrograms(a: BuyerAnswers, programs: LoanProgramRow[]): Match[] {
+  const credit = CREDIT_NUM[a.creditRange] ?? 620;
+  const downPct = a.price > 0 ? (a.down / a.price) * 100 : 0;
+
+  const out: Match[] = [];
+  for (const p of programs) {
+    // Hard filters — clearly not a fit.
+    if (p.veteran_only && !a.veteran) continue;
+    if (p.occupancy.length && !p.occupancy.includes(a.occupancy)) continue;
+    if (p.property_types.length && !p.property_types.includes(a.propertyType)) continue;
+
+    const reasons: string[] = [];
+    const considerations: string[] = [];
+    let score = 100 - p.sort;
+
+    if (p.min_credit == null || credit >= p.min_credit) {
+      if (p.min_credit != null) reasons.push(`Your credit range fits the ~${p.min_credit}+ typical minimum`);
+    } else {
+      considerations.push(`Usually looks for around ${p.min_credit}+ credit`);
+      score -= 25;
+    }
+
+    if (p.min_down_pct == null || downPct >= p.min_down_pct) {
+      if (p.min_down_pct != null && p.min_down_pct <= 3.5) reasons.push("Low down payment friendly");
+    } else {
+      considerations.push(`Typically needs about ${p.min_down_pct}% down (you entered ~${downPct.toFixed(1)}%)`);
+      score -= 15;
+    }
+
+    if (a.veteran && p.slug === "va") { reasons.push("You indicated military service — this is the veterans' benefit"); score += 40; }
+    if (a.selfEmployed && p.self_employed_ok) { reasons.push("Built for self-employed / 1099 income"); score += 25; }
+    if (a.firstTime && p.first_time_friendly) { reasons.push("First-time-buyer friendly"); score += 10; }
+    if (a.occupancy === "investment" && p.slug === "dscr") { reasons.push("Qualifies on the property's rental income"); score += 20; }
+
+    if (reasons.length === 0) reasons.push("Fits your basic scenario — worth a closer look");
+    out.push({ program: p, reasons, considerations, score });
+  }
+  return out.sort((x, y) => y.score - x.score).slice(0, 4);
+}
+
+/** Save a buyer scenario (loan-finder submission) for the logged-in agent. */
+export async function saveScenario(a: BuyerAnswers, matchedSlugs: string[], notes?: string): Promise<boolean> {
+  const sb = getSupabase();
+  if (!sb) return false;
+  const { data: { user } } = await sb.auth.getUser();
+  if (!user) return false;
+  const { error } = await sb.from("buyer_scenarios").insert({
+    user_id: user.id,
+    credit_range: a.creditRange,
+    price: a.price,
+    down: a.down,
+    first_time: a.firstTime,
+    veteran: a.veteran,
+    self_employed: a.selfEmployed,
+    property_type: a.propertyType,
+    occupancy: a.occupancy,
+    income: a.income ?? null,
+    notes: notes ?? null,
+    matched_slugs: matchedSlugs,
+    sent_to_lender: true,
+  });
+  return !error;
+}

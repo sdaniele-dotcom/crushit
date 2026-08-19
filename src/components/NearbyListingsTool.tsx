@@ -160,8 +160,8 @@ function printWindow(html: string) {
   }
 }
 
-export function NearbyListingsTool() {
-  const [location, setLocation] = useState("");
+export function NearbyListingsTool({ initialAddress = "" }: { initialAddress?: string } = {}) {
+  const [location, setLocation] = useState(initialAddress);
   const [radius, setRadius] = useState(5);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<ApiResult | null>(null);

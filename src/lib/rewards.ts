@@ -93,6 +93,7 @@ export async function saveProject(input: {
   data?: Record<string, unknown>;
   publicUrl?: string;
   pdfUrl?: string;
+  listingId?: string;
 }): Promise<void> {
   const sb = getSupabase();
   if (!sb) return;
@@ -107,5 +108,6 @@ export async function saveProject(input: {
     data: input.data ?? {},
     public_url: input.publicUrl ?? null,
     pdf_url: input.pdfUrl ?? null,
+    listing_id: input.listingId ?? null,
   });
 }

@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
+import { ActiveListingProvider, ListingPicker } from "@/components/ActiveListing";
 import { Container, PageHero, Button, Eyebrow, Card } from "@/components/ui";
 import { CopyCard } from "@/components/CopyCard";
 import { PrintButton } from "@/components/PrintButton";
-import { NearbyListingsTool } from "@/components/NearbyListingsTool";
+import { OpenHouseSetup } from "@/components/OpenHouseSetup";
 import Link from "next/link";
 import { site } from "@/lib/site";
 import { crushLogoPrimaryDataUri } from "@/lib/brandLogo";
@@ -288,7 +289,7 @@ const printBtnGhost =
 
 export default function OpenHouseKitPage() {
   return (
-    <>
+    <ActiveListingProvider>
       <PageHero
         eyebrow="Co-marketing · Open house"
         title={
@@ -300,20 +301,19 @@ export default function OpenHouseKitPage() {
       />
 
       <Container className="py-14">
-        {/* Nearby listings */}
-        <Eyebrow>Step 1 · Know the competition</Eyebrow>
+        <ListingPicker />
+        {/* Guided setup: property + open house details + nearby competition */}
+        <Eyebrow>Step 1 · Property &amp; details</Eyebrow>
         <h2 className="mt-4 text-3xl font-bold tracking-tight text-ink-900">
-          Every home for sale nearby
+          Set up your open house
         </h2>
         <p className="mt-3 max-w-2xl text-muted">
-          Enter your listing&apos;s address, pick a radius — 1, 5, 10, or 25
-          miles — and pull up the active homes for sale nearby from the MLS,
-          grouped by beds &amp; baths. Then hit{" "}
-          <strong>Print all on one page</strong> for a co-branded comparison
-          sheet for the sign-in table.
+          Pick a saved listing above (or fill the pieces manually), set your date
+          &amp; time, then pull up the active homes for sale nearby — grouped by
+          beds &amp; baths — for a co-branded comparison sheet.
         </p>
         <div className="mt-6">
-          <NearbyListingsTool />
+          <OpenHouseSetup />
         </div>
         <div className="mt-4 flex flex-wrap items-center gap-3">
           <Link
@@ -523,6 +523,6 @@ export default function OpenHouseKitPage() {
           </div>
         </div>
       </Container>
-    </>
+    </ActiveListingProvider>
   );
 }

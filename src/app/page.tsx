@@ -60,19 +60,18 @@ export default function Home() {
               {site.brand} · by {site.company}
             </p>
             <h1 className="mt-5 text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl">
-              Run your real estate <span className="text-gradient">marketing</span>, all in one place.
+              Your real estate business. <span className="text-gradient">One dashboard.</span>
             </h1>
             <p className="mt-6 max-w-xl text-lg text-slate-300">
-              Co-branded flyers, open house tools, and buyer &amp; seller guides — set up your
-              profile once and every tool fills in your name, photo, and logo automatically.
-              Free for partner agents.
+              Market listings. Run buyer numbers. Create content. Prep open houses. Find loan
+              programs. Earn rewards — all in one place, co-branded to you. Free for partner agents.
             </p>
             <div className="mt-8 flex flex-wrap gap-4">
               <Link href="/signup" className="inline-flex items-center rounded-full bg-crush-500 px-7 py-3.5 text-base font-semibold text-white shadow-lg shadow-crush-500/25 transition-colors hover:bg-crush-600">
-                Create your free account
+                Create Free Agent Account
               </Link>
-              <Link href="/login" className="inline-flex items-center rounded-full border border-white/20 px-7 py-3.5 text-base font-semibold text-white transition-colors hover:bg-white/10">
-                Log in
+              <Link href="#features" className="inline-flex items-center rounded-full border border-white/20 px-7 py-3.5 text-base font-semibold text-white transition-colors hover:bg-white/10">
+                Explore Realtor Tools
               </Link>
             </div>
             <p className="mt-5 text-sm text-slate-400">
@@ -134,7 +133,7 @@ export default function Home() {
       </section>
 
       {/* ───────── Features ───────── */}
-      <section className="py-20 sm:py-24">
+      <section id="features" className="scroll-mt-16 py-20 sm:py-24">
         <Container>
           <div className="mx-auto max-w-2xl text-center">
             <p className="text-sm font-semibold uppercase tracking-wider text-crush-600">The suite</p>

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { ActiveListingProvider, ListingPicker } from "@/components/ActiveListing";
 import { Container, PageHero, Button } from "@/components/ui";
 import { CopyCard } from "@/components/CopyCard";
 
@@ -43,7 +44,7 @@ const emails: { title: string; meta: string; text: string }[] = [
 
 export default function EmailTemplatesPage() {
   return (
-    <>
+    <ActiveListingProvider>
       <PageHero
         eyebrow="Co-marketing · Email"
         title={
@@ -55,6 +56,7 @@ export default function EmailTemplatesPage() {
       />
 
       <Container className="py-14">
+        <ListingPicker />
         <div className="rounded-2xl border border-border bg-surface p-5 text-sm text-muted">
           <span className="font-semibold text-ink-800">How to use:</span> tap
           Copy, paste into your email or CRM, and replace [BRACKETS]. The subject
@@ -83,6 +85,6 @@ export default function EmailTemplatesPage() {
           </div>
         </div>
       </Container>
-    </>
+    </ActiveListingProvider>
   );
 }
