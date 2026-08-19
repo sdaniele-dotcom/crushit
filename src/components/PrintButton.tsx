@@ -1,15 +1,22 @@
 "use client";
 
+import { recordUse } from "@/lib/rewards";
+
 export function PrintButton({
   html,
   label = "Print",
   className = "",
+  rewardAction,
+  rewardEvents,
 }: {
   html: string;
   label?: string;
   className?: string;
+  rewardAction?: string;
+  rewardEvents?: string[];
 }) {
   function print() {
+    if (rewardAction) void recordUse(rewardAction, { events: rewardEvents });
     const w = window.open("", "_blank", "width=850,height=1100");
     if (!w) return;
     w.document.write(html);

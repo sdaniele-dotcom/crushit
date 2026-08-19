@@ -1,17 +1,23 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
+import { recordUse } from "@/lib/rewards";
 
 export function CopyCard({
   title,
   meta,
   text,
+  rewardAction,
+  rewardEvents,
 }: {
   title: string;
   meta?: string;
   text: string;
+  rewardAction?: string;
+  rewardEvents?: string[];
 }) {
   const [copied, setCopied] = useState(false);
+  const rewarded = useRef(false);
 
   function copy() {
     navigator.clipboard
@@ -19,6 +25,10 @@ export function CopyCard({
       .then(() => {
         setCopied(true);
         setTimeout(() => setCopied(false), 1600);
+        if (rewardAction && !rewarded.current) {
+          rewarded.current = true;
+          void recordUse(rewardAction, { events: rewardEvents });
+        }
       })
       .catch(() => {});
   }

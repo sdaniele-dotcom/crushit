@@ -10,6 +10,7 @@ import {
   DEFAULT_PMI_RATE_PCT,
 } from "@/lib/calc";
 import { openBrandedPdf } from "@/lib/pdf";
+import { recordUse } from "@/lib/rewards";
 
 export function PaymentCalculator() {
   const [price, setPrice] = useState(450000);
@@ -62,6 +63,12 @@ export function PaymentCalculator() {
           ],
         },
       ],
+    });
+    void recordUse("calculator_use", {
+      events: ["financing_tool_used"],
+      relatedType: "calculator",
+      relatedId: "payment",
+      description: "Used the payment calculator",
     });
   }
 

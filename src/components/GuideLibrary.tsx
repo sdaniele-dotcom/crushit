@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { recordUse } from "@/lib/rewards";
 
 type GuideKey = "buyer" | "seller";
 
@@ -141,6 +142,12 @@ export function GuideLibrary() {
       w.document.write(html);
       w.document.close();
       w.focus();
+      void recordUse(active.key === "seller" ? "seller_guide" : "buyer_guide", {
+        events: ["marketing_piece_created"],
+        relatedType: "guide",
+        relatedId: active.key,
+        description: `Created a ${active.label}`,
+      });
       close();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong.");
