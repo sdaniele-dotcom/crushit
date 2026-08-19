@@ -13,6 +13,7 @@ export function Header() {
   const pathname = usePathname();
   const { configured, user, profile, signOut } = useAuth();
   const firstName = profile?.first_name || fullName(profile).split(" ")[0] || "Account";
+  const isAdmin = profile?.role === "admin";
 
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-ink-900/90 backdrop-blur-md">
@@ -39,6 +40,14 @@ export function Header() {
           })}
           {configured && user ? (
             <>
+              {isAdmin && (
+                <Link
+                  href="/admin"
+                  className="ml-2 rounded-full px-4 py-2 text-sm font-semibold text-slate-200 hover:text-white"
+                >
+                  Admin
+                </Link>
+              )}
               <Link
                 href="/dashboard"
                 className="ml-2 inline-flex items-center gap-2 rounded-full bg-white/10 px-4 py-2 text-sm font-semibold text-white hover:bg-white/15"
@@ -121,6 +130,11 @@ export function Header() {
                 <Link href="/dashboard" onClick={() => setOpen(false)} className="mt-2 block rounded-lg px-3 py-2.5 text-base font-medium text-white">
                   ⭐ {profile?.current_stars ?? 0} · Dashboard
                 </Link>
+                {isAdmin && (
+                  <Link href="/admin" onClick={() => setOpen(false)} className="block rounded-lg px-3 py-2.5 text-base font-medium text-slate-200 hover:bg-white/5">
+                    Admin
+                  </Link>
+                )}
                 <button
                   type="button"
                   onClick={() => {
