@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Container, PageHero, Button, Eyebrow } from "@/components/ui";
+import { LoanFinder } from "@/components/LoanFinder";
 import { site } from "@/lib/site";
 import {
   loanPrograms,
@@ -29,6 +30,11 @@ export default function LoanProgramsPage() {
       />
 
       <Container className="py-14">
+        {/* Find a loan for my buyer */}
+        <div className="mb-12">
+          <LoanFinder />
+        </div>
+
         {/* Quick-compare table */}
         <div className="overflow-x-auto rounded-2xl border border-border">
           <table className="w-full min-w-[640px] text-left text-sm">
