@@ -10,15 +10,6 @@ import { fullName } from "@/lib/profile";
 import { levelProgress } from "@/lib/levels";
 import { useLevels } from "@/lib/useLevels";
 
-const QUICK = [
-  { label: "Create a flyer", href: "/co-brand", icon: "📄" },
-  { label: "Open House Kit", href: "/co-marketing/open-house-kit", icon: "🏡" },
-  { label: "Buyer & seller guides", href: "/resources#guides", icon: "📘" },
-  { label: "Social & video", href: "/co-marketing/social-kit", icon: "🎬" },
-  { label: "Loan programs", href: "/loan-programs", icon: "🏦" },
-  { label: "Calculators", href: "/calculators", icon: "🧮" },
-];
-
 function greeting() {
   const h = new Date().getHours();
   if (h < 12) return "Good morning";
@@ -100,17 +91,6 @@ function DashboardInner() {
               <div className="h-full rounded-full bg-crush-500 transition-all" style={{ width: `${lp.pct}%` }} />
             </div>
           </div>
-        </div>
-
-        {/* Quick actions */}
-        <h2 className="mt-10 text-sm font-bold uppercase tracking-wide text-crush-700">Quick actions</h2>
-        <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {QUICK.map((q) => (
-            <Link key={q.href} href={q.href} className="card-hover flex items-center gap-4 rounded-2xl border border-border bg-white p-5">
-              <span className="text-2xl" aria-hidden>{q.icon}</span>
-              <span className="font-semibold text-ink-900">{q.label}</span>
-            </Link>
-          ))}
         </div>
 
         <div className="mt-10 grid gap-8 lg:grid-cols-2">
