@@ -1,13 +1,24 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import Link from "next/link";
 import { AuthShell } from "@/components/auth/AuthShell";
 import { getSupabase } from "@/lib/supabase";
+import type { EmailOtpType } from "@supabase/supabase-js";
 
-/** Landing page for email-confirmation / magic links. Exchanges the code for a
- *  session (PKCE) then forwards to the dashboard. */
+/**
+ * Landing page for email-confirmation / magic / recovery links.
+ *
+ * Handles every shape of link Supabase can send, so confirmation works no
+ * matter how the email template is configured or which device opens it:
+ *   1. ?error=... / #error=...        → show the real reason (expired, invalid…)
+ *   2. ?token_hash=...&type=...       → verifyOtp (cross-device safe, no PKCE verifier needed)
+ *   3. ?code=...                      → exchangeCodeForSession (PKCE, same-browser)
+ *   4. #access_token=...              → detectSessionInUrl already set the session
+ */
 export default function AuthCallbackPage() {
   const [msg, setMsg] = useState("Signing you in…");
+  const [failed, setFailed] = useState(false);
 
   useEffect(() => {
     const sb = getSupabase();
@@ -15,27 +26,82 @@ export default function AuthCallbackPage() {
       window.location.assign("/");
       return;
     }
-    const url = window.location.href;
-    const finish = () => window.location.assign("/dashboard");
-    if (url.includes("code=")) {
-      sb.auth
-        .exchangeCodeForSession(url)
-        .then(({ error }) => {
-          if (error) setMsg(error.message);
-          else finish();
-        })
-        .catch(() => setMsg("Could not complete sign-in. Try logging in."));
-    } else {
-      // detectSessionInUrl handles hash-based tokens; give it a moment.
-      setTimeout(finish, 600);
+
+    const query = new URLSearchParams(window.location.search);
+    // Some links put params in the URL hash (#…) instead of the query string.
+    const hash = new URLSearchParams(window.location.hash.replace(/^#/, ""));
+    const get = (k: string) => query.get(k) || hash.get(k);
+
+    const fail = (m: string) => {
+      setMsg(m);
+      setFailed(true);
+    };
+    const finish = () => window.location.assign("/dashboard/");
+
+    // 1) The link itself carried an error (expired, already used, invalid).
+    const errDesc = get("error_description") || get("error");
+    if (errDesc) {
+      fail(decodeURIComponent(errDesc).replace(/\+/g, " "));
+      return;
     }
+
+    const isRecovery = get("type") === "recovery";
+    const afterAuth = () => {
+      if (isRecovery) window.location.assign("/update-password/");
+      else finish();
+    };
+
+    (async () => {
+      const tokenHash = get("token_hash");
+      const type = get("type") as EmailOtpType | null;
+      const code = get("code");
+
+      try {
+        if (tokenHash && type) {
+          // Cross-device safe: no PKCE code_verifier required.
+          const { error } = await sb.auth.verifyOtp({ type, token_hash: tokenHash });
+          if (error) return fail(error.message);
+          return afterAuth();
+        }
+
+        if (code) {
+          const { error } = await sb.auth.exchangeCodeForSession(code);
+          if (error) return fail(error.message);
+          return afterAuth();
+        }
+
+        // 4) Hash-based tokens: detectSessionInUrl consumes them asynchronously.
+        for (let i = 0; i < 10; i++) {
+          const { data } = await sb.auth.getSession();
+          if (data.session) return afterAuth();
+          await new Promise((r) => setTimeout(r, 250));
+        }
+        fail("This sign-in link is invalid or has expired. Request a new one below.");
+      } catch {
+        fail("Could not complete sign-in. Please request a new link.");
+      }
+    })();
   }, []);
 
   return (
-    <AuthShell title="One moment…" subtitle={msg}>
-      <div className="flex justify-center py-4">
-        <span className="h-8 w-8 animate-spin rounded-full border-2 border-crush-500 border-t-transparent" />
-      </div>
+    <AuthShell title={failed ? "Sign-in link problem" : "One moment…"} subtitle={msg}>
+      {failed ? (
+        <div className="grid gap-3">
+          <Link
+            href="/login/"
+            className="rounded-full bg-crush-500 px-5 py-3 text-center text-sm font-semibold text-white hover:bg-crush-600"
+          >
+            Go to log in
+          </Link>
+          <Link href="/signup/" className="text-center text-sm font-semibold text-crush-600">
+            Create a new account
+          </Link>
+        </div>
+      ) : (
+        <div className="flex justify-center py-4">
+          <span className="h-8 w-8 animate-spin rounded-full border-2 border-crush-500 border-t-transparent" />
+        </div>
+      )}
     </AuthShell>
   );
 }
