@@ -223,7 +223,7 @@ export default function ResourcesPage() {
               of buyers and sellers all year long.
             </p>
             <div className="mt-6">
-              <Button href="/contact">Start co-marketing</Button>
+              <Button href="/about/#contact">Start co-marketing</Button>
             </div>
           </div>
           <ol className="space-y-5">

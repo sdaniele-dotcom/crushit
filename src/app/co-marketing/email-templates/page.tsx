@@ -76,7 +76,7 @@ export default function EmailTemplatesPage() {
             pre-approval.
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-3">
-            <Button href="/contact">Connect a client</Button>
+            <Button href="/about/#contact">Connect a client</Button>
             <Button href="/resources" variant="secondary">
               Back to toolkit
             </Button>

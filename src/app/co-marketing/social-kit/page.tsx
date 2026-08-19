@@ -145,7 +145,7 @@ export default function SocialKitPage() {
             ))}
           </div>
           <div className="mt-8 flex flex-wrap gap-3">
-            <Button href="/contact">Request free content</Button>
+            <Button href="/about/#contact">Request free content</Button>
             <Button href="/co-brand" variant="secondary">
               Make a flyer now
             </Button>
