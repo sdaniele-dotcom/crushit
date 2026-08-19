@@ -60,7 +60,10 @@ export default function SignupPage() {
     }
     setBusy(false);
     if (data.session) {
-      window.location.assign("/dashboard");
+      // Signed in immediately (email confirmation is off). Start onboarding at
+      // the profile so they add their headshot/logo and earn the +10 — after
+      // which every co-branded tool autofills from it.
+      window.location.assign("/profile/");
     } else {
       setSent(true); // email confirmation required
     }
