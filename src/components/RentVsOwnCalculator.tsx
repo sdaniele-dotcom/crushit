@@ -10,6 +10,7 @@ import {
 } from "@/lib/rentVsOwn";
 import { site } from "@/lib/site";
 import { crushLogoPrimaryDataUri } from "@/lib/brandLogo";
+import { recordUse } from "@/lib/rewards";
 
 const HORIZONS = [5, 10, 15, 20, 30];
 const money0 = (n: number) => currency(Math.round(n));
@@ -140,6 +141,12 @@ export function RentVsOwnCalculator() {
       });
       setTimeout(go, 2000);
     }
+    void recordUse("calculator_use", {
+      events: ["financing_tool_used"],
+      relatedType: "calculator",
+      relatedId: "rent-vs-own",
+      description: "Used the rent vs. own calculator",
+    });
   }
 
   return (

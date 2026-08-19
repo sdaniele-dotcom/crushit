@@ -56,6 +56,26 @@ export async function awardStars(
   return res;
 }
 
+/**
+ * Convenience for tool usage: award stars for `action` and log any extra
+ * activity `events` (used to drive achievements). Fire-and-forget safe.
+ */
+export async function recordUse(
+  action: string,
+  opts: {
+    events?: string[];
+    dedupeKey?: string;
+    relatedType?: string;
+    relatedId?: string;
+    description?: string;
+    silent?: boolean;
+  } = {},
+): Promise<void> {
+  const { events = [], ...award } = opts;
+  await awardStars(action, award);
+  for (const ev of events) await logActivity(ev, { action });
+}
+
 /** Log a platform activity event (used for achievements + admin analytics). */
 export async function logActivity(
   event: string,

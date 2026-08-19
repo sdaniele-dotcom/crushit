@@ -12,6 +12,7 @@ import {
   DEFAULT_PMI_RATE_PCT,
 } from "@/lib/calc";
 import { openBrandedPdf } from "@/lib/pdf";
+import { recordUse } from "@/lib/rewards";
 
 export function AffordabilityCalculator() {
   const [income, setIncome] = useState(8500); // monthly gross
@@ -78,6 +79,12 @@ export function AffordabilityCalculator() {
           ],
         },
       ],
+    });
+    void recordUse("calculator_use", {
+      events: ["financing_tool_used"],
+      relatedType: "calculator",
+      relatedId: "affordability",
+      description: "Used the affordability calculator",
     });
   }
 

@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Field, ResultCard, Row } from "./fields";
 import { currency, monthlyPI } from "@/lib/calc";
 import { openBrandedPdf } from "@/lib/pdf";
+import { recordUse } from "@/lib/rewards";
 
 export function RefinanceCalculator() {
   const [balance, setBalance] = useState(360000);
@@ -60,6 +61,12 @@ export function RefinanceCalculator() {
       disclaimer:
         "Compares principal & interest only and is an estimate for educational purposes — not a commitment to lend or a rate quote. A full refinance analysis factors in escrow, cash-out, taxes, and how long you plan to stay. Contact " +
         "Crush Mortgage for personalized numbers. Equal Housing Opportunity.",
+    });
+    void recordUse("calculator_use", {
+      events: ["financing_tool_used"],
+      relatedType: "calculator",
+      relatedId: "refinance",
+      description: "Used the refinance calculator",
     });
   }
 

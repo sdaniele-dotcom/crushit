@@ -63,7 +63,7 @@ export default function VideoScriptsPage() {
 
         <div className="mt-8 grid gap-5 lg:grid-cols-2">
           {scripts.map((s) => (
-            <CopyCard key={s.title} title={s.title} meta={s.meta} text={s.text} />
+            <CopyCard key={s.title} title={s.title} meta={s.meta} text={s.text} rewardAction="video_script" rewardEvents={["content_piece_created"]} />
           ))}
         </div>
 

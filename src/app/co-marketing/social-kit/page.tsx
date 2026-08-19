@@ -90,7 +90,7 @@ export default function SocialKitPage() {
 
         <div className="mt-8 grid gap-5 md:grid-cols-2">
           {captions.map((c) => (
-            <CopyCard key={c.title} title={c.title} meta={c.meta} text={c.text} />
+            <CopyCard key={c.title} title={c.title} meta={c.meta} text={c.text} rewardAction="social_content" rewardEvents={["content_piece_created"]} />
           ))}
         </div>
 

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { site } from "@/lib/site";
 import { crushLogoPrimaryDataUri } from "@/lib/brandLogo";
+import { recordUse } from "@/lib/rewards";
 
 type Listing = {
   listing_id: string;
@@ -233,7 +234,7 @@ export function NearbyListingsTool() {
             </p>
             <button
               type="button"
-              onClick={() =>
+              onClick={() => {
                 printWindow(
                   buildPrintHtml(
                     [result.subject.street, result.subject.city]
@@ -243,7 +244,13 @@ export function NearbyListingsTool() {
                     result.listings.length,
                     groups,
                   ),
-                )
+                );
+                void recordUse("open_house_kit", {
+                  events: ["open_house_piece_created", "marketing_piece_created"],
+                  relatedType: "open_house",
+                  relatedId: "nearby_sheet",
+                });
+              }
               }
               className="inline-flex items-center gap-2 rounded-full bg-crush-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-crush-500/20 transition-colors hover:bg-crush-600"
             >

@@ -352,6 +352,8 @@ export default function OpenHouseKitPage() {
               html={signInSheetHtml}
               label="Print sign-in sheet"
               className={printBtnClass}
+              rewardAction="open_house_kit"
+              rewardEvents={["open_house_piece_created", "marketing_piece_created"]}
             />
           </div>
 
