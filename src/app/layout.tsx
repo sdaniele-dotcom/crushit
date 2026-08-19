@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import { Header } from "@/components/Header";
-import { Footer } from "@/components/Footer";
-import { ChatWidget } from "@/components/ChatWidget";
+import { AppFrame } from "@/components/AppFrame";
 import { AuthProvider } from "@/components/auth/AuthProvider";
 import { Toaster } from "@/components/ui/Toaster";
 import { site } from "@/lib/site";
@@ -58,10 +56,7 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
         <AuthProvider>
-          <Header />
-          <main className="flex-1">{children}</main>
-          <Footer />
-          <ChatWidget />
+          <AppFrame>{children}</AppFrame>
           <Toaster />
         </AuthProvider>
       </body>

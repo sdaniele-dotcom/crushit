@@ -22,22 +22,23 @@ export function Header() {
 
         {/* Desktop nav */}
         <nav className="hidden items-center gap-1 md:flex">
-          {navItems.map((item) => {
-            const active = pathname === item.href;
-            return (
-              <Link
-                key={item.href}
-                href={item.href}
-                className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
-                  active
-                    ? "bg-white/10 text-white"
-                    : "text-slate-300 hover:text-white"
-                }`}
-              >
-                {item.label}
-              </Link>
-            );
-          })}
+          {(!configured || user) &&
+            navItems.map((item) => {
+              const active = pathname === item.href;
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+                    active
+                      ? "bg-white/10 text-white"
+                      : "text-slate-300 hover:text-white"
+                  }`}
+                >
+                  {item.label}
+                </Link>
+              );
+            })}
           {configured && user ? (
             <>
               {isAdmin && (
@@ -115,16 +116,17 @@ export function Header() {
       {open && (
         <nav className="border-t border-white/10 bg-ink-900 md:hidden">
           <div className="mx-auto max-w-6xl px-5 py-3 sm:px-8">
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                onClick={() => setOpen(false)}
-                className="block rounded-lg px-3 py-2.5 text-base font-medium text-slate-200 hover:bg-white/5"
-              >
-                {item.label}
-              </Link>
-            ))}
+            {(!configured || user) &&
+              navItems.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  onClick={() => setOpen(false)}
+                  className="block rounded-lg px-3 py-2.5 text-base font-medium text-slate-200 hover:bg-white/5"
+                >
+                  {item.label}
+                </Link>
+              ))}
             {configured && user ? (
               <>
                 <Link href="/dashboard" onClick={() => setOpen(false)} className="mt-2 block rounded-lg px-3 py-2.5 text-base font-medium text-white">
