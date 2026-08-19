@@ -12,9 +12,17 @@ import {
 import { openBrandedPdf } from "@/lib/pdf";
 import { recordUse } from "@/lib/rewards";
 
+function qp(name: string): number | null {
+  if (typeof window === "undefined") return null;
+  const v = new URLSearchParams(window.location.search).get(name);
+  if (v == null || v.trim() === "") return null;
+  const n = Number(v);
+  return Number.isFinite(n) ? n : null;
+}
+
 export function PaymentCalculator() {
-  const [price, setPrice] = useState(450000);
-  const [downPct, setDownPct] = useState(10);
+  const [price, setPrice] = useState(() => qp("price") ?? 450000);
+  const [downPct, setDownPct] = useState(() => qp("downPct") ?? 10);
   const [ratePct, setRatePct] = useState(6.5);
   const [years, setYears] = useState(30);
   const [taxRatePct, setTaxRatePct] = useState(DEFAULT_TAX_RATE_PCT);

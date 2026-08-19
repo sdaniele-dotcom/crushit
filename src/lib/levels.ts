@@ -6,10 +6,11 @@
 export type Level = { name: string; min: number };
 
 export const LEVELS: Level[] = [
-  { name: "Starter", min: 0 },
-  { name: "Pro", min: 100 },
-  { name: "Elite", min: 250 },
-  { name: "Crush Club", min: 500 },
+  { name: "Rookie", min: 0 },
+  { name: "Rising Agent", min: 100 },
+  { name: "Gold Agent", min: 250 },
+  { name: "Platinum Agent", min: 500 },
+  { name: "CRUSH IT Elite", min: 1000 },
 ];
 
 export function level_name(lifetime: number, levels: Level[] = LEVELS): string {
