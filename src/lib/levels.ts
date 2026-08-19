@@ -12,15 +12,15 @@ export const LEVELS: Level[] = [
   { name: "Crush Club", min: 500 },
 ];
 
-export function level_name(lifetime: number): string {
-  let name = LEVELS[0].name;
-  for (const l of LEVELS) if (lifetime >= l.min) name = l.name;
+export function level_name(lifetime: number, levels: Level[] = LEVELS): string {
+  let name = levels[0].name;
+  for (const l of [...levels].sort((a, b) => a.min - b.min)) if (lifetime >= l.min) name = l.name;
   return name;
 }
 
 /** Current level, next level, and progress toward it. */
-export function levelProgress(lifetime: number) {
-  const sorted = [...LEVELS].sort((a, b) => a.min - b.min);
+export function levelProgress(lifetime: number, levels: Level[] = LEVELS) {
+  const sorted = [...levels].sort((a, b) => a.min - b.min);
   let current = sorted[0];
   let next: Level | null = null;
   for (let i = 0; i < sorted.length; i++) {

@@ -8,6 +8,7 @@ import { useAuth } from "@/components/auth/AuthProvider";
 import { getSupabase } from "@/lib/supabase";
 import { fullName } from "@/lib/profile";
 import { levelProgress } from "@/lib/levels";
+import { useLevels } from "@/lib/useLevels";
 
 const QUICK = [
   { label: "Create a flyer", href: "/co-brand", icon: "📄" },
@@ -67,9 +68,10 @@ function DashboardInner() {
     })();
   }, [user]);
 
+  const levels = useLevels();
   const name = profile?.first_name || fullName(profile) || "there";
   const lifetime = profile?.lifetime_stars ?? 0;
-  const lp = levelProgress(lifetime);
+  const lp = levelProgress(lifetime, levels);
 
   return (
     <>
@@ -171,8 +173,10 @@ function DashboardInner() {
           })}
         </div>
 
-        <div className="mt-10">
+        <div className="mt-10 flex flex-wrap gap-3">
           <Link href="/profile" className="rounded-full bg-crush-500 px-6 py-3 text-sm font-semibold text-white hover:bg-crush-600">Edit my profile</Link>
+          <Link href="/rewards" className="rounded-full border border-border bg-white px-6 py-3 text-sm font-semibold text-ink-900 hover:bg-surface-2">My rewards</Link>
+          <Link href="/leaderboard" className="rounded-full border border-border bg-white px-6 py-3 text-sm font-semibold text-ink-900 hover:bg-surface-2">Leaderboard</Link>
         </div>
       </Container>
     </>
