@@ -55,7 +55,6 @@ export const navItems: NavItem[] = [
   { label: "Rent vs Own", href: "/rent-vs-own" },
   { label: "Loan Programs", href: "/loan-programs" },
   { label: "Resources", href: "/resources" },
-  { label: "Team", href: "/team" },
-  { label: "Contact", href: "/contact" },
+  { label: "About", href: "/about" },
   { label: "Leaderboard", href: "/leaderboard" },
 ];

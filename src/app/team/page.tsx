@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Image from "next/image";
+import Link from "next/link";
 import { Container, PageHero, Button, Card } from "@/components/ui";
 import { team } from "@/lib/data";
 import { site } from "@/lib/site";
@@ -34,7 +35,8 @@ export default function TeamPage() {
       />
 
       <Container className="py-14">
-        <div className="grid gap-6 sm:grid-cols-2">
+        <Link href="/about" className="text-sm font-semibold text-crush-600">← About</Link>
+        <div className="mt-6 grid gap-6 sm:grid-cols-2">
           {team.map((m) => {
             const phone = m.phone || site.phone;
             const email = m.email || site.email;

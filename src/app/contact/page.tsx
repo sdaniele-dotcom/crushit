@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { Container, PageHero, Card } from "@/components/ui";
 import { ContactForm } from "@/components/ContactForm";
 import { site } from "@/lib/site";
@@ -24,7 +25,8 @@ export default function ContactPage() {
       />
 
       <Container className="py-14">
-        <div className="grid gap-10 lg:grid-cols-[1.3fr_1fr]">
+        <Link href="/about" className="text-sm font-semibold text-crush-600">← About</Link>
+        <div className="mt-6 grid gap-10 lg:grid-cols-[1.3fr_1fr]">
           {/* Form */}
           <Card className="order-2 lg:order-1">
             <h2 className="text-2xl font-bold text-ink-900">
