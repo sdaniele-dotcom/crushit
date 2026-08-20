@@ -41,8 +41,8 @@ function ProgramsInner() {
       active: sel.active ?? true, sort: sel.sort ?? 0,
     };
     const { error } = sel.id
-      ? await sb.from("loan_programs").update(row).eq("id", sel.id)
-      : await sb.from("loan_programs").insert(row);
+      ? await sb.from("crush_loan_programs").update(row).eq("id", sel.id)
+      : await sb.from("crush_loan_programs").insert(row);
     if (error) { setMsg(error.message); return; }
     setMsg("Saved.");
     setSel(null);
@@ -52,7 +52,7 @@ function ProgramsInner() {
   async function del(id: string) {
     const sb = getSupabase();
     if (!sb) return;
-    await sb.from("loan_programs").delete().eq("id", id);
+    await sb.from("crush_loan_programs").delete().eq("id", id);
     setSel(null);
     load();
   }
