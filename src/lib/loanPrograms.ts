@@ -43,10 +43,14 @@ export type BuyerAnswers = {
   firstTime: boolean;
   veteran: boolean;
   selfEmployed: boolean;
+  medical: boolean; // doctor/dentist — for physician programs
   propertyType: string; // single-family | condo | townhome | multi-unit
   occupancy: string; // primary | second | investment
   income?: number;
 };
+
+// Programs that specifically require self-employment to make sense.
+const SELF_EMPLOYED_ONLY = ["bank-statement", "non-qm-self-employed", "self-employed-fha"];
 
 const CREDIT_NUM: Record<string, number> = {
   "740+": 760, "680-739": 700, "620-679": 640, "580-619": 590, "<580": 550,
@@ -62,36 +66,30 @@ export function matchPrograms(a: BuyerAnswers, programs: LoanProgramRow[]): Matc
 
   const out: Match[] = [];
   for (const p of programs) {
-    // Hard filters — clearly not a fit.
+    // HARD filters — a program only appears if it matches what they entered.
     if (p.veteran_only && !a.veteran) continue;
     if (p.occupancy.length && !p.occupancy.includes(a.occupancy)) continue;
     if (p.property_types.length && !p.property_types.includes(a.propertyType)) continue;
+    if (p.min_credit != null && credit < p.min_credit) continue;                 // credit too low
+    if (p.min_down_pct != null && downPct + 0.05 < p.min_down_pct) continue;      // not enough down
+    if (SELF_EMPLOYED_ONLY.includes(p.slug) && !a.selfEmployed) continue;         // self-employed products
+    if (p.slug === "doctor" && !a.medical) continue;                             // physician program
 
     const reasons: string[] = [];
-    const considerations: string[] = [];
     let score = 100 - p.sort;
 
-    if (p.min_credit == null || credit >= p.min_credit) {
-      if (p.min_credit != null) reasons.push(`Your credit range fits the ~${p.min_credit}+ typical minimum`);
-    } else {
-      considerations.push(`Usually looks for around ${p.min_credit}+ credit`);
-      score -= 25;
-    }
+    if (p.min_down_pct === 0) reasons.push("No down payment required");
+    else if (p.min_down_pct != null && p.min_down_pct <= 3.5) reasons.push(`Low down payment (${p.min_down_pct}%)`);
+    if (p.min_credit != null) reasons.push(`Fits your credit (${p.min_credit}+ typical minimum)`);
 
-    if (p.min_down_pct == null || downPct >= p.min_down_pct) {
-      if (p.min_down_pct != null && p.min_down_pct <= 3.5) reasons.push("Low down payment friendly");
-    } else {
-      considerations.push(`Typically needs about ${p.min_down_pct}% down (you entered ~${downPct.toFixed(1)}%)`);
-      score -= 15;
-    }
-
-    if (a.veteran && p.slug === "va") { reasons.push("You indicated military service — this is the veterans' benefit"); score += 40; }
+    if (a.veteran && p.slug === "va") { reasons.push("Matches your military service"); score += 40; }
+    if (a.medical && p.slug === "doctor") { reasons.push("Physician program — matches the buyer's profession"); score += 35; }
     if (a.selfEmployed && p.self_employed_ok) { reasons.push("Built for self-employed / 1099 income"); score += 25; }
-    if (a.firstTime && p.first_time_friendly) { reasons.push("First-time-buyer friendly"); score += 10; }
     if (a.occupancy === "investment" && p.slug === "dscr") { reasons.push("Qualifies on the property's rental income"); score += 20; }
+    if (a.firstTime && p.first_time_friendly) { reasons.push("First-time-buyer friendly"); score += 10; }
 
-    if (reasons.length === 0) reasons.push("Fits your basic scenario — worth a closer look");
-    out.push({ program: p, reasons, considerations, score });
+    if (reasons.length === 0) reasons.push("Fits your credit, down payment, and property");
+    out.push({ program: p, reasons, considerations: [], score });
   }
   return out.sort((x, y) => y.score - x.score);
 }
