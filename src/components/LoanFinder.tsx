@@ -21,7 +21,7 @@ export function LoanFinder() {
   const [open, setOpen] = useState(false);
   const [a, setA] = useState<BuyerAnswers>({
     creditRange: "680-739", price: 0, down: 0, firstTime: false, veteran: false,
-    selfEmployed: false, propertyType: "single-family", occupancy: "primary",
+    selfEmployed: false, medical: false, propertyType: "single-family", occupancy: "primary",
   });
   const [results, setResults] = useState<Match[] | null>(null);
   const [busy, setBusy] = useState(false);
@@ -92,7 +92,7 @@ export function LoanFinder() {
             </label>
           </div>
           <div className="flex flex-wrap gap-4">
-            {([["firstTime", "First-time buyer"], ["veteran", "Veteran / active-duty"], ["selfEmployed", "Self-employed / 1099"]] as const).map(([k, label]) => (
+            {([["firstTime", "First-time buyer"], ["veteran", "Veteran / active-duty"], ["selfEmployed", "Self-employed / 1099"], ["medical", "Doctor / dentist"]] as const).map(([k, label]) => (
               <label key={k} className="flex items-center gap-2 text-sm text-ink-800">
                 <input type="checkbox" className="h-4 w-4 accent-crush-500" checked={a[k]} onChange={(e) => set(k, e.target.checked)} />
                 {label}
