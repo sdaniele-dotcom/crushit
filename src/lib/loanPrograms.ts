@@ -103,14 +103,25 @@ export function splitMatches(matches: Match[]): { standard: Match[]; exclusive: 
   return { standard: standard.slice(0, 4), exclusive: exclusive.slice(0, 4) };
 }
 
-/** Save a buyer scenario (loan-finder submission) for the logged-in agent. */
-export async function saveScenario(a: BuyerAnswers, matchedSlugs: string[], notes?: string): Promise<boolean> {
+export type AgentContact = { name?: string | null; email?: string | null; phone?: string | null };
+
+/** Save a buyer scenario (loan-finder submission) for the logged-in agent.
+ *  The agent's contact is snapshotted so the loan-officer email has it. */
+export async function saveScenario(
+  a: BuyerAnswers,
+  matchedSlugs: string[],
+  agent?: AgentContact,
+  notes?: string,
+): Promise<boolean> {
   const sb = getSupabase();
   if (!sb) return false;
   const { data: { user } } = await sb.auth.getUser();
   if (!user) return false;
   const { error } = await sb.from("buyer_scenarios").insert({
     user_id: user.id,
+    agent_name: agent?.name ?? null,
+    agent_email: agent?.email ?? user.email ?? null,
+    agent_phone: agent?.phone ?? null,
     credit_range: a.creditRange,
     price: a.price,
     down: a.down,
