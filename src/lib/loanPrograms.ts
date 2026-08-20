@@ -30,7 +30,7 @@ export type LoanProgramRow = {
 export async function fetchLoanPrograms(activeOnly = true): Promise<LoanProgramRow[]> {
   const sb = getSupabase();
   if (!sb) return [];
-  let q = sb.from("loan_programs").select("*").order("sort");
+  let q = sb.from("crush_loan_programs").select("*").order("sort");
   if (activeOnly) q = q.eq("active", true);
   const { data } = await q;
   return (data as LoanProgramRow[]) ?? [];
