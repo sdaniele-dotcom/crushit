@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { fetchLoanPrograms, matchPrograms, saveScenario, type BuyerAnswers, type Match } from "@/lib/loanPrograms";
+import { fetchLoanPrograms, matchPrograms, splitMatches, saveScenario, type BuyerAnswers, type Match } from "@/lib/loanPrograms";
 import { recordUse } from "@/lib/rewards";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { toast } from "@/lib/toast";
@@ -100,29 +100,27 @@ export function LoanFinder() {
         </form>
       )}
 
-      {results && (
+      {results && (() => {
+        const { standard, exclusive } = splitMatches(results);
+        return (
         <div className="mt-6">
           <h3 className="text-sm font-bold uppercase tracking-wide text-crush-700">Programs that may be worth exploring</h3>
           {results.length === 0 && <p className="mt-3 text-sm text-muted">No clear matches from the answers given — a quick chat with a loan officer is the best next step.</p>}
           <div className="mt-3 grid gap-3 sm:grid-cols-2">
-            {results.map((m) => (
-              <div key={m.program.id} className="rounded-2xl border border-border bg-white p-5">
-                <div className="flex items-center justify-between gap-2">
-                  <p className="font-bold text-ink-900">{m.program.name}</p>
-                  {m.program.category && <span className="rounded-full bg-surface-2 px-2.5 py-1 text-xs font-semibold text-muted">{m.program.category}</span>}
-                </div>
-                {m.program.tagline && <p className="mt-0.5 text-sm text-muted">{m.program.tagline}</p>}
-                <ul className="mt-3 space-y-1 text-sm text-ink-800">
-                  {m.reasons.map((r, i) => <li key={i} className="flex gap-2"><span className="text-crush-500">✓</span> {r}</li>)}
-                </ul>
-                {m.considerations.length > 0 && (
-                  <ul className="mt-2 space-y-1 text-xs text-muted">
-                    {m.considerations.map((c, i) => <li key={i} className="flex gap-2"><span>•</span> {c}</li>)}
-                  </ul>
-                )}
-              </div>
-            ))}
+            {standard.map((m) => <ProgramCard key={m.program.id} m={m} />)}
           </div>
+
+          {exclusive.length > 0 && (
+            <div className="mt-6">
+              <div className="flex items-center gap-2">
+                <span className="rounded-full bg-crush-500 px-2.5 py-1 text-xs font-bold text-white">⭐ Exclusive</span>
+                <h3 className="text-sm font-bold uppercase tracking-wide text-crush-700">Exclusive Crush Mortgage programs to ask about</h3>
+              </div>
+              <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                {exclusive.map((m) => <ProgramCard key={m.program.id} m={m} exclusive />)}
+              </div>
+            </div>
+          )}
 
           <div className="mt-5 flex flex-wrap items-center gap-3">
             <button type="button" onClick={send} disabled={sent} className="rounded-full bg-ink-900 px-6 py-3 text-sm font-semibold text-white hover:bg-ink-800 disabled:opacity-60">
@@ -134,6 +132,29 @@ export function LoanFinder() {
             Informational only. This does not confirm eligibility, rates, or approval — a licensed Crush Mortgage loan officer reviews every scenario before anything is final.
           </p>
         </div>
+        );
+      })()}
+    </div>
+  );
+}
+
+function ProgramCard({ m, exclusive = false }: { m: Match; exclusive?: boolean }) {
+  return (
+    <div className={`rounded-2xl border bg-white p-5 ${exclusive ? "border-crush-300 ring-1 ring-crush-100" : "border-border"}`}>
+      <div className="flex items-center justify-between gap-2">
+        <p className="font-bold text-ink-900">{m.program.name}</p>
+        {m.program.category && (
+          <span className={`rounded-full px-2.5 py-1 text-xs font-semibold ${exclusive ? "bg-crush-500 text-white" : "bg-surface-2 text-muted"}`}>{m.program.category}</span>
+        )}
+      </div>
+      {m.program.tagline && <p className="mt-0.5 text-sm text-muted">{m.program.tagline}</p>}
+      <ul className="mt-3 space-y-1 text-sm text-ink-800">
+        {m.reasons.map((r, i) => <li key={i} className="flex gap-2"><span className="text-crush-500">✓</span> {r}</li>)}
+      </ul>
+      {m.considerations.length > 0 && (
+        <ul className="mt-2 space-y-1 text-xs text-muted">
+          {m.considerations.map((c, i) => <li key={i} className="flex gap-2"><span>•</span> {c}</li>)}
+        </ul>
       )}
     </div>
   );
