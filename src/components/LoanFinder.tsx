@@ -4,6 +4,7 @@ import { useState } from "react";
 import { fetchLoanPrograms, matchPrograms, splitMatches, saveScenario, type BuyerAnswers, type Match } from "@/lib/loanPrograms";
 import { recordUse } from "@/lib/rewards";
 import { useAuth } from "@/components/auth/AuthProvider";
+import { fullName } from "@/lib/profile";
 import { toast } from "@/lib/toast";
 
 const inp = "w-full rounded-xl border border-border bg-white px-3.5 py-2.5 text-sm outline-none focus:border-crush-400 focus:ring-2 focus:ring-crush-100";
@@ -16,7 +17,7 @@ const OCCUPANCY = ["primary", "second", "investment"];
 function num(v: string): number { return parseFloat(v.replace(/[^\d.]/g, "")) || 0; }
 
 export function LoanFinder() {
-  const { user } = useAuth();
+  const { user, profile } = useAuth();
   const [open, setOpen] = useState(false);
   const [a, setA] = useState<BuyerAnswers>({
     creditRange: "680-739", price: 0, down: 0, firstTime: false, veteran: false,
@@ -42,7 +43,11 @@ export function LoanFinder() {
   async function send() {
     if (!results) return;
     if (!user) { toast({ emoji: "🔒", title: "Log in to send", body: "Create a free account to send scenarios to Crush Mortgage." }); return; }
-    const ok = await saveScenario(a, results.map((r) => r.program.slug));
+    const ok = await saveScenario(a, results.map((r) => r.program.slug), {
+      name: fullName(profile),
+      email: profile?.email ?? user.email,
+      phone: profile?.phone,
+    });
     if (ok) { setSent(true); toast({ emoji: "📨", title: "Scenario sent to Crush Mortgage", body: "A loan officer will follow up with you." }); }
   }
 
