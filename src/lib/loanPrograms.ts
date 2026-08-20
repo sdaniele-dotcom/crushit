@@ -93,7 +93,14 @@ export function matchPrograms(a: BuyerAnswers, programs: LoanProgramRow[]): Matc
     if (reasons.length === 0) reasons.push("Fits your basic scenario — worth a closer look");
     out.push({ program: p, reasons, considerations, score });
   }
-  return out.sort((x, y) => y.score - x.score).slice(0, 4);
+  return out.sort((x, y) => y.score - x.score);
+}
+
+/** Split matches into standard programs and exclusive/specialty ones. */
+export function splitMatches(matches: Match[]): { standard: Match[]; exclusive: Match[] } {
+  const exclusive = matches.filter((m) => (m.program.category ?? "").toLowerCase() === "exclusive");
+  const standard = matches.filter((m) => (m.program.category ?? "").toLowerCase() !== "exclusive");
+  return { standard: standard.slice(0, 4), exclusive: exclusive.slice(0, 4) };
 }
 
 /** Save a buyer scenario (loan-finder submission) for the logged-in agent. */
