@@ -36,7 +36,6 @@ const QUICK_ACTIONS = [
   { label: "Build Open House Kit", desc: "Sign-in, invites & follow-ups", icon: "🏡", href: "/co-marketing/open-house-kit", tone: "from-ink-800 to-ink-900" },
   { label: "Run Buyer Payment", desc: "Mortgage & affordability", icon: "🧮", href: "/calculators", tone: "from-sky-500 to-sky-600" },
   { label: "Find a Loan Program", desc: "Match a buyer to a program", icon: "🏦", href: "/loan-programs", tone: "from-emerald-500 to-emerald-600" },
-  { label: "Rent vs Own", desc: "Show buyers the math", icon: "🏠", href: "/rent-vs-own", tone: "from-teal-500 to-teal-600" },
   { label: "Create Social Content", desc: "Posts, captions & scripts", icon: "📱", href: "/co-marketing/social-kit", tone: "from-violet-500 to-violet-600" },
   { label: "Buyer / Seller Guides", desc: "Co-branded client guides", icon: "📘", href: "/resources", tone: "from-amber-500 to-amber-600" },
 ];
@@ -112,6 +111,21 @@ function DashboardInner() {
           </Link>
         ))}
       </div>
+
+      {/* Rent vs Own — full-width */}
+      <Link
+        href="/rent-vs-own"
+        className="group mt-3 flex items-center justify-between gap-4 rounded-2xl border border-border bg-white p-5 transition-shadow hover:shadow-lg sm:mt-4"
+      >
+        <div className="flex items-center gap-4">
+          <span className="grid h-12 w-12 place-items-center rounded-xl bg-gradient-to-br from-teal-500 to-teal-600 text-2xl text-white shadow-sm" aria-hidden>🏠</span>
+          <div>
+            <p className="font-bold text-ink-900">Rent vs Own</p>
+            <p className="mt-0.5 text-xs text-muted">Show buyers the math on renting vs. buying</p>
+          </div>
+        </div>
+        <span className="text-crush-600 transition-transform group-hover:translate-x-1" aria-hidden>→</span>
+      </Link>
 
       {/* Rewards summary */}
       <div className="mt-8 grid gap-4 rounded-2xl border border-crush-200 bg-gradient-to-br from-crush-50 to-white p-6 sm:grid-cols-[auto_1fr_auto] sm:items-center sm:gap-8">
