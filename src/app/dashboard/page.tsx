@@ -36,6 +36,7 @@ const QUICK_ACTIONS = [
   { label: "Build Open House Kit", desc: "Sign-in, invites & follow-ups", icon: "🏡", href: "/co-marketing/open-house-kit", tone: "from-ink-800 to-ink-900" },
   { label: "Run Buyer Payment", desc: "Mortgage & affordability", icon: "🧮", href: "/calculators", tone: "from-sky-500 to-sky-600" },
   { label: "Find a Loan Program", desc: "Match a buyer to a program", icon: "🏦", href: "/loan-programs", tone: "from-emerald-500 to-emerald-600" },
+  { label: "Rent vs Own", desc: "Show buyers the math", icon: "🏠", href: "/rent-vs-own", tone: "from-teal-500 to-teal-600" },
   { label: "Create Social Content", desc: "Posts, captions & scripts", icon: "📱", href: "/co-marketing/social-kit", tone: "from-violet-500 to-violet-600" },
   { label: "Buyer / Seller Guides", desc: "Co-branded client guides", icon: "📘", href: "/resources", tone: "from-amber-500 to-amber-600" },
 ];
