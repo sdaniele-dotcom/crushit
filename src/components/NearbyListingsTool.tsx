@@ -29,7 +29,7 @@ type ApiResult =
     }
   | { ok: false; error: string };
 
-const RADII = [1, 5, 10, 25];
+const RADII = [0.5, 1, 2, 3, 5];
 
 function money(n?: number): string {
   return n && n > 0 ? "$" + Math.round(n).toLocaleString("en-US") : "—";
@@ -162,7 +162,7 @@ function printWindow(html: string) {
 
 export function NearbyListingsTool({ initialAddress = "" }: { initialAddress?: string } = {}) {
   const [location, setLocation] = useState(initialAddress);
-  const [radius, setRadius] = useState(5);
+  const [radius, setRadius] = useState(1);
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<ApiResult | null>(null);
   const ready = location.trim().length >= 3;
@@ -322,14 +322,19 @@ export function NearbyListingsTool({ initialAddress = "" }: { initialAddress?: s
         </div>
       )}
 
-      {/* Empty / error state */}
+      {/* Empty / error state — never silently fails */}
       {result && !hasLive && (
-        <p className="mt-4 rounded-2xl border border-border bg-surface p-4 text-sm text-muted">
-          {result.ok
-            ? "No active listings came back for that area. Try a wider radius, or check the address/ZIP."
-            : result.error ||
-              "The MLS feed isn't returning results yet — make sure the CRMLS RESO credentials are set."}
-        </p>
+        <div className={`mt-4 rounded-2xl border p-4 text-sm ${result.ok ? "border-border bg-surface text-muted" : "border-crush-200 bg-crush-50 text-crush-800"}`}>
+          {result.ok ? (
+            <>No active listings found within {radius} mile{radius === 1 ? "" : "s"}. Try increasing the radius, or double-check the address / ZIP.</>
+          ) : (
+            <>
+              <p className="font-semibold">We couldn&apos;t pull nearby listings.</p>
+              <p className="mt-1">{result.error || "The MLS data source isn't connected yet."}</p>
+              <p className="mt-2 text-xs">If this keeps happening, the MLS/IDX feed (CRMLS) may not be connected — an admin can check the data-source settings.</p>
+            </>
+          )}
+        </div>
       )}
     </div>
   );
