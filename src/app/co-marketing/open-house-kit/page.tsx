@@ -4,6 +4,7 @@ import { Container, PageHero, Button, Eyebrow, Card } from "@/components/ui";
 import { CopyCard } from "@/components/CopyCard";
 import { PrintButton } from "@/components/PrintButton";
 import { OpenHouseSetup } from "@/components/OpenHouseSetup";
+import { OpenHouseSignIn } from "@/components/OpenHouseSignIn";
 import Link from "next/link";
 import { site } from "@/lib/site";
 import { crushLogoPrimaryDataUri } from "@/lib/brandLogo";
@@ -336,19 +337,14 @@ export default function OpenHouseKitPage() {
                   Printable sign-in sheet
                 </h3>
                 <p className="mt-1 max-w-xl text-muted">
-                  Co-branded with {site.company}, with columns for name, phone,
-                  email, agent status, and pre-approval — the two questions that
-                  tell you who&apos;s a real buyer.
+                  Branded to <strong>you</strong> at the top — your logo, headshot,
+                  name &amp; contact — with the property address and roomy columns
+                  for name, phone, email, agent status, interest, and financing.
+                  {site.company} sits at the bottom as your financing partner.
                 </p>
               </div>
             </div>
-            <PrintButton
-              html={signInSheetHtml}
-              label="Print sign-in sheet"
-              className={printBtnClass}
-              rewardAction="open_house_kit"
-              rewardEvents={["open_house_piece_created", "marketing_piece_created"]}
-            />
+            <OpenHouseSignIn />
           </div>
 
           {/* Matching flyer callout */}
