@@ -7,6 +7,7 @@ import { useAuth } from "@/components/auth/AuthProvider";
 import { getSupabase } from "@/lib/supabase";
 import { useLevels } from "@/lib/useLevels";
 import { levelProgress } from "@/lib/levels";
+import { TierRewards } from "@/components/TierRewards";
 
 type Tx = { id: string; action: string; stars: number; description: string | null; created_at: string };
 type Achievement = { key: string; name: string; description: string | null; icon: string | null };
@@ -83,6 +84,9 @@ function RewardsInner() {
             );
           })}
         </div>
+
+        {/* Tier rewards — real perks unlocked by leveling up */}
+        <TierRewards lifetime={lifetime} />
 
         {/* Achievements */}
         <h2 className="mt-10 text-sm font-bold uppercase tracking-wide text-crush-700">Achievements</h2>
