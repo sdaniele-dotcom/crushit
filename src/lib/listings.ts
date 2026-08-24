@@ -1,6 +1,37 @@
 "use client";
 
 import { getSupabase } from "@/lib/supabase";
+import { site } from "@/lib/site";
+
+export type PropertyLookup = {
+  street_address?: string;
+  city?: string;
+  state?: string;
+  zip?: string;
+  purchase_price?: number;
+  property_type?: string;
+  bedrooms?: number;
+  bathrooms?: number;
+  square_footage?: number;
+  photo_url?: string;
+  description?: string;
+};
+
+/** Look up a property (photo + details) from the MLS source (Lofty) by address. */
+export async function lookupProperty(address: string): Promise<PropertyLookup | null> {
+  if (!address || address.trim().length < 3) return null;
+  try {
+    const res = await fetch(`${site.flyerApiBase}/api/public/property`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ address: address.trim() }),
+    });
+    const data = await res.json();
+    return data?.ok ? (data.property as PropertyLookup) : null;
+  } catch {
+    return null;
+  }
+}
 
 export type Listing = {
   id: string;

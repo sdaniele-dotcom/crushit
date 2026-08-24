@@ -5,6 +5,7 @@ import { CopyCard } from "@/components/CopyCard";
 import { PrintButton } from "@/components/PrintButton";
 import { OpenHouseSetup } from "@/components/OpenHouseSetup";
 import { OpenHouseSignIn } from "@/components/OpenHouseSignIn";
+import { NeighborPostcard } from "@/components/NeighborPostcard";
 import Link from "next/link";
 import { site } from "@/lib/site";
 import { crushLogoPrimaryDataUri } from "@/lib/brandLogo";
@@ -370,26 +371,10 @@ export default function OpenHouseKitPage() {
           <h2 className="mt-4 text-3xl font-bold tracking-tight text-ink-900">
             Invite the neighbors, gather feedback
           </h2>
+          <div className="mt-6">
+            <NeighborPostcard />
+          </div>
           <div className="mt-6 grid gap-6 md:grid-cols-2">
-            <div className="flex flex-col rounded-3xl border border-border bg-white p-6">
-              <span className="grid h-12 w-12 place-items-center rounded-xl bg-crush-50 text-2xl">
-                📮
-              </span>
-              <h3 className="mt-4 text-lg font-bold text-ink-900">
-                Neighbor invite
-              </h3>
-              <p className="mt-2 flex-1 text-sm text-muted">
-                Two-per-page cards to drop on the block. Pulls in nearby lookers
-                — and the neighbors who might be your next sellers.
-              </p>
-              <div className="mt-5">
-                <PrintButton
-                  html={neighborInviteHtml}
-                  label="Print neighbor invites"
-                  className={printBtnGhost}
-                />
-              </div>
-            </div>
             <div className="flex flex-col rounded-3xl border border-border bg-white p-6">
               <span className="grid h-12 w-12 place-items-center rounded-xl bg-crush-50 text-2xl">
                 🗒️
