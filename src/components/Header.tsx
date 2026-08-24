@@ -15,6 +15,7 @@ const GROUPS: { label: string; items: Item[] }[] = [
     label: "Marketing",
     items: [
       { label: "Listing Flyers", href: "/co-brand" },
+      { label: "Flyer Templates", href: "/flyer-studio" },
       { label: "Social Media Kit", href: "/co-marketing/social-kit" },
       { label: "Open House Kit", href: "/co-marketing/open-house-kit" },
       { label: "Email Templates", href: "/co-marketing/email-templates" },

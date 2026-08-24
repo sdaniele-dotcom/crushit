@@ -6,7 +6,6 @@ import { PrintButton } from "@/components/PrintButton";
 import { OpenHouseSetup } from "@/components/OpenHouseSetup";
 import { OpenHouseSignIn } from "@/components/OpenHouseSignIn";
 import { NeighborPostcard } from "@/components/NeighborPostcard";
-import { OpenHouseFlyer } from "@/components/OpenHouseFlyer";
 import { DigitalOpenHouse } from "@/components/DigitalOpenHouse";
 import { OpenHouseFeedbackPrint } from "@/components/OpenHouseFeedbackPrint";
 import Link from "next/link";
@@ -353,20 +352,32 @@ export default function OpenHouseKitPage() {
 
         </div>
 
-        {/* Property flyer — photos only */}
+        {/* Property flyer — the template library */}
         <div className="mt-14">
           <Eyebrow>Step 3 · The flyer</Eyebrow>
           <h2 className="mt-4 text-3xl font-bold tracking-tight text-ink-900">
-            Print your property flyer
+            Design your open house flyer
           </h2>
           <p className="mt-3 max-w-2xl text-muted">
-            A clean, full-page flyer for the sign-in table and the front
-            window — just the home&apos;s photos and details, branded to you.
-            Pick a template and print.
+            Choose from a library of editable templates, drop in your own
+            photos, tweak the text, and print — everything auto-fills from your
+            profile and this listing.
           </p>
-          <div className="mt-6">
-            <OpenHouseFlyer />
-          </div>
+          <Card className="mt-6 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
+            <div className="flex items-start gap-4">
+              <span className="grid h-12 w-12 shrink-0 place-items-center rounded-xl bg-crush-50 text-2xl">🎨</span>
+              <div>
+                <h3 className="font-bold text-ink-900">Open the flyer template library</h3>
+                <p className="mt-1 text-sm text-muted">
+                  Just Listed, Open House, Luxury &amp; more — fully editable, with
+                  your photos. Prints as a clean full page.
+                </p>
+              </div>
+            </div>
+            <Button href="/flyer-studio?category=open-house" className="shrink-0">
+              Browse templates
+            </Button>
+          </Card>
 
           {/* Matching co-branded (financing) flyer callout */}
           <Card className="mt-6 flex flex-col items-start justify-between gap-4 bg-surface sm:flex-row sm:items-center">

@@ -48,6 +48,7 @@ function AdminInner() {
         <div className="mb-8 flex flex-wrap gap-3">
           <Link href="/admin/users" className="rounded-full bg-crush-500 px-6 py-3 text-sm font-semibold text-white hover:bg-crush-600">Manage users</Link>
           <Link href="/admin/rewards" className="rounded-full border border-border bg-white px-6 py-3 text-sm font-semibold text-ink-900 hover:bg-surface-2">Rewards settings</Link>
+          <Link href="/admin/tier-rewards" className="rounded-full border border-border bg-white px-6 py-3 text-sm font-semibold text-ink-900 hover:bg-surface-2">Tier rewards &amp; claims</Link>
           <Link href="/admin/loan-programs" className="rounded-full border border-border bg-white px-6 py-3 text-sm font-semibold text-ink-900 hover:bg-surface-2">Loan programs</Link>
           <Link href="/admin/scenarios" className="rounded-full border border-border bg-white px-6 py-3 text-sm font-semibold text-ink-900 hover:bg-surface-2">Buyer scenarios</Link>
           <Link href="/admin/vendors" className="rounded-full border border-border bg-white px-6 py-3 text-sm font-semibold text-ink-900 hover:bg-surface-2">Resource partners</Link>
