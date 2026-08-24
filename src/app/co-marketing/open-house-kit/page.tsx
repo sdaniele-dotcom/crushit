@@ -308,20 +308,14 @@ export default function OpenHouseKitPage() {
           Set up your open house
         </h2>
         <p className="mt-3 max-w-2xl text-muted">
-          Pick a saved listing above (or fill the pieces manually), set your date
-          &amp; time, then pull up the active homes for sale nearby — grouped by
-          beds &amp; baths — for a co-branded comparison sheet.
+          Pick a saved listing above (or fill the pieces manually) and set your
+          date &amp; time. Want to know the nearby competition? Search the MLS and
+          print a blank comparison sheet for the sign-in table.
         </p>
         <div className="mt-6">
           <OpenHouseSetup />
         </div>
         <div className="mt-4 flex flex-wrap items-center gap-3">
-          <Link
-            href="/mls-search"
-            className="inline-flex items-center gap-2 rounded-full border border-border bg-white px-5 py-2.5 text-sm font-semibold text-ink-900 transition-colors hover:bg-surface-2"
-          >
-            Or open the full CRMLS search →
-          </Link>
           <PrintButton
             html={comparisonWorksheetHtml}
             label="Print a blank comparison sheet"
