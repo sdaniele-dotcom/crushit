@@ -28,6 +28,7 @@ const GROUPS: { label: string; items: Item[] }[] = [
       { label: "Mortgage Calculator", href: "/calculators" },
       { label: "Rent vs Own", href: "/rent-vs-own" },
       { label: "Loan Program Finder", href: "/loan-programs" },
+      { label: "Search the MLS", href: "/mls-search" },
     ],
   },
   {
