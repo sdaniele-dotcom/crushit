@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { NearbyListingsTool } from "@/components/NearbyListingsTool";
+import Link from "next/link";
 import { useActiveListing } from "@/components/ActiveListing";
 import { upsertListing } from "@/lib/listings";
 import { recordUse } from "@/lib/rewards";
@@ -85,8 +85,16 @@ export function OpenHouseSetup() {
         </button>
       </div>
 
-      {/* Nearby competition, seeded from the listing address */}
-      <NearbyListingsTool key={listing?.id ?? "none"} initialAddress={listing?.address ?? ""} />
+      {/* Know the nearby competition — search the MLS */}
+      <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-border bg-surface p-5">
+        <div>
+          <h3 className="text-sm font-bold uppercase tracking-wide text-crush-700">Know the competition</h3>
+          <p className="mt-1 text-sm text-muted">Pull up active homes for sale nearby on the MLS to talk to buyers about their options.</p>
+        </div>
+        <Link href="/mls-search" className="inline-flex shrink-0 items-center gap-2 rounded-full bg-crush-500 px-5 py-2.5 text-sm font-semibold text-white hover:bg-crush-600">
+          Search the MLS →
+        </Link>
+      </div>
     </div>
   );
 }
