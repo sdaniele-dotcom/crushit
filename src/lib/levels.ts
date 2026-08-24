@@ -3,15 +3,20 @@
  * database; the Admin can change the thresholds there, and a later phase reads
  * them live. Defaults are used for instant client-side display.
  */
-export type Level = { name: string; min: number };
+export type Level = { name: string; min: number; icon?: string; blurb?: string };
 
 export const LEVELS: Level[] = [
-  { name: "Rookie", min: 0 },
-  { name: "Rising Agent", min: 100 },
-  { name: "Gold Agent", min: 250 },
-  { name: "Platinum Agent", min: 500 },
-  { name: "CRUSH IT Elite", min: 1000 },
+  { name: "CRUSH ROOKIE", min: 0, icon: "⭐", blurb: "Full Realtor Suite access — start earning." },
+  { name: "CRUSH PRO", min: 250, icon: "⭐", blurb: "Extra templates plus occasional perks." },
+  { name: "CRUSH ELITE", min: 750, icon: "⭐", blurb: "Priority marketing requests and exclusive events." },
+  { name: "CRUSH VIP", min: 1500, icon: "⭐", blurb: "Monthly marketing perks and VIP event access." },
+  { name: "CRUSH LEGEND", min: 3000, icon: "👑", blurb: "Profile badge, premium marketing, an annual gift, and invite-only experiences." },
 ];
+
+/** The badge icon for a given tier name (falls back to a star). */
+export function level_icon(name: string | null | undefined, levels: Level[] = LEVELS): string {
+  return levels.find((l) => l.name === name)?.icon || "⭐";
+}
 
 export function level_name(lifetime: number, levels: Level[] = LEVELS): string {
   let name = levels[0].name;

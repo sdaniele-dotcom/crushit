@@ -13,6 +13,13 @@ export type TierReward = {
   repeatable: boolean;
   active: boolean;
   sort: number;
+  // Drop fields (kind='drop'): a limited-time reward you SPEND stars on.
+  kind: "tier" | "drop";
+  star_cost: number;
+  quantity_total: number | null;
+  quantity_claimed: number;
+  starts_at: string | null;
+  ends_at: string | null;
 };
 
 export type ClaimStatus = "requested" | "approved" | "fulfilled" | "declined";
@@ -25,6 +32,7 @@ export type RewardClaim = {
   status: ClaimStatus;
   note: string | null;
   admin_note: string | null;
+  stars_spent: number;
   created_at: string;
   updated_at: string;
 };
@@ -35,6 +43,32 @@ export async function fetchTierRewards(): Promise<TierReward[]> {
   if (!sb) return [];
   const { data } = await sb.from("tier_rewards").select("*").order("min_stars").order("sort");
   return (data as TierReward[]) ?? [];
+}
+
+/** Active limited-time drops (spend-stars rewards), newest window first. */
+export async function fetchDrops(): Promise<TierReward[]> {
+  const sb = getSupabase();
+  if (!sb) return [];
+  const { data } = await sb.from("tier_rewards").select("*").eq("kind", "drop").eq("active", true).order("ends_at");
+  return (data as TierReward[]) ?? [];
+}
+
+export async function redeemDrop(dropId: string, note?: string): Promise<ClaimResult> {
+  const sb = getSupabase();
+  if (!sb) return { ok: false, reason: "not_configured" };
+  const { data, error } = await sb.rpc("redeem_drop", { p_drop_id: dropId, p_note: note ?? null });
+  if (error) return { ok: false, reason: error.message };
+  return (data as ClaimResult) ?? { ok: false, reason: "unknown" };
+}
+
+/** Set (or clear, with null) the reward the agent is saving toward. */
+export async function setSavingGoal(rewardId: string | null): Promise<boolean> {
+  const sb = getSupabase();
+  if (!sb) return false;
+  const { data: { user } } = await sb.auth.getUser();
+  if (!user) return false;
+  const { error } = await sb.from("profiles").update({ saving_goal_id: rewardId }).eq("id", user.id);
+  return !error;
 }
 
 /** The signed-in agent's own claims. */

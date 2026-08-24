@@ -5,6 +5,8 @@ import { Container, PageHero } from "@/components/ui";
 import { RequireAuth } from "@/components/auth/RequireAuth";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { getSupabase } from "@/lib/supabase";
+import { useLevels } from "@/lib/useLevels";
+import { level_icon } from "@/lib/levels";
 
 type Row = {
   rank: number;
@@ -21,6 +23,7 @@ const medal = (r: number) => (r === 1 ? "🥇" : r === 2 ? "🥈" : r === 3 ? "�
 
 function LeaderboardInner() {
   const { user, profile } = useAuth();
+  const levels = useLevels();
   const [scope, setScope] = useState<"all" | "month">("all");
   const [rows, setRows] = useState<Row[]>([]);
   const [myRank, setMyRank] = useState<number | null>(null);
@@ -101,10 +104,13 @@ function LeaderboardInner() {
                     </span>
                   )}
                   <div className="min-w-0 flex-1">
-                    <p className="truncate font-semibold text-ink-900">{r.display_name || "Agent"}{me && <span className="ml-2 text-xs font-normal text-crush-600">(you)</span>}</p>
+                    <p className="truncate font-semibold text-ink-900">
+                      <span className="mr-1.5" aria-hidden title={r.level ?? ""}>{level_icon(r.level, levels)}</span>
+                      {r.display_name || "Agent"}{me && <span className="ml-2 text-xs font-normal text-crush-600">(you)</span>}
+                    </p>
                     <p className="truncate text-xs text-muted">{r.brokerage || ""}</p>
                   </div>
-                  <span className="hidden shrink-0 rounded-full bg-surface-2 px-3 py-1 text-xs font-semibold text-ink-700 sm:inline">{r.level}</span>
+                  <span className="hidden shrink-0 rounded-full bg-crush-50 px-3 py-1 text-xs font-semibold text-crush-700 sm:inline">{r.level}</span>
                   <span className="w-24 shrink-0 text-right text-sm font-bold text-crush-600">
                     {(scope === "month" ? r.period_stars : r.lifetime_stars).toLocaleString()} ⭐
                   </span>

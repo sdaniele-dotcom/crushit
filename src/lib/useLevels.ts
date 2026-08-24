@@ -11,11 +11,18 @@ export function useLevels(): Level[] {
     const sb = getSupabase();
     if (!sb) return;
     sb.from("levels")
-      .select("name,min_stars")
+      .select("name,min_stars,icon,blurb")
       .order("min_stars")
       .then(({ data }) => {
         if (data && data.length) {
-          setLevels(data.map((l) => ({ name: l.name as string, min: l.min_stars as number })));
+          setLevels(
+            data.map((l) => ({
+              name: l.name as string,
+              min: l.min_stars as number,
+              icon: (l.icon as string) || undefined,
+              blurb: (l.blurb as string) || undefined,
+            })),
+          );
         }
       });
   }, []);

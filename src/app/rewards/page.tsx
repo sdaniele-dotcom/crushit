@@ -8,6 +8,8 @@ import { getSupabase } from "@/lib/supabase";
 import { useLevels } from "@/lib/useLevels";
 import { levelProgress } from "@/lib/levels";
 import { TierRewards } from "@/components/TierRewards";
+import { SavingGoal } from "@/components/SavingGoal";
+import { RewardDrops } from "@/components/RewardDrops";
 
 type Tx = { id: string; action: string; stars: number; description: string | null; created_at: string };
 type Achievement = { key: string; name: string; description: string | null; icon: string | null };
@@ -67,16 +69,23 @@ function RewardsInner() {
           </div>
         </div>
 
+        {/* What are you saving for? */}
+        <SavingGoal lifetime={lifetime} current={profile?.current_stars ?? 0} />
+
         {/* Levels */}
-        <h2 className="mt-10 text-sm font-bold uppercase tracking-wide text-crush-700">Crush levels</h2>
-        <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-          {sortedLevels.map((l) => {
+        <h2 className="mt-10 text-sm font-bold uppercase tracking-wide text-crush-700">Crush tiers</h2>
+        <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
+          {sortedLevels.map((l, i) => {
             const reached = lifetime >= l.min;
             const current = l.name === lp.current.name;
+            const next = sortedLevels[i + 1];
+            const range = next ? `${l.min.toLocaleString()}–${(next.min - 1).toLocaleString()}` : `${l.min.toLocaleString()}+`;
             return (
-              <div key={l.name} className={`rounded-2xl border p-5 ${current ? "border-crush-400 bg-crush-50" : reached ? "border-crush-200 bg-white" : "border-border bg-white opacity-70"}`}>
-                <p className="text-lg font-bold text-ink-900">{l.name}</p>
-                <p className="text-xs text-muted">{l.min}+ lifetime ⭐</p>
+              <div key={l.name} className={`rounded-2xl border p-5 ${current ? "border-crush-400 bg-crush-50 ring-2 ring-crush-200" : reached ? "border-crush-200 bg-white" : "border-border bg-white opacity-70"}`}>
+                <span className={`text-3xl ${reached ? "" : "grayscale"}`} aria-hidden>{l.icon || "⭐"}</span>
+                <p className="mt-1 text-base font-bold text-ink-900">{l.name}</p>
+                <p className="text-xs font-semibold text-muted">{range} ⭐</p>
+                {l.blurb && <p className="mt-2 text-xs text-muted">{l.blurb}</p>}
                 <p className={`mt-2 text-xs font-semibold ${current ? "text-crush-600" : reached ? "text-mint-500" : "text-muted"}`}>
                   {current ? "You're here" : reached ? "Reached ✓" : "Locked"}
                 </p>
@@ -84,6 +93,9 @@ function RewardsInner() {
             );
           })}
         </div>
+
+        {/* Limited-time drops — spend stars while they last */}
+        <RewardDrops current={profile?.current_stars ?? 0} />
 
         {/* Tier rewards — real perks unlocked by leveling up */}
         <TierRewards lifetime={lifetime} />

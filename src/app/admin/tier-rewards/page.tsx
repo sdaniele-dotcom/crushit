@@ -29,6 +29,19 @@ const STATUS_CLASS: Record<string, string> = {
 function fmt(iso: string) {
   return new Date(iso).toLocaleDateString("en-US", { month: "short", day: "numeric", year: "numeric" });
 }
+/** ISO → value for <input type="datetime-local"> (local time, no seconds). */
+function toLocalInput(iso: string | null): string {
+  if (!iso) return "";
+  const d = new Date(iso);
+  if (Number.isNaN(d.getTime())) return "";
+  const off = d.getTimezoneOffset();
+  return new Date(d.getTime() - off * 60000).toISOString().slice(0, 16);
+}
+function fromLocalInput(v: string): string | null {
+  if (!v) return null;
+  const d = new Date(v);
+  return Number.isNaN(d.getTime()) ? null : d.toISOString();
+}
 
 function Inner() {
   const [rewards, setRewards] = useState<TierReward[]>([]);
@@ -49,7 +62,10 @@ function Inner() {
 
   async function saveReward(r: TierReward) {
     setSaving(true);
-    const res = await upsertReward(r);
+    // Don't write the live redemption counter back from the admin form.
+    const { quantity_claimed: _ignore, ...payload } = r;
+    void _ignore;
+    const res = await upsertReward(payload);
     setSaving(false);
     if (res) { setMsg(`Saved "${r.title}".`); setTimeout(() => setMsg(""), 2500); }
     else toast({ emoji: "⚠️", title: "Save failed", body: "Check your admin access and try again." });
@@ -105,6 +121,7 @@ function Inner() {
                       {c.agent_name || "Agent"}{c.agent_email ? ` · ${c.agent_email}` : ""} · {fmt(c.created_at)}
                     </p>
                     {c.note && <p className="mt-1 text-sm text-ink-800">“{c.note}”</p>}
+                    {c.stars_spent > 0 && <p className="mt-1 text-xs font-semibold text-crush-600">Spent {c.stars_spent} ⭐</p>}
                   </div>
                   <span className={`shrink-0 rounded-full px-3 py-1 text-xs font-semibold ${STATUS_CLASS[c.status]}`}>{c.status}</span>
                 </div>
@@ -148,9 +165,19 @@ function Inner() {
                   <textarea className={`${input} min-h-[54px]`} value={r.description ?? ""} onChange={(e) => patch(r.id, { description: e.target.value })} /></label>
                 <label className="mt-3 block"><span className="text-xs font-semibold text-muted">Fulfillment note (internal)</span>
                   <input className={input} value={r.fulfillment ?? ""} onChange={(e) => patch(r.id, { fulfillment: e.target.value })} placeholder="How staff delivers this" /></label>
-                <div className="mt-3 flex flex-wrap items-center gap-4">
-                  <label className="flex items-center gap-2 text-sm"><span className="text-xs font-semibold text-muted">Min ⭐</span>
-                    <input type="number" min={0} className={`${input} w-24`} value={r.min_stars} onChange={(e) => patch(r.id, { min_stars: Math.max(0, parseInt(e.target.value, 10) || 0) })} /></label>
+                <div className="mt-3 flex flex-wrap items-center gap-3">
+                  <button type="button" onClick={() => patch(r.id, { kind: r.kind === "drop" ? "tier" : "drop" })} className={`rounded-full px-3 py-1.5 text-xs font-semibold ${r.kind === "drop" ? "bg-crush-500 text-white" : "bg-surface-2 text-muted"}`}>{r.kind === "drop" ? "🔥 Limited drop" : "Tier perk"}</button>
+                  {r.kind === "tier" ? (
+                    <label className="flex items-center gap-2 text-sm"><span className="text-xs font-semibold text-muted">Unlock at ⭐</span>
+                      <input type="number" min={0} className={`${input} w-24`} value={r.min_stars} onChange={(e) => patch(r.id, { min_stars: Math.max(0, parseInt(e.target.value, 10) || 0) })} /></label>
+                  ) : (
+                    <>
+                      <label className="flex items-center gap-2 text-sm"><span className="text-xs font-semibold text-muted">Cost ⭐</span>
+                        <input type="number" min={0} className={`${input} w-24`} value={r.star_cost} onChange={(e) => patch(r.id, { star_cost: Math.max(0, parseInt(e.target.value, 10) || 0) })} /></label>
+                      <label className="flex items-center gap-2 text-sm"><span className="text-xs font-semibold text-muted">Qty</span>
+                        <input type="number" min={0} placeholder="∞" className={`${input} w-20`} value={r.quantity_total ?? ""} onChange={(e) => patch(r.id, { quantity_total: e.target.value === "" ? null : Math.max(0, parseInt(e.target.value, 10) || 0) })} /></label>
+                    </>
+                  )}
                   <button type="button" onClick={() => patch(r.id, { repeatable: !r.repeatable })} className={`rounded-full px-3 py-1.5 text-xs font-semibold ${r.repeatable ? "bg-mint-500/15 text-mint-600" : "bg-surface-2 text-muted"}`}>{r.repeatable ? "Repeatable" : "One-time"}</button>
                   <button type="button" onClick={() => patch(r.id, { active: !r.active })} className={`rounded-full px-3 py-1.5 text-xs font-semibold ${r.active ? "bg-mint-500/15 text-mint-600" : "bg-surface-2 text-muted"}`}>{r.active ? "Active" : "Hidden"}</button>
                   <div className="ml-auto flex gap-2">
@@ -158,6 +185,15 @@ function Inner() {
                     <button type="button" onClick={() => saveReward(r)} disabled={saving} className="rounded-full bg-crush-500 px-5 py-1.5 text-xs font-semibold text-white hover:bg-crush-600 disabled:opacity-50">Save</button>
                   </div>
                 </div>
+                {r.kind === "drop" && (
+                  <div className="mt-3 grid gap-3 sm:grid-cols-2">
+                    <label className="block"><span className="text-xs font-semibold text-muted">Starts (optional)</span>
+                      <input type="datetime-local" className={input} value={toLocalInput(r.starts_at)} onChange={(e) => patch(r.id, { starts_at: fromLocalInput(e.target.value) })} /></label>
+                    <label className="block"><span className="text-xs font-semibold text-muted">Ends (optional)</span>
+                      <input type="datetime-local" className={input} value={toLocalInput(r.ends_at)} onChange={(e) => patch(r.id, { ends_at: fromLocalInput(e.target.value) })} /></label>
+                    {r.quantity_total != null && <p className="text-xs text-muted sm:col-span-2">{r.quantity_claimed} of {r.quantity_total} claimed.</p>}
+                  </div>
+                )}
               </div>
             ))}
           </div>
