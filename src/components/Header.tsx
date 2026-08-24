@@ -34,6 +34,7 @@ const GROUPS: { label: string; items: Item[] }[] = [
     label: "My Business",
     items: [
       { label: "My Listings", href: "/listings" },
+      { label: "Resources", href: "/partners" },
       { label: "Rewards", href: "/rewards" },
       { label: "Leaderboard", href: "/leaderboard" },
     ],
