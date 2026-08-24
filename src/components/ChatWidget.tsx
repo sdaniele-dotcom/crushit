@@ -2,8 +2,53 @@
 
 import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { site } from "@/lib/site";
 import { useAuth } from "@/components/auth/AuthProvider";
+
+/** Page-specific proactive prompts. First matching prefix wins. */
+const CONTEXTS: { match: (p: string) => boolean; msg: (name: string) => string; actions: { label: string; href: string }[] }[] = [
+  {
+    match: (p) => p.startsWith("/co-marketing/open-house-kit"),
+    msg: () => "Need help getting this open house ready?",
+    actions: [
+      { label: "🏠 Sign-in & QR", href: "/co-marketing/open-house-kit" },
+      { label: "📮 Neighbor postcard", href: "/co-marketing/open-house-kit" },
+      { label: "✉️ Follow-up email", href: "/co-marketing/email-templates" },
+    ],
+  },
+  {
+    match: (p) => p.startsWith("/co-brand") || p.startsWith("/listings"),
+    msg: () => "Want me to help market this listing?",
+    actions: [
+      { label: "🎨 Create flyer", href: "/co-brand" },
+      { label: "📱 Social post", href: "/co-marketing/social-kit" },
+      { label: "🏡 Open house kit", href: "/co-marketing/open-house-kit" },
+    ],
+  },
+  {
+    match: (p) => p.startsWith("/loan-programs"),
+    msg: () => "Trying to find the right program for a buyer?",
+    actions: [{ label: "🏦 Find a loan", href: "/loan-programs" }],
+  },
+  {
+    match: (p) => p.startsWith("/calculators") || p.startsWith("/rent-vs-own"),
+    msg: () => "Running numbers for a buyer?",
+    actions: [
+      { label: "🧮 Payment calculator", href: "/calculators" },
+      { label: "🏠 Rent vs Own", href: "/rent-vs-own" },
+    ],
+  },
+  {
+    match: (p) => p.startsWith("/dashboard") || p === "/",
+    msg: (name) => `Hey ${name || "there"} 👋 What are you working on today?`,
+    actions: [
+      { label: "🎨 Listing flyer", href: "/co-brand" },
+      { label: "🏡 Open house kit", href: "/co-marketing/open-house-kit" },
+      { label: "📱 Social content", href: "/co-marketing/social-kit" },
+    ],
+  },
+];
 
 type Action = { label: string; href: string };
 type Msg = { role: "user" | "assistant"; content: string; actions?: Action[] };
@@ -81,7 +126,25 @@ export function ChatWidget() {
       : "Hi! 👋 What are you working on today?",
   };
 
+  const pathname = usePathname() || "/";
+  const ctx = CONTEXTS.find((c) => c.match(pathname)) ?? null;
   const [open, setOpen] = useState(false);
+  const [bubble, setBubble] = useState(false);
+
+  // Proactive bubble: appears once per session after a short delay, only when
+  // logged in and on a relevant page, and never after being dismissed/opened.
+  useEffect(() => {
+    let dismissed = false;
+    try { dismissed = sessionStorage.getItem("crush:chat-nudge") === "1"; } catch {}
+    if (dismissed || !ctx || !profile) return;
+    const t = setTimeout(() => { if (!open) setBubble(true); }, 4500);
+    return () => clearTimeout(t);
+  }, [ctx, profile, open]);
+
+  function dismissBubble() {
+    setBubble(false);
+    try { sessionStorage.setItem("crush:chat-nudge", "1"); } catch {}
+  }
   const [messages, setMessages] = useState<Msg[]>([greeting]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -157,10 +220,30 @@ export function ChatWidget() {
 
   return (
     <>
+      {/* Proactive nudge bubble */}
+      {bubble && !open && ctx && (
+        <div className="fixed bottom-24 right-5 z-50 w-[min(88vw,320px)] rounded-2xl border border-border bg-white p-4 shadow-2xl">
+          <button type="button" onClick={dismissBubble} aria-label="Dismiss" className="absolute right-2 top-2 grid h-6 w-6 place-items-center rounded-full text-muted hover:bg-surface-2">
+            <svg viewBox="0 0 20 20" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round"><path d="M5 5l10 10M15 5L5 15" /></svg>
+          </button>
+          <p className="pr-5 text-sm font-semibold text-ink-900">{ctx.msg(firstName)}</p>
+          <div className="mt-3 flex flex-wrap gap-1.5">
+            {ctx.actions.map((a) => (
+              <Link key={a.href + a.label} href={a.href} onClick={dismissBubble} className="rounded-full border border-crush-200 bg-crush-50 px-3 py-1.5 text-xs font-semibold text-crush-700 hover:bg-crush-100">
+                {a.label}
+              </Link>
+            ))}
+          </div>
+          <button type="button" onClick={() => { dismissBubble(); setOpen(true); }} className="mt-3 text-xs font-semibold text-crush-600 hover:text-crush-700">
+            Or ask me anything →
+          </button>
+        </div>
+      )}
+
       {/* Launcher */}
       <button
         type="button"
-        onClick={() => setOpen((o) => !o)}
+        onClick={() => { setBubble(false); setOpen((o) => !o); }}
         aria-label={open ? "Close chat" : "Open chat assistant"}
         className="fixed bottom-5 right-5 z-50 grid h-14 w-14 place-items-center rounded-full bg-crush-500 text-white shadow-xl shadow-crush-500/30 transition-transform hover:scale-105 hover:bg-crush-600"
       >
