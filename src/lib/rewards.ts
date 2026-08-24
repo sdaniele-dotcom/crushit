@@ -48,7 +48,11 @@ export async function awardStars(
     if (!opts.silent) {
       toast({ emoji: "⭐", title: `+${res.stars} Crush Stars`, body: res.label });
       if (res.leveled_up && res.level) {
-        toast({ emoji: "🎉", title: `You reached ${res.level}!` });
+        toast({
+          emoji: "🎉",
+          title: `You reached ${res.level}!`,
+          body: "A Crush team member will reach out about your perks and next steps.",
+        });
       }
     }
     refreshProfileSoon();
