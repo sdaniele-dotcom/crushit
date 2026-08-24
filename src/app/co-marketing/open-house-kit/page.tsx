@@ -7,6 +7,7 @@ import { OpenHouseSetup } from "@/components/OpenHouseSetup";
 import { OpenHouseSignIn } from "@/components/OpenHouseSignIn";
 import { NeighborPostcard } from "@/components/NeighborPostcard";
 import { DigitalOpenHouse } from "@/components/DigitalOpenHouse";
+import { OpenHouseFeedbackPrint } from "@/components/OpenHouseFeedbackPrint";
 import Link from "next/link";
 import { site } from "@/lib/site";
 import { crushLogoPrimaryDataUri } from "@/lib/brandLogo";
@@ -403,11 +404,7 @@ export default function OpenHouseKitPage() {
                 feedback for the seller recap — and surface hot buyers.
               </p>
               <div className="mt-5">
-                <PrintButton
-                  html={feedbackFormHtml}
-                  label="Print feedback form"
-                  className={printBtnGhost}
-                />
+                <OpenHouseFeedbackPrint className={printBtnGhost} />
               </div>
             </div>
           </div>
