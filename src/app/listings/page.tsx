@@ -4,7 +4,7 @@ import { useCallback, useEffect, useState } from "react";
 import Link from "next/link";
 import { Container, PageHero } from "@/components/ui";
 import { RequireAuth } from "@/components/auth/RequireAuth";
-import { listMyListings, upsertListing, deleteListing, listingLabel, type Listing } from "@/lib/listings";
+import { listMyListings, upsertListing, deleteListing, listingLabel, lookupProperty, type Listing } from "@/lib/listings";
 import { toast } from "@/lib/toast";
 
 const input =
@@ -32,12 +32,35 @@ function ListingsInner() {
   const [listings, setListings] = useState<Listing[]>([]);
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState(false);
+  const [looking, setLooking] = useState(false);
+  const [photo, setPhoto] = useState("");
+  const [lookupMsg, setLookupMsg] = useState("");
   const [f, setF] = useState({ address: "", city: "", state: "", zip: "", price: "", beds: "", baths: "", sqft: "", description: "" });
 
   const load = useCallback(async () => setListings(await listMyListings()), []);
   useEffect(() => { load(); }, [load]);
 
   const set = (k: keyof typeof f, v: string) => setF((s) => ({ ...s, [k]: v }));
+
+  async function lookup() {
+    if (!f.address.trim()) return;
+    setLooking(true);
+    setLookupMsg("");
+    const p = await lookupProperty(f.address);
+    setLooking(false);
+    if (!p) { setLookupMsg("No MLS match found — you can fill the details in by hand."); return; }
+    setF((s) => ({
+      ...s,
+      city: p.city || s.city, state: p.state || s.state, zip: p.zip || s.zip,
+      price: p.purchase_price ? String(p.purchase_price) : s.price,
+      beds: p.bedrooms != null ? String(p.bedrooms) : s.beds,
+      baths: p.bathrooms != null ? String(p.bathrooms) : s.baths,
+      sqft: p.square_footage != null ? String(p.square_footage) : s.sqft,
+      description: p.description || s.description,
+    }));
+    if (p.photo_url) setPhoto(p.photo_url);
+    setLookupMsg(p.photo_url ? "Filled in from the MLS (photo included)." : "Filled in from the MLS.");
+  }
 
   async function add(e: React.FormEvent) {
     e.preventDefault();
@@ -47,11 +70,14 @@ function ListingsInner() {
       address: f.address, city: f.city || undefined, state: f.state || undefined, zip: f.zip || undefined,
       price: num(f.price), beds: num(f.beds), baths: num(f.baths), sqft: num(f.sqft) as number | undefined,
       description: f.description || undefined,
+      photos: photo ? [photo] : undefined,
     });
     setBusy(false);
     if (res) {
       toast({ emoji: "🏠", title: "Listing saved", body: "Reuse it across every tool." });
       setF({ address: "", city: "", state: "", zip: "", price: "", beds: "", baths: "", sqft: "", description: "" });
+      setPhoto("");
+      setLookupMsg("");
       setOpen(false);
       load();
     }
@@ -81,7 +107,20 @@ function ListingsInner() {
           <form onSubmit={add} className="mt-5 grid gap-4 rounded-2xl border border-border bg-white p-6">
             <div>
               <label className={label}>Property address *</label>
-              <input className={input} value={f.address} onChange={(e) => set("address", e.target.value)} placeholder="123 Main St" required autoFocus />
+              <div className="flex flex-wrap gap-2">
+                <input className={`${input} flex-1`} value={f.address} onChange={(e) => set("address", e.target.value)} placeholder="123 Main St, Long Beach, CA" required autoFocus />
+                <button type="button" onClick={lookup} disabled={looking || f.address.trim().length < 3} className="shrink-0 rounded-xl border border-crush-200 bg-crush-50 px-4 py-2.5 text-sm font-semibold text-crush-700 hover:bg-crush-100 disabled:opacity-50">
+                  {looking ? "Looking up…" : "Look up from MLS"}
+                </button>
+              </div>
+              {lookupMsg && <p className="mt-1.5 text-xs font-medium text-crush-700">{lookupMsg}</p>}
+              {photo && (
+                <div className="mt-2 flex items-center gap-3">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={photo} alt="Listing" className="h-16 w-24 rounded-lg object-cover" />
+                  <button type="button" onClick={() => setPhoto("")} className="text-xs font-semibold text-muted underline">Remove photo</button>
+                </div>
+              )}
             </div>
             <div className="grid gap-4 sm:grid-cols-3">
               <div><label className={label}>City</label><input className={input} value={f.city} onChange={(e) => set("city", e.target.value)} /></div>
