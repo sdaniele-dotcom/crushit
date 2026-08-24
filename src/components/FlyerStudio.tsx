@@ -12,6 +12,8 @@ const CATEGORIES: { key: FlyerCategory | "all"; label: string }[] = [
   { key: "listing", label: "Listing" },
   { key: "open-house", label: "Open house" },
   { key: "luxury", label: "Luxury" },
+  { key: "rental", label: "Rental" },
+  { key: "price-drop", label: "Price drop" },
   { key: "sold", label: "Just sold" },
 ];
 

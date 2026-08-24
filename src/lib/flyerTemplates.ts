@@ -11,7 +11,7 @@ import { esc } from "@/lib/printBranding";
 import { crushLogoPrimaryDataUri } from "@/lib/brandLogo";
 import { site } from "@/lib/site";
 
-export type FlyerCategory = "listing" | "open-house" | "luxury" | "sold";
+export type FlyerCategory = "listing" | "open-house" | "luxury" | "sold" | "rental" | "price-drop";
 
 export type FlyerTemplate = {
   id: string;
@@ -21,19 +21,35 @@ export type FlyerTemplate = {
   kicker: string;
   accent: string;
   font: "sans" | "serif";
-  layout: "hero" | "grid" | "split" | "minimal";
+  layout: "hero" | "grid" | "split" | "minimal" | "banner" | "framed";
   /** How many photos this layout shows off best. */
   photoSlots: number;
 };
 
 export const FLYER_TEMPLATES: FlyerTemplate[] = [
+  // Listing
   { id: "just-listed", name: "Just Listed", category: "listing", badge: "🏡", kicker: "JUST LISTED", accent: "#e62c2c", font: "sans", layout: "hero", photoSlots: 4 },
-  { id: "open-house-bold", name: "Open House · Bold", category: "open-house", badge: "🔑", kicker: "OPEN HOUSE", accent: "#e62c2c", font: "sans", layout: "hero", photoSlots: 3 },
-  { id: "open-house-grid", name: "Open House · Photo Grid", category: "open-house", badge: "🗂️", kicker: "OPEN HOUSE", accent: "#111827", font: "sans", layout: "grid", photoSlots: 4 },
-  { id: "luxury", name: "Luxury", category: "luxury", badge: "✨", kicker: "FOR SALE", accent: "#b08d4c", font: "serif", layout: "minimal", photoSlots: 1 },
+  { id: "just-listed-grid", name: "Just Listed · Grid", category: "listing", badge: "🖼️", kicker: "JUST LISTED", accent: "#e62c2c", font: "sans", layout: "grid", photoSlots: 4 },
   { id: "modern-split", name: "Modern Split", category: "listing", badge: "🧭", kicker: "NEW LISTING", accent: "#0f766e", font: "sans", layout: "split", photoSlots: 2 },
   { id: "coming-soon", name: "Coming Soon", category: "listing", badge: "⏳", kicker: "COMING SOON", accent: "#1f2937", font: "serif", layout: "minimal", photoSlots: 1 },
+  { id: "bold-banner", name: "Bold Banner", category: "listing", badge: "📣", kicker: "NEW LISTING", accent: "#7c3aed", font: "sans", layout: "banner", photoSlots: 4 },
+  // Open house
+  { id: "open-house-bold", name: "Open House · Bold", category: "open-house", badge: "🔑", kicker: "OPEN HOUSE", accent: "#e62c2c", font: "sans", layout: "hero", photoSlots: 3 },
+  { id: "open-house-grid", name: "Open House · Photo Grid", category: "open-house", badge: "🗂️", kicker: "OPEN HOUSE", accent: "#111827", font: "sans", layout: "grid", photoSlots: 4 },
+  { id: "open-house-elegant", name: "Open House · Elegant", category: "open-house", badge: "🕯️", kicker: "OPEN HOUSE", accent: "#b08d4c", font: "serif", layout: "framed", photoSlots: 1 },
+  // Luxury
+  { id: "luxury", name: "Luxury", category: "luxury", badge: "✨", kicker: "FOR SALE", accent: "#b08d4c", font: "serif", layout: "minimal", photoSlots: 1 },
+  { id: "luxury-framed", name: "Luxury · Framed", category: "luxury", badge: "🖤", kicker: "PRESENTED BY", accent: "#1a1a1a", font: "serif", layout: "framed", photoSlots: 1 },
+  { id: "luxury-split", name: "Luxury · Split", category: "luxury", badge: "🥂", kicker: "EXCLUSIVE", accent: "#8a6d3b", font: "serif", layout: "split", photoSlots: 2 },
+  // Rental
+  { id: "for-rent", name: "For Rent", category: "rental", badge: "🔑", kicker: "FOR RENT", accent: "#2563eb", font: "sans", layout: "hero", photoSlots: 4 },
+  { id: "now-leasing-grid", name: "Now Leasing · Grid", category: "rental", badge: "🏢", kicker: "NOW LEASING", accent: "#2563eb", font: "sans", layout: "grid", photoSlots: 4 },
+  // Price drop
+  { id: "price-improved", name: "Price Improved", category: "price-drop", badge: "📉", kicker: "PRICE IMPROVED", accent: "#e62c2c", font: "sans", layout: "banner", photoSlots: 4 },
+  { id: "new-price", name: "New Price", category: "price-drop", badge: "🏷️", kicker: "NEW PRICE", accent: "#059669", font: "sans", layout: "hero", photoSlots: 3 },
+  // Sold
   { id: "just-sold", name: "Just Sold", category: "sold", badge: "🎉", kicker: "JUST SOLD", accent: "#0f766e", font: "sans", layout: "hero", photoSlots: 3 },
+  { id: "sold-spotlight", name: "Sold · Spotlight", category: "sold", badge: "🌟", kicker: "SOLD", accent: "#0f766e", font: "sans", layout: "minimal", photoSlots: 1 },
 ];
 
 export type FlyerData = {
@@ -148,6 +164,37 @@ export function renderFlyer(tpl: FlyerTemplate, d: FlyerData, photos: string[]):
           ${kicker}
           <div style="margin-top:14px">${priceHtml}${addr}${specsHtml(d, a, f.head)}${whenHtml(d, a, f.head)}${desc}</div>
           ${photos[1] ? `<img src="${esc(photos[1])}" style="width:100%;height:1.6in;object-fit:cover;border-radius:8px;margin-top:16px" alt="">` : ""}
+        </div>
+      </div>`;
+  } else if (tpl.layout === "banner") {
+    const strip = photos.slice(1, 4);
+    inner = `
+      <div style="background:${a};padding:0.42in 0.6in;color:#fff">
+        <div style="display:inline-block;border:1.5px solid rgba(255,255,255,.7);font-family:${f.head};font-weight:800;font-size:10pt;letter-spacing:4px;text-transform:uppercase;padding:5px 14px">${esc(d.kicker || tpl.kicker)}</div>
+        <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-top:12px">
+          <div>
+            <div style="font-family:${f.head};font-weight:700;font-size:17pt">${esc(d.address || "[Property address]")}</div>
+            ${d.cityLine ? `<div style="font-size:11pt;opacity:.9">${esc(d.cityLine)}</div>` : ""}
+          </div>
+          ${d.price ? `<div style="font-family:${f.head};font-weight:800;font-size:28pt;line-height:1;white-space:nowrap">${esc(d.price)}</div>` : ""}
+        </div>
+      </div>
+      ${photoOrPlaceholder(hero, "width:100%;height:3.9in;display:block", "Upload the hero photo")}
+      <div style="padding:0.3in 0.6in 0">${specsHtml(d, a, f.head)}${whenHtml(d, a, f.head)}${desc}
+        ${strip.length ? `<div style="display:flex;gap:10px;margin-top:16px">${strip.map((p) => photoOrPlaceholder(p, "flex:1;height:1.2in;border-radius:6px")).join("")}</div>` : ""}
+      </div>`;
+  } else if (tpl.layout === "framed") {
+    inner = `
+      <div style="background:${a};padding:0.32in">
+        <div style="background:#fff;padding:0.4in 0.5in;text-align:center">
+          <div style="display:inline-block;font-family:${f.head};font-weight:700;font-size:10pt;letter-spacing:5px;text-transform:uppercase;color:${a}">${esc(d.kicker || tpl.kicker)}</div>
+          <div style="margin:14px 0 0">${photoOrPlaceholder(hero, "width:100%;height:3.9in", "Upload the hero photo")}</div>
+          ${d.price ? `<div style="font-family:${f.head};font-weight:800;font-size:27pt;color:${a};margin-top:14px">${esc(d.price)}</div>` : ""}
+          <div style="font-family:${f.head};font-weight:700;font-size:15pt;color:#111;margin-top:4px">${esc(d.address || "[Property address]")}</div>
+          ${d.cityLine ? `<div style="font-size:11pt;color:#555">${esc(d.cityLine)}</div>` : ""}
+          <div style="display:flex;justify-content:center;margin-top:6px">${specsHtml(d, a, f.head)}</div>
+          <div style="display:flex;justify-content:center">${whenHtml(d, a, f.head)}</div>
+          ${d.description ? `<p style="margin:12px auto 0;font-size:10pt;line-height:1.6;color:#444;max-width:5.6in">${esc(d.description)}</p>` : ""}
         </div>
       </div>`;
   } else {
