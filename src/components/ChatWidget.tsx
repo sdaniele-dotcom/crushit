@@ -128,20 +128,32 @@ export function ChatWidget() {
 
   const pathname = usePathname() || "/";
   const ctx = CONTEXTS.find((c) => c.match(pathname)) ?? null;
+  const hasCtx = !!ctx;
+  const hasProfile = !!profile;
   const [open, setOpen] = useState(false);
   const [bubble, setBubble] = useState(false);
 
-  // Proactive bubble: appears once per session after a short delay, only when
-  // logged in and on a relevant page, and never after being dismissed/opened.
+  // Proactive bubble: re-arms a short delay after the agent lands on each
+  // relevant page. Depends only on the pathname + whether they're signed in
+  // (stable values), so profile refreshes don't keep cancelling the timer. It
+  // goes quiet for the session only once they actually open the chat — not just
+  // because they dismissed one bubble.
   useEffect(() => {
-    let dismissed = false;
-    try { dismissed = sessionStorage.getItem("crush:chat-nudge") === "1"; } catch {}
-    if (dismissed || !ctx || !profile) return;
-    const t = setTimeout(() => { if (!open) setBubble(true); }, 4500);
+    setBubble(false);
+    if (!hasCtx || !hasProfile) return;
+    let quiet = false;
+    try { quiet = sessionStorage.getItem("crush:chat-nudge") === "1"; } catch {}
+    if (quiet) return;
+    const t = setTimeout(() => setBubble(true), 4500);
     return () => clearTimeout(t);
-  }, [ctx, profile, open]);
+  }, [pathname, hasCtx, hasProfile]);
 
+  // X on the bubble: just hide it — it can re-appear on the next relevant page.
   function dismissBubble() {
+    setBubble(false);
+  }
+  // Opening the chat means they found it — stop nudging for this session.
+  function quietNudge() {
     setBubble(false);
     try { sessionStorage.setItem("crush:chat-nudge", "1"); } catch {}
   }
@@ -234,7 +246,7 @@ export function ChatWidget() {
               </Link>
             ))}
           </div>
-          <button type="button" onClick={() => { dismissBubble(); setOpen(true); }} className="mt-3 text-xs font-semibold text-crush-600 hover:text-crush-700">
+          <button type="button" onClick={() => { quietNudge(); setOpen(true); }} className="mt-3 text-xs font-semibold text-crush-600 hover:text-crush-700">
             Or ask me anything →
           </button>
         </div>
@@ -243,7 +255,7 @@ export function ChatWidget() {
       {/* Launcher */}
       <button
         type="button"
-        onClick={() => { setBubble(false); setOpen((o) => !o); }}
+        onClick={() => { quietNudge(); setOpen((o) => !o); }}
         aria-label={open ? "Close chat" : "Open chat assistant"}
         className="fixed bottom-5 right-5 z-50 grid h-14 w-14 place-items-center rounded-full bg-crush-500 text-white shadow-xl shadow-crush-500/30 transition-transform hover:scale-105 hover:bg-crush-600"
       >
