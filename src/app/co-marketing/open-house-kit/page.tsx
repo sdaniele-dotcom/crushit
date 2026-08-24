@@ -6,6 +6,7 @@ import { PrintButton } from "@/components/PrintButton";
 import { OpenHouseSetup } from "@/components/OpenHouseSetup";
 import { OpenHouseSignIn } from "@/components/OpenHouseSignIn";
 import { NeighborPostcard } from "@/components/NeighborPostcard";
+import { DigitalOpenHouse } from "@/components/DigitalOpenHouse";
 import Link from "next/link";
 import { site } from "@/lib/site";
 import { crushLogoPrimaryDataUri } from "@/lib/brandLogo";
@@ -367,7 +368,22 @@ export default function OpenHouseKitPage() {
 
         {/* Promote it */}
         <div className="mt-14">
-          <Eyebrow>Step 3 · Fill the room</Eyebrow>
+          <Eyebrow>Step 3 · Digital sign-in &amp; feedback</Eyebrow>
+          <h2 className="mt-4 text-3xl font-bold tracking-tight text-ink-900">
+            Capture leads &amp; feedback by QR
+          </h2>
+          <p className="mt-3 max-w-2xl text-muted">
+            Print these QR codes for the sign-in table. Visitors sign in and leave
+            feedback on their phone — everything is saved under this listing and
+            only you can see it.
+          </p>
+          <div className="mt-6">
+            <DigitalOpenHouse />
+          </div>
+        </div>
+
+        <div className="mt-14">
+          <Eyebrow>Step 4 · Fill the room</Eyebrow>
           <h2 className="mt-4 text-3xl font-bold tracking-tight text-ink-900">
             Invite the neighbors, gather feedback
           </h2>

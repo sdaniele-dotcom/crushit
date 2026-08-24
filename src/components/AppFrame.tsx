@@ -20,7 +20,12 @@ import { Container } from "@/components/ui";
  * When Supabase is NOT configured, it degrades to the old public site so
  * nothing breaks before accounts are switched on.
  */
-const AUTH_ROUTES = ["/login", "/signup", "/reset-password", "/update-password", "/auth/callback"];
+// Public routes that render without the login gate or app chrome — auth pages
+// plus the QR-driven open-house visitor forms (scanned by logged-out visitors).
+const AUTH_ROUTES = [
+  "/login", "/signup", "/reset-password", "/update-password", "/auth/callback",
+  "/open-house", "/feedback",
+];
 
 function normalize(p: string): string {
   if (p.length > 1 && p.endsWith("/")) return p.slice(0, -1);
