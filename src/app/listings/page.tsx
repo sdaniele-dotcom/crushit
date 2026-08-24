@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Container, PageHero } from "@/components/ui";
 import { RequireAuth } from "@/components/auth/RequireAuth";
 import { listMyListings, upsertListing, deleteListing, listingLabel, lookupProperty, type Listing } from "@/lib/listings";
+import { uploadListingPhoto } from "@/lib/storage";
 import { toast } from "@/lib/toast";
 
 const input =
@@ -34,6 +35,7 @@ function ListingsInner() {
   const [busy, setBusy] = useState(false);
   const [looking, setLooking] = useState(false);
   const [photo, setPhoto] = useState("");
+  const [uploading, setUploading] = useState(false);
   const [lookupMsg, setLookupMsg] = useState("");
   const [f, setF] = useState({ address: "", city: "", state: "", zip: "", price: "", beds: "", baths: "", sqft: "", description: "" });
 
@@ -59,7 +61,23 @@ function ListingsInner() {
       description: p.description || s.description,
     }));
     if (p.photo_url) setPhoto(p.photo_url);
-    setLookupMsg(p.photo_url ? "Filled in from the MLS (photo included)." : "Filled in from the MLS.");
+    setLookupMsg(p.photo_url ? "Filled in from the MLS (photo included)." : "Filled in from the MLS — no photo on file, upload one below.");
+  }
+
+  async function onPhotoFile(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file) return;
+    setUploading(true);
+    setLookupMsg("");
+    try {
+      const url = await uploadListingPhoto(file);
+      setPhoto(url);
+    } catch (err) {
+      toast({ emoji: "⚠️", title: "Upload failed", body: err instanceof Error ? err.message : "Please try again." });
+    } finally {
+      setUploading(false);
+    }
   }
 
   async function add(e: React.FormEvent) {
@@ -114,13 +132,20 @@ function ListingsInner() {
                 </button>
               </div>
               {lookupMsg && <p className="mt-1.5 text-xs font-medium text-crush-700">{lookupMsg}</p>}
-              {photo && (
-                <div className="mt-2 flex items-center gap-3">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={photo} alt="Listing" className="h-16 w-24 rounded-lg object-cover" />
-                  <button type="button" onClick={() => setPhoto("")} className="text-xs font-semibold text-muted underline">Remove photo</button>
-                </div>
-              )}
+              <div className="mt-2 flex flex-wrap items-center gap-3">
+                {photo && (
+                  <>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={photo} alt="Listing" className="h-16 w-24 rounded-lg object-cover" />
+                    <button type="button" onClick={() => setPhoto("")} className="text-xs font-semibold text-muted underline">Remove photo</button>
+                  </>
+                )}
+                <label className="cursor-pointer rounded-xl border border-border bg-white px-4 py-2.5 text-sm font-semibold text-ink-900 hover:bg-surface-2">
+                  {uploading ? "Uploading…" : photo ? "Replace photo" : "Upload a photo"}
+                  <input type="file" accept="image/*" onChange={onPhotoFile} disabled={uploading} className="hidden" />
+                </label>
+              </div>
+              <p className="mt-1 text-xs text-muted">This photo is reused on flyers, postcards, and the open-house flyer. No MLS photo? Snap or upload your own.</p>
             </div>
             <div className="grid gap-4 sm:grid-cols-3">
               <div><label className={label}>City</label><input className={input} value={f.city} onChange={(e) => set("city", e.target.value)} /></div>

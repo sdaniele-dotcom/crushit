@@ -6,6 +6,7 @@ import { PrintButton } from "@/components/PrintButton";
 import { OpenHouseSetup } from "@/components/OpenHouseSetup";
 import { OpenHouseSignIn } from "@/components/OpenHouseSignIn";
 import { NeighborPostcard } from "@/components/NeighborPostcard";
+import { OpenHouseFlyer } from "@/components/OpenHouseFlyer";
 import { DigitalOpenHouse } from "@/components/DigitalOpenHouse";
 import { OpenHouseFeedbackPrint } from "@/components/OpenHouseFeedbackPrint";
 import Link from "next/link";
@@ -350,26 +351,44 @@ export default function OpenHouseKitPage() {
             <OpenHouseSignIn />
           </div>
 
-          {/* Matching flyer callout */}
+        </div>
+
+        {/* Property flyer — photos only */}
+        <div className="mt-14">
+          <Eyebrow>Step 3 · The flyer</Eyebrow>
+          <h2 className="mt-4 text-3xl font-bold tracking-tight text-ink-900">
+            Print your property flyer
+          </h2>
+          <p className="mt-3 max-w-2xl text-muted">
+            A clean, full-page flyer for the sign-in table and the front
+            window — just the home&apos;s photos and details, branded to you.
+            Pick a template and print.
+          </p>
+          <div className="mt-6">
+            <OpenHouseFlyer />
+          </div>
+
+          {/* Matching co-branded (financing) flyer callout */}
           <Card className="mt-6 flex flex-col items-start justify-between gap-4 bg-surface sm:flex-row sm:items-center">
             <div>
               <h3 className="font-bold text-ink-900">
-                Add the matching co-branded flyer
+                Want financing on it too?
               </h3>
               <p className="mt-1 text-sm text-muted">
-                Generate a property flyer with financing scenarios for the
-                sign-in table — your name and photo alongside ours.
+                Generate the co-branded version with monthly-payment scenarios
+                and program options on the back — your name and photo alongside
+                {" "}{site.company}.
               </p>
             </div>
             <Button href="/co-brand" className="shrink-0">
-              Make the flyer
+              Make the payment flyer
             </Button>
           </Card>
         </div>
 
         {/* Promote it */}
         <div className="mt-14">
-          <Eyebrow>Step 3 · Digital sign-in &amp; feedback</Eyebrow>
+          <Eyebrow>Step 4 · Digital sign-in &amp; feedback</Eyebrow>
           <h2 className="mt-4 text-3xl font-bold tracking-tight text-ink-900">
             Capture leads &amp; feedback by QR
           </h2>
@@ -384,7 +403,7 @@ export default function OpenHouseKitPage() {
         </div>
 
         <div className="mt-14">
-          <Eyebrow>Step 4 · Fill the room</Eyebrow>
+          <Eyebrow>Step 5 · Fill the room</Eyebrow>
           <h2 className="mt-4 text-3xl font-bold tracking-tight text-ink-900">
             Invite the neighbors, gather feedback
           </h2>
@@ -414,7 +433,7 @@ export default function OpenHouseKitPage() {
         <div className="mt-14">
           <div className="flex flex-wrap items-end justify-between gap-4">
             <div>
-              <Eyebrow>Step 4 · The playbook</Eyebrow>
+              <Eyebrow>Step 6 · The playbook</Eyebrow>
               <h2 className="mt-4 text-3xl font-bold tracking-tight text-ink-900">
                 Before, during &amp; after
               </h2>
@@ -471,7 +490,7 @@ export default function OpenHouseKitPage() {
 
         {/* Follow-up templates */}
         <div className="mt-14">
-          <Eyebrow>Step 5 · The follow-up</Eyebrow>
+          <Eyebrow>Step 7 · The follow-up</Eyebrow>
           <h2 className="mt-4 text-3xl font-bold tracking-tight text-ink-900">
             Copy-and-send follow-ups
           </h2>

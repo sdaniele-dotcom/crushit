@@ -66,6 +66,7 @@ export function PropertyFlyerTool() {
   const [prefilled, setPrefilled] = useState(false);
   const [saveToProfile, setSaveToProfile] = useState(false);
   const [listing, setListing] = useState<Listing | null>(null);
+  const [template, setTemplate] = useState<"classic" | "bold" | "editorial">("classic");
 
   // If we arrived from a saved listing (?listing=<id>), load it to prefill the
   // property fields — enter the property once, reuse it everywhere.
@@ -148,6 +149,7 @@ export function PropertyFlyerTool() {
         veteran: fd.get("veteran") === "on" ? true : null,
       },
       loan_officer_id: officerId || undefined,
+      template,
     };
 
     setStatus("loading");
@@ -326,6 +328,30 @@ export function PropertyFlyerTool() {
             🏠 Using your saved listing — {listing.address}. Edits here apply to this flyer only.
           </p>
         )}
+
+        {/* Flyer style / template */}
+        <h2 className="mt-8 text-2xl font-bold text-ink-900">Flyer style</h2>
+        <p className="mt-1 text-sm text-muted">
+          Pick a look. Every flyer prints as two pages — payment scenarios on the
+          front, a plain-English guide to the programs on the back.
+        </p>
+        <div className="mt-4 grid gap-3 sm:grid-cols-3">
+          {[
+            { key: "classic" as const, name: "Classic", blurb: "Charcoal header, red accents" },
+            { key: "bold" as const, name: "Bold", blurb: "Red header, high energy" },
+            { key: "editorial" as const, name: "Editorial", blurb: "Clean, light, minimal" },
+          ].map((t) => (
+            <button
+              key={t.key}
+              type="button"
+              onClick={() => setTemplate(t.key)}
+              className={`rounded-xl border px-4 py-3 text-left text-sm transition-colors ${template === t.key ? "border-crush-400 bg-crush-50" : "border-border hover:bg-surface-2"}`}
+            >
+              <span className="block font-bold text-ink-900">{t.name}</span>
+              <span className="block text-xs text-muted">{t.blurb}</span>
+            </button>
+          ))}
+        </div>
 
         {/* Primary CTA — always visible right after the essentials */}
         <div className="mt-8">
