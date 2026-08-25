@@ -224,10 +224,13 @@ export function FlyerStudio({ initialCategory = "all" }: { initialCategory?: Fly
             <iframe title="Flyer preview" srcDoc={html} style={{ width: 816, height: 1056, border: 0, transform: "scale(0.5)", transformOrigin: "top left" }} />
           </div>
         </div>
-        <button type="button" onClick={print} className="mt-4 w-full rounded-full bg-crush-500 px-6 py-3.5 text-base font-semibold text-white shadow-lg shadow-crush-500/20 hover:bg-crush-600">
-          Print / Save as PDF
-        </button>
-        <p className="mt-2 text-center text-xs text-muted">Opens a clean, full-page version to print or save.</p>
+        <div className="mt-4 rounded-2xl border-2 border-crush-200 bg-crush-50 p-4 text-center">
+          <p className="text-lg font-extrabold text-ink-900">Your flyer is ready! 🎉</p>
+          <p className="mt-0.5 text-xs text-muted">Prints only the flyer — clean, full page, with your logo &amp; branding.</p>
+          <button type="button" onClick={print} className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-full bg-crush-500 px-6 py-3.5 text-base font-bold text-white shadow-lg shadow-crush-500/20 hover:bg-crush-600">
+            🖨️ Print Here
+          </button>
+        </div>
       </div>
     </div>
   );

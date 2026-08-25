@@ -117,6 +117,16 @@ function whenHtml(d: FlyerData, accent: string, headFont: string): string {
   return `<div style="display:inline-block;margin-top:14px;padding:10px 18px;border-radius:999px;background:${accent};color:#fff;font-family:${headFont};font-weight:700;font-size:12pt"><span style="text-transform:uppercase;letter-spacing:2px;font-size:8.5pt;opacity:.85;display:block">Open house</span>${parts}</div>`;
 }
 
+/** Top-of-flyer agent/company brand bar. The agent's uploaded logo sits at the
+ *  top of EVERY template (object-fit:contain so it's never stretched); if no
+ *  logo is saved, their name + brokerage stand in. */
+function topBrand(d: FlyerData, headFont: string): string {
+  const inner = d.logoUrl
+    ? `<img src="${esc(d.logoUrl)}" style="max-height:52px;max-width:270px;width:auto;height:auto;object-fit:contain" alt="">`
+    : `<div><span style="font-family:${headFont};font-weight:800;font-size:15pt;color:#111">${esc(d.agentName || "Your Name")}</span>${d.agentBrokerage ? `<span style="color:#666;font-size:10.5pt">&nbsp;&nbsp;·&nbsp;&nbsp;${esc(d.agentBrokerage)}</span>` : ""}</div>`;
+  return `<div style="display:flex;align-items:center;min-height:48px;padding:14px 0.6in 10px">${inner}</div>`;
+}
+
 function agentBlock(d: FlyerData, accent: string, headFont: string): string {
   const contact = [d.agentPhone, d.agentEmail, d.agentBrokerage, d.dreLicense && `DRE #${d.dreLicense}`]
     .filter(Boolean)
@@ -128,7 +138,7 @@ function agentBlock(d: FlyerData, accent: string, headFont: string): string {
       <div style="font-family:${headFont};font-weight:800;font-size:13pt;color:#111">${esc(d.agentName || "Your Name")}</div>
       <div style="font-size:9pt;color:#555;margin-top:2px">${contact}</div>
     </div>
-    ${d.logoUrl ? `<img src="${esc(d.logoUrl)}" style="max-height:40px;max-width:150px;object-fit:contain" alt="">` : ""}
+    ${d.logoUrl ? `<img src="${esc(d.logoUrl)}" style="max-height:38px;max-width:140px;width:auto;object-fit:contain" alt="">` : ""}
   </div>`;
 }
 
@@ -161,7 +171,7 @@ export function renderFlyer(tpl: FlyerTemplate, d: FlyerData, photos: string[]):
   if (tpl.layout === "hero") {
     const strip = photos.slice(1, 4);
     inner = `
-      ${photoOrPlaceholder(hero, "width:100%;height:4.5in;display:block", "Upload the hero photo")}
+      ${photoOrPlaceholder(hero, "width:100%;height:4.05in;display:block", "Upload the hero photo")}
       <div style="padding:0.3in 0.6in 0">
         <div style="margin:-0.55in 0 0"><span style="position:relative;top:0">${kicker}</span></div>
         <div style="margin-top:0.4in">${priceHtml}${addr}${specsHtml(d, a, f.head)}${whenHtml(d, a, f.head)}${desc}</div>
@@ -177,7 +187,7 @@ export function renderFlyer(tpl: FlyerTemplate, d: FlyerData, photos: string[]):
       <div style="padding:14px 0.6in 0">${specsHtml(d, a, f.head)}${whenHtml(d, a, f.head)}${desc}</div>`;
   } else if (tpl.layout === "split") {
     inner = `
-      <div style="display:flex;height:8.1in">
+      <div style="display:flex;height:7.4in">
         <div style="width:3.6in;flex-shrink:0">${photoOrPlaceholder(hero, "width:100%;height:100%;display:block", "Upload the hero photo")}</div>
         <div style="flex:1;padding:0.5in 0.5in 0">
           ${kicker}
@@ -219,7 +229,7 @@ export function renderFlyer(tpl: FlyerTemplate, d: FlyerData, photos: string[]):
   } else {
     // minimal — full-bleed photo with an overlay panel
     inner = `
-      <div style="position:relative;height:7.4in">
+      <div style="position:relative;height:6.7in">
         ${photoOrPlaceholder(hero, "position:absolute;inset:0;width:100%;height:100%", "Upload the hero photo")}
         <div style="position:absolute;left:0;right:0;bottom:0;padding:0.5in 0.6in;background:linear-gradient(to top,rgba(0,0,0,.72),rgba(0,0,0,0))">
           <div style="display:inline-block;border:1.5px solid #fff;color:#fff;font-family:${f.head};font-weight:700;font-size:10pt;letter-spacing:5px;text-transform:uppercase;padding:5px 14px">${esc(d.kicker || tpl.kicker)}</div>
@@ -246,6 +256,7 @@ export function renderFlyer(tpl: FlyerTemplate, d: FlyerData, photos: string[]):
   <div class="__bar"><span>Flyer ready — print or Save as PDF (Letter, no margins).</span>
     <button onclick="window.print()" style="cursor:pointer;border:0;border-radius:999px;background:#e62c2c;color:#fff;font-weight:700;font-size:12px;padding:6px 14px">Print / Save as PDF</button></div>
   <div class="page">
+    ${topBrand(d, f.head)}
     <div class="page-body">${inner}</div>
     <div style="padding:0 0.6in">${agentBlock(d, a, f.head)}</div>
     ${crushFoot()}
