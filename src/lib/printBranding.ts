@@ -1,7 +1,7 @@
 /**
  * Centralized print/PDF branding (spec §10). One place that builds the two
  * branding blocks every printable shares, so the hierarchy is always:
- *   TOP  = Realtor / their brokerage  (primary)
+ *   TOP  = Agent / their brokerage  (primary)
  *   BOTTOM = Crush Mortgage  (financing partner)
  *
  * The Crush Mortgage mark always comes from the ONE canonical asset
@@ -20,7 +20,7 @@ export function esc(s: unknown): string {
     .replace(/"/g, "&quot;");
 }
 
-/** Top-of-page realtor branding: company logo, headshot, name + contact. */
+/** Top-of-page agent branding: company logo, headshot, name + contact. */
 export function realtorBrandHtml(profile: Profile | null | undefined): string {
   const name = fullName(profile) || "Your Name";
   const logo = profile?.brokerage_logo_url || profile?.team_logo_url || "";

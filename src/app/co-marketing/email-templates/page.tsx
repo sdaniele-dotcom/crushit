@@ -6,7 +6,7 @@ import { CopyCard } from "@/components/CopyCard";
 export const metadata: Metadata = {
   title: "Email Templates",
   description:
-    "Copy-and-send email templates for realtors — new leads, pre-approval follow-ups, past clients, and 'thinking of selling' homeowners.",
+    "Copy-and-send email templates for agents — new leads, pre-approval follow-ups, past clients, and 'thinking of selling' homeowners.",
 };
 
 const emails: { title: string; meta: string; text: string }[] = [

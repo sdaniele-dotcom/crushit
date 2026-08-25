@@ -64,7 +64,7 @@ export default function OpenHouseSignInPage() {
               <div><label className={label}>Your name *</label><input className={input} value={f.name} onChange={(e) => set("name", e.target.value)} required autoFocus /></div>
               <div><label className={label}>Phone</label><input className={input} type="tel" value={f.phone} onChange={(e) => set("phone", e.target.value)} /></div>
               <div><label className={label}>Email</label><input className={input} type="email" value={f.email} onChange={(e) => set("email", e.target.value)} /></div>
-              <div><label className={label}>Are you working with a Realtor?</label><YesNo value={f.working_with_agent} onChange={(v) => set("working_with_agent", v)} /></div>
+              <div><label className={label}>Are you working with an agent?</label><YesNo value={f.working_with_agent} onChange={(v) => set("working_with_agent", v)} /></div>
               <div><label className={label}>Interested in this property?</label><YesNo value={f.interested_this} onChange={(v) => set("interested_this", v)} /></div>
               <div><label className={label}>Interested in similar homes?</label><YesNo value={f.interested_similar} onChange={(v) => set("interested_similar", v)} /></div>
               <div><label className={label}>Want info about financing?</label><YesNo value={f.wants_financing} onChange={(v) => set("wants_financing", v)} /></div>

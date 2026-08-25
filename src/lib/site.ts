@@ -1,5 +1,5 @@
 /**
- * CRUSH IT — Realtors Suite
+ * CRUSH IT — Agent Suite
  * Central configuration.
  *
  * Pre-filled with Crush Mortgage details pulled from crushmortgage.com.
@@ -10,9 +10,9 @@
 
 export const site = {
   brand: "CRUSH IT",
-  tagline: "The Realtors Suite by Crush Mortgage",
+  tagline: "The Agent Suite by Crush Mortgage",
   shortDescription:
-    "A complete toolkit of calculators, loan guides, and co-marketing resources built to help realtors win more clients and close more deals.",
+    "A complete toolkit of calculators, loan guides, and co-marketing resources built to help agents win more clients and close more deals.",
 
   // ─── Company / loan-officer details ───────────────────────────────
   company: "Crush Mortgage",

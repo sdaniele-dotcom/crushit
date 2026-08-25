@@ -5,17 +5,15 @@ import { useAuth } from "@/components/auth/AuthProvider";
 import { useActiveListing } from "@/components/ActiveListing";
 import { fullName } from "@/lib/profile";
 import { awardStars, logActivity } from "@/lib/rewards";
-import { FLYER_TEMPLATES, renderFlyer, type FlyerData, type FlyerCategory } from "@/lib/flyerTemplates";
+import { FLYER_TEMPLATES, CATEGORY_LABELS, renderFlyer, type FlyerData, type FlyerCategory } from "@/lib/flyerTemplates";
 
-const CATEGORIES: { key: FlyerCategory | "all"; label: string }[] = [
-  { key: "all", label: "All" },
-  { key: "listing", label: "Listing" },
-  { key: "open-house", label: "Open house" },
-  { key: "luxury", label: "Luxury" },
-  { key: "rental", label: "Rental" },
-  { key: "price-drop", label: "Price drop" },
-  { key: "sold", label: "Just sold" },
-];
+// Templates grouped by category, in a friendly order, for the dropdown.
+const CATEGORY_ORDER: FlyerCategory[] = ["listing", "open-house", "luxury", "rental", "price-drop", "sold"];
+const GROUPED = CATEGORY_ORDER.map((cat) => ({
+  cat,
+  label: CATEGORY_LABELS[cat],
+  items: FLYER_TEMPLATES.filter((t) => t.category === cat),
+})).filter((g) => g.items.length > 0);
 
 const inputCls = "w-full rounded-xl border border-border bg-white px-3 py-2 text-sm outline-none focus:border-crush-400 focus:ring-2 focus:ring-crush-100";
 const labelCls = "text-xs font-semibold uppercase tracking-wide text-muted";
@@ -49,7 +47,6 @@ const money = (n: number | null | undefined) =>
 export function FlyerStudio({ initialCategory = "all" }: { initialCategory?: FlyerCategory | "all" }) {
   const { profile } = useAuth();
   const { listing } = useActiveListing();
-  const [cat, setCat] = useState<FlyerCategory | "all">(initialCategory);
   const [tplId, setTplId] = useState<string>(FLYER_TEMPLATES.find((t) => initialCategory === "all" || t.category === initialCategory)?.id ?? FLYER_TEMPLATES[0].id);
   const [photos, setPhotos] = useState<string[]>([]);
   const [uploading, setUploading] = useState(false);
@@ -141,27 +138,27 @@ export function FlyerStudio({ initialCategory = "all" }: { initialCategory?: Fly
     logActivity("marketing_piece_created", { kind: "flyer_template", template: tpl.id });
   }
 
-  const shown = FLYER_TEMPLATES.filter((t) => cat === "all" || t.category === cat);
-
   return (
     <div className="grid gap-8 lg:grid-cols-[1fr_minmax(320px,420px)]">
-      {/* Left: template gallery + editor */}
+      {/* Left: template picker + editor */}
       <div>
-        <div className="flex flex-wrap gap-2">
-          {CATEGORIES.map((c) => (
-            <button key={c.key} type="button" onClick={() => setCat(c.key)} className={`rounded-full px-4 py-1.5 text-sm font-semibold transition-colors ${cat === c.key ? "bg-crush-500 text-white" : "bg-surface-2 text-ink-700 hover:bg-surface"}`}>{c.label}</button>
-          ))}
-        </div>
-
-        <div className="mt-4 grid grid-cols-2 gap-3 sm:grid-cols-3">
-          {shown.map((t) => (
-            <button key={t.id} type="button" onClick={() => setTplId(t.id)} className={`rounded-2xl border p-4 text-left transition-colors ${tplId === t.id ? "border-crush-400 bg-crush-50 ring-2 ring-crush-200" : "border-border bg-white hover:bg-surface-2"}`}>
-              <span className="text-2xl" aria-hidden>{t.badge}</span>
-              <p className="mt-1 text-sm font-bold text-ink-900">{t.name}</p>
-              <p className="text-xs capitalize text-muted">{t.category.replace("-", " ")}</p>
-            </button>
-          ))}
-        </div>
+        <label className="block">
+          <span className="text-sm font-bold uppercase tracking-wide text-crush-700">Template</span>
+          <select
+            value={tplId}
+            onChange={(e) => setTplId(e.target.value)}
+            className="mt-2 w-full rounded-xl border border-border bg-white px-3.5 py-3 text-sm font-semibold text-ink-900 outline-none focus:border-crush-400 focus:ring-2 focus:ring-crush-100"
+          >
+            {GROUPED.map((g) => (
+              <optgroup key={g.cat} label={g.label}>
+                {g.items.map((t) => (
+                  <option key={t.id} value={t.id}>{t.name}</option>
+                ))}
+              </optgroup>
+            ))}
+          </select>
+        </label>
+        <p className="mt-1.5 text-xs text-muted">{FLYER_TEMPLATES.length} templates across {GROUPED.length} categories — switch anytime; your details carry over.</p>
 
         {/* Photos */}
         <h3 className="mt-8 text-sm font-bold uppercase tracking-wide text-crush-700">Photos</h3>

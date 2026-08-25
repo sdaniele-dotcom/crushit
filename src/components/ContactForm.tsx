@@ -91,7 +91,7 @@ export function ContactForm() {
       <input
         type="hidden"
         name="_subject"
-        value="New CRUSH IT Realtors Suite inquiry"
+        value="New CRUSH IT Agent Suite inquiry"
       />
       <input type="hidden" name="_template" value="table" />
       <input type="hidden" name="_captcha" value="false" />
@@ -137,7 +137,7 @@ export function ContactForm() {
           <option value="" disabled>
             Select one
           </option>
-          <option>Realtor / agent</option>
+          <option>Real estate agent</option>
           <option>Homebuyer</option>
           <option>Homeowner (refinance)</option>
           <option>Real-estate investor</option>

@@ -6,14 +6,14 @@ import { CopyCard } from "@/components/CopyCard";
 export const metadata: Metadata = {
   title: "Social Media Kit",
   description:
-    "Ready-to-post, copy-and-paste social captions for realtors — new listings, open houses, buyer tips, and more. Co-branded with Crush Mortgage.",
+    "Ready-to-post, copy-and-paste social captions for agents — new listings, open houses, buyer tips, and more. Co-branded with Crush Mortgage.",
 };
 
 const captions: { title: string; meta: string; text: string }[] = [
   {
     title: "Just listed",
     meta: "New listing announcement",
-    text: `✨ JUST LISTED ✨\n[ADDRESS], [CITY]\n[BEDS] bd | [BATHS] ba | [SQFT] sqft — $[PRICE]\n\nThis one won't last. Want to know what the monthly payment could look like? I partner with Crush Mortgage to get you real numbers fast.\n\nDM me for a private showing 🔑\n— [YOUR NAME], [BROKERAGE]\n\n#justlisted #[CITY]realestate #homeforsale #realtor`,
+    text: `✨ JUST LISTED ✨\n[ADDRESS], [CITY]\n[BEDS] bd | [BATHS] ba | [SQFT] sqft — $[PRICE]\n\nThis one won't last. Want to know what the monthly payment could look like? I partner with Crush Mortgage to get you real numbers fast.\n\nDM me for a private showing 🔑\n— [YOUR NAME], [BROKERAGE]\n\n#justlisted #[CITY]realestate #homeforsale #realestateagent`,
   },
   {
     title: "Open house",
@@ -23,7 +23,7 @@ const captions: { title: string; meta: string; text: string }[] = [
   {
     title: "Just sold",
     meta: "Closing / social proof",
-    text: `🎉 SOLD & CLOSED! 🎉\nAnother happy homeowner in [CITY].\n\nFrom offer to keys, my team + Crush Mortgage made it smooth and on time. If you're thinking about buying or selling in [YEAR], let's talk.\n\n— [YOUR NAME], [BROKERAGE] 📲 [PHONE]\n\n#sold #closingday #realestate #[CITY]realtor`,
+    text: `🎉 SOLD & CLOSED! 🎉\nAnother happy homeowner in [CITY].\n\nFrom offer to keys, my team + Crush Mortgage made it smooth and on time. If you're thinking about buying or selling in [YEAR], let's talk.\n\n— [YOUR NAME], [BROKERAGE] 📲 [PHONE]\n\n#sold #closingday #realestate #[CITY]realestate`,
   },
   {
     title: "Down payment myth",
@@ -53,7 +53,7 @@ const captions: { title: string; meta: string; text: string }[] = [
 ];
 
 const hashtags = [
-  "#realtor",
+  "#realestateagent",
   "#realestate",
   "#[CITY]realestate",
   "#homebuying",

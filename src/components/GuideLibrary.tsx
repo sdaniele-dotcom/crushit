@@ -43,7 +43,7 @@ function esc(s: string): string {
 export function GuideLibrary() {
   const [openKey, setOpenKey] = useState<GuideKey | null>(null);
   const [name, setName] = useState("");
-  const [title, setTitle] = useState("REALTOR®");
+  const [title, setTitle] = useState("Real Estate Agent");
   const [brokerage, setBrokerage] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
@@ -264,7 +264,7 @@ export function GuideLibrary() {
                 </div>
                 <div>
                   <label className={labelCls}>Title</label>
-                  <input className={inputCls} value={title} onChange={(e) => setTitle(e.target.value)} placeholder="REALTOR®" />
+                  <input className={inputCls} value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Real Estate Agent" />
                 </div>
                 <div>
                   <label className={labelCls}>Brokerage</label>

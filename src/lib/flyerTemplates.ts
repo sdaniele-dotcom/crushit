@@ -47,10 +47,29 @@ export const FLYER_TEMPLATES: FlyerTemplate[] = [
   // Price drop
   { id: "price-improved", name: "Price Improved", category: "price-drop", badge: "📉", kicker: "PRICE IMPROVED", accent: "#e62c2c", font: "sans", layout: "banner", photoSlots: 4 },
   { id: "new-price", name: "New Price", category: "price-drop", badge: "🏷️", kicker: "NEW PRICE", accent: "#059669", font: "sans", layout: "hero", photoSlots: 3 },
+  { id: "new-construction", name: "New Construction", category: "listing", badge: "🏗️", kicker: "NEW CONSTRUCTION", accent: "#334155", font: "sans", layout: "hero", photoSlots: 4 },
+  { id: "featured-listing", name: "Featured Listing", category: "luxury", badge: "🌆", kicker: "FEATURED LISTING", accent: "#b08d4c", font: "serif", layout: "hero", photoSlots: 3 },
+  // Open house
+  { id: "open-house-minimal", name: "Open House · Minimal", category: "open-house", badge: "◻️", kicker: "OPEN HOUSE", accent: "#111827", font: "sans", layout: "minimal", photoSlots: 1 },
+  // Rental / investment
+  { id: "investment", name: "Investment Opportunity", category: "rental", badge: "📈", kicker: "INVESTMENT OPPORTUNITY", accent: "#059669", font: "sans", layout: "split", photoSlots: 2 },
+  // Price drop
+  { id: "price-reduced-framed", name: "Price Reduced · Framed", category: "price-drop", badge: "🔻", kicker: "PRICE REDUCED", accent: "#e62c2c", font: "sans", layout: "framed", photoSlots: 1 },
   // Sold
   { id: "just-sold", name: "Just Sold", category: "sold", badge: "🎉", kicker: "JUST SOLD", accent: "#0f766e", font: "sans", layout: "hero", photoSlots: 3 },
   { id: "sold-spotlight", name: "Sold · Spotlight", category: "sold", badge: "🌟", kicker: "SOLD", accent: "#0f766e", font: "sans", layout: "minimal", photoSlots: 1 },
+  { id: "thinking-of-selling", name: "Thinking of Selling?", category: "sold", badge: "💬", kicker: "THINKING OF SELLING?", accent: "#7c3aed", font: "sans", layout: "banner", photoSlots: 3 },
 ];
+
+/** Display label for each category (for the template dropdown groups). */
+export const CATEGORY_LABELS: Record<FlyerCategory, string> = {
+  listing: "Listing",
+  "open-house": "Open house",
+  luxury: "Luxury",
+  rental: "Rental & investment",
+  "price-drop": "Price drop",
+  sold: "Just sold",
+};
 
 export type FlyerData = {
   kicker: string;

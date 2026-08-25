@@ -6,7 +6,7 @@ import { CopyCard } from "@/components/CopyCard";
 export const metadata: Metadata = {
   title: "Video Scripts",
   description:
-    "Short-form video scripts for realtors — reels and shorts on down payments, rates, first-time buying, and more. Copy and film in minutes.",
+    "Short-form video scripts for agents — reels and shorts on down payments, rates, first-time buying, and more. Copy and film in minutes.",
 };
 
 const scripts: { title: string; meta: string; text: string }[] = [

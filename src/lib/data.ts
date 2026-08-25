@@ -96,7 +96,7 @@ export const loanPrograms: LoanProgram[] = [
       "Loan limits up to the conforming cap",
       "Works for primary, second homes & investment",
     ],
-    watchOut: "Higher credit scores unlock the best rates and lower PMI.",
+    watchOut: "Higher credit scores unlock better rates and lower PMI.",
   },
   {
     name: "FHA",
@@ -139,7 +139,7 @@ export const loanPrograms: LoanProgram[] = [
     minCredit: "640",
     highlights: [
       "$0 down payment",
-      "Below-market guarantee fees",
+      "Low guarantee fee — often less than PMI",
       "Generous eligible-area maps (many suburbs qualify)",
       "Great for first-time buyers",
     ],
@@ -174,6 +174,21 @@ export const loanPrograms: LoanProgram[] = [
       "No limit on number of financed properties",
     ],
     watchOut: "Higher rates and down payment than owner-occupied loans.",
+  },
+  {
+    name: "Bank Statement",
+    slug: "bank-statement",
+    tagline: "Qualify with deposits, not tax returns.",
+    bestFor: "Self-employed buyers, business owners & 1099 earners.",
+    minDown: "10%",
+    minCredit: "660+",
+    highlights: [
+      "Qualify on 12–24 months of bank deposits",
+      "No tax returns or W-2s required",
+      "Built for self-employed & business owners",
+      "Primary, second home, or investment",
+    ],
+    watchOut: "Rates are typically higher than full-doc loans, and a larger down payment may be required.",
   },
 ];
 
