@@ -6,6 +6,7 @@ import { recordUse } from "@/lib/rewards";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { fullName } from "@/lib/profile";
 import { toast } from "@/lib/toast";
+import { CurrencyInput } from "@/components/CurrencyInput";
 
 const inp = "w-full rounded-xl border border-border bg-white px-3.5 py-2.5 text-sm outline-none focus:border-crush-400 focus:ring-2 focus:ring-crush-100";
 const lbl = "text-xs font-semibold uppercase tracking-wide text-muted";
@@ -13,8 +14,6 @@ const lbl = "text-xs font-semibold uppercase tracking-wide text-muted";
 const CREDIT = ["740+", "680-739", "620-679", "580-619", "<580"];
 const PROPERTY = ["single-family", "condo", "townhome", "multi-unit"];
 const OCCUPANCY = ["primary", "second", "investment"];
-
-function num(v: string): number { return parseFloat(v.replace(/[^\d.]/g, "")) || 0; }
 
 export function LoanFinder() {
   const { user, profile } = useAuth();
@@ -26,8 +25,34 @@ export function LoanFinder() {
   const [results, setResults] = useState<Match[] | null>(null);
   const [busy, setBusy] = useState(false);
   const [sent, setSent] = useState(false);
+  const [pctStr, setPctStr] = useState(""); // down payment %, linked to the $ amount
 
   const set = <K extends keyof BuyerAnswers>(k: K, v: BuyerAnswers[K]) => setA((s) => ({ ...s, [k]: v }));
+
+  const round1 = (n: number) => Math.round(n * 10) / 10;
+
+  // Purchase price — if a down-payment % is set, keep that % and recompute the $.
+  function setPrice(v?: number) {
+    const price = v ?? 0;
+    setA((s) => {
+      const down = pctStr ? Math.round((price * (parseFloat(pctStr) || 0)) / 100) : s.down;
+      return { ...s, price, down };
+    });
+    if (!pctStr && v && v > 0 && a.down > 0) setPctStr(String(round1((a.down / v) * 100)));
+  }
+  // Down payment as dollars — update the linked % from the current price.
+  function setDollars(v?: number) {
+    const down = v ?? 0;
+    set("down", down);
+    setPctStr(a.price > 0 && down > 0 ? String(round1((down / a.price) * 100)) : "");
+  }
+  // Down payment as a percent — update the linked $ from the current price.
+  function setPct(str: string) {
+    const clean = str.replace(/[^\d.]/g, "");
+    setPctStr(clean);
+    const pct = parseFloat(clean) || 0;
+    if (a.price > 0) set("down", Math.round((a.price * pct) / 100));
+  }
 
   async function run(e: React.FormEvent) {
     e.preventDefault();
@@ -72,10 +97,19 @@ export function LoanFinder() {
               </select>
             </label>
             <label className="block"><span className={lbl}>Purchase price</span>
-              <input className={inp} inputMode="numeric" placeholder="$450,000" onChange={(e) => set("price", num(e.target.value))} />
+              <CurrencyInput className={inp} placeholder="450,000" value={a.price || undefined} onChange={setPrice} />
             </label>
-            <label className="block"><span className={lbl}>Down payment available</span>
-              <input className={inp} inputMode="numeric" placeholder="$45,000" onChange={(e) => set("down", num(e.target.value))} />
+            <label className="block"><span className={lbl}>Down payment</span>
+              <div className="flex gap-2">
+                <CurrencyInput className={inp} placeholder="$ amount" value={a.down || undefined} onChange={setDollars} aria-label="Down payment in dollars" />
+                <div className="flex w-24 shrink-0 items-center rounded-xl border border-border bg-white focus-within:border-crush-400 focus-within:ring-2 focus-within:ring-crush-100">
+                  <input className="w-full bg-transparent px-3 py-2.5 text-sm text-ink-900 outline-none" inputMode="decimal" placeholder="%" value={pctStr} onChange={(e) => setPct(e.target.value)} aria-label="Down payment percent" />
+                  <span className="pr-3 text-sm text-muted select-none">%</span>
+                </div>
+              </div>
+              {a.price > 0 && a.down > 0 && (
+                <span className="mt-1 block text-xs text-muted">{round1((a.down / a.price) * 100)}% of {`$${a.price.toLocaleString("en-US")}`}</span>
+              )}
             </label>
             <label className="block"><span className={lbl}>Property type</span>
               <select className={inp} value={a.propertyType} onChange={(e) => set("propertyType", e.target.value)}>
@@ -88,7 +122,7 @@ export function LoanFinder() {
               </select>
             </label>
             <label className="block"><span className={lbl}>Approx. annual income (optional)</span>
-              <input className={inp} inputMode="numeric" placeholder="$120,000" onChange={(e) => set("income", num(e.target.value))} />
+              <CurrencyInput className={inp} placeholder="120,000" value={a.income || undefined} onChange={(v) => set("income", v ?? 0)} />
             </label>
           </div>
           <div className="flex flex-wrap gap-4">

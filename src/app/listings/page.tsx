@@ -153,7 +153,7 @@ function ListingsInner() {
               <div><label className={label}>ZIP</label><input className={input} value={f.zip} onChange={(e) => set("zip", e.target.value)} /></div>
             </div>
             <div className="grid gap-4 sm:grid-cols-4">
-              <div><label className={label}>Price</label><input className={input} value={f.price} onChange={(e) => set("price", e.target.value)} placeholder="$450,000" inputMode="numeric" /></div>
+              <div><label className={label}>Price</label><input className={input} value={f.price} onChange={(e) => { const d = e.target.value.replace(/[^\d]/g, ""); set("price", d ? Number(d).toLocaleString("en-US") : ""); }} placeholder="450,000" inputMode="numeric" /></div>
               <div><label className={label}>Beds</label><input className={input} value={f.beds} onChange={(e) => set("beds", e.target.value)} inputMode="decimal" /></div>
               <div><label className={label}>Baths</label><input className={input} value={f.baths} onChange={(e) => set("baths", e.target.value)} inputMode="decimal" /></div>
               <div><label className={label}>Sq ft</label><input className={input} value={f.sqft} onChange={(e) => set("sqft", e.target.value)} inputMode="numeric" /></div>

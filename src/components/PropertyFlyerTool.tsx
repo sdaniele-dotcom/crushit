@@ -43,6 +43,14 @@ function resizeImage(file: File, max = 640): Promise<string> {
   });
 }
 
+/** Live comma-format an uncontrolled money input as the user types. The submit
+ *  handler strips non-digits, so the real numeric value is preserved. */
+function fmtMoneyInput(e: React.FormEvent<HTMLInputElement>) {
+  const el = e.currentTarget;
+  const d = el.value.replace(/[^\d]/g, "");
+  el.value = d ? Number(d).toLocaleString("en-US") : "";
+}
+
 export function PropertyFlyerTool() {
   const { user, profile, refreshProfile } = useAuth();
   const [status, setStatus] = useState<Status>("idle");
@@ -394,7 +402,7 @@ export function PropertyFlyerTool() {
               </label>
               <label className="block">
                 <span className={label}>Purchase price</span>
-                <input name="purchase_price" className={inputCls} placeholder="Auto-filled from MLS" inputMode="decimal" defaultValue={listing?.price != null ? String(listing.price) : ""} />
+                <input name="purchase_price" className={inputCls} placeholder="Auto-filled from MLS" inputMode="numeric" onInput={fmtMoneyInput} defaultValue={listing?.price != null ? listing.price.toLocaleString("en-US") : ""} />
               </label>
               <label className="block">
                 <span className={label}>Property type</span>
@@ -402,11 +410,11 @@ export function PropertyFlyerTool() {
               </label>
               <label className="block">
                 <span className={label}>Annual property taxes</span>
-                <input name="annual_property_taxes" className={inputCls} placeholder="$7,200" inputMode="decimal" />
+                <input name="annual_property_taxes" className={inputCls} placeholder="7,200" inputMode="numeric" onInput={fmtMoneyInput} />
               </label>
               <label className="block">
                 <span className={label}>Monthly HOA</span>
-                <input name="monthly_hoa" className={inputCls} placeholder="$0" inputMode="decimal" />
+                <input name="monthly_hoa" className={inputCls} placeholder="0" inputMode="numeric" onInput={fmtMoneyInput} />
               </label>
               <label className="block sm:col-span-2">
                 <span className={label}>Listing photo URL</span>

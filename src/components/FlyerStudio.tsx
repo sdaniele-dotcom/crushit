@@ -190,7 +190,7 @@ export function FlyerStudio({ initialCategory = "all" }: { initialCategory?: Fly
           <label className="block"><span className={labelCls}>Banner text</span>
             <input className={inputCls} value={d.kicker} onChange={(e) => { setKickerTouched(true); set("kicker", e.target.value); }} /></label>
           <label className="block"><span className={labelCls}>Price</span>
-            <input className={inputCls} value={d.price} onChange={(e) => set("price", e.target.value)} placeholder="$450,000" /></label>
+            <input className={inputCls} inputMode="numeric" value={d.price} onChange={(e) => { const dg = e.target.value.replace(/[^\d]/g, ""); set("price", dg ? "$" + Number(dg).toLocaleString("en-US") : ""); }} placeholder="$450,000" /></label>
           <label className="block sm:col-span-2"><span className={labelCls}>Address</span>
             <input className={inputCls} value={d.address} onChange={(e) => set("address", e.target.value)} placeholder="123 Main St" /></label>
           <label className="block sm:col-span-2"><span className={labelCls}>City / state / zip</span>
