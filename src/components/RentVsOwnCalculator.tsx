@@ -99,6 +99,10 @@ export function RentVsOwnCalculator() {
       <div class="brand"><img src="${crushLogoPrimaryDataUri}" alt="Crush Mortgage"/><div class="c"><strong>${site.phone}</strong><br/>NMLS #${site.companyNmls} · ${site.website.replace(/^https?:\/\//, "")}</div></div></div>
       <div class="hero">After ${inp.horizonYears} years, owning could leave you about<div class="big">${money0(ahead)} ahead of renting</div>
       <div class="sub">Equity built ${money0(s.equity)} + rent you'd avoid paying above your net house payment ${money0(s.cumRentSurplus)}.</div></div>
+      <div style="margin:0 0 6px;padding:12px 16px;border-radius:12px;background:#fef2f2;border:1px solid #fecaca">
+        <div style="font-size:12px;color:#b91c1c;font-weight:700;text-transform:uppercase;letter-spacing:.03em">If you keep renting for ${inp.horizonYears} years — $0 equity to show for it</div>
+        <div style="font-size:26px;font-weight:800;color:#dc2626;margin-top:2px">${money0(s.totalRentPaid)} paid in rent</div>
+      </div>
       <h2>Your monthly house payment</h2>
       <table>
         <tr><td>Principal &amp; interest</td><td class="r">${money0(m.principalInterest)}</td></tr>
@@ -158,7 +162,7 @@ export function RentVsOwnCalculator() {
         </h3>
         <div className="mt-3 grid gap-4 sm:grid-cols-2">
           <div className="sm:col-span-2">
-            <Field label="Home price" value={inp.purchasePrice} onChange={set("purchasePrice")} prefix="$" min={50000} max={5000000} step={5000} slider />
+            <Field label="Home price" value={inp.purchasePrice} onChange={set("purchasePrice")} prefix="$" min={50000} max={5000000} step={5000} slider commas />
           </div>
           <Field label="Down payment" value={inp.downPct} onChange={set("downPct")} suffix="%" min={0} max={50} step={0.5} slider help={money0(r.downPayment)} />
           <Field label="Interest rate" value={inp.ratePct} onChange={set("ratePct")} suffix="%" min={1} max={12} step={0.125} slider />
@@ -177,7 +181,7 @@ export function RentVsOwnCalculator() {
           <Field label="Mortgage insurance (PMI)" value={inp.pmiPct} onChange={set("pmiPct")} suffix="% / yr" min={0} max={2} step={0.05} help={inp.downPct >= 20 ? "Waived at 20% down" : undefined} />
           <Field label="HOA dues" value={inp.hoaMonthly} onChange={set("hoaMonthly")} prefix="$" suffix="/ mo" min={0} step={25} />
           <Field label="Income tax rate" value={inp.incomeTaxPct} onChange={set("incomeTaxPct")} suffix="%" min={0} max={50} step={1} help="For the tax deduction" />
-          <Field label="Closing costs" value={inp.closingCosts} onChange={set("closingCosts")} prefix="$" min={0} step={500} />
+          <Field label="Closing costs" value={inp.closingCosts} onChange={set("closingCosts")} prefix="$" min={0} step={500} commas />
         </div>
       </div>
 
@@ -219,12 +223,15 @@ export function RentVsOwnCalculator() {
 
         {/* Rent vs Own columns */}
         <div className="grid gap-4 sm:grid-cols-2">
-          <div className="rounded-2xl border border-border bg-white p-5">
-            <p className="text-xs font-bold uppercase tracking-wide text-muted">If you keep renting</p>
+          <div className="rounded-2xl border-2 border-red-200 bg-red-50/60 p-5">
+            <p className="text-xs font-bold uppercase tracking-wide text-red-600">If you keep renting</p>
+            <div className="mt-2 rounded-xl bg-white/70 p-3">
+              <p className="text-xs font-semibold text-red-600">Rent paid over {inp.horizonYears} years — with $0 to show for it</p>
+              <p className="mt-0.5 text-3xl font-extrabold tracking-tight text-red-600 sm:text-4xl">{money0(s.totalRentPaid)}</p>
+            </div>
             <dl className="mt-3 space-y-2 text-sm">
-              <div className="flex justify-between"><dt className="text-muted">Rent paid over {inp.horizonYears} yrs</dt><dd className="font-semibold text-ink-900">{money0(s.totalRentPaid)}</dd></div>
               <div className="flex justify-between"><dt className="text-muted">Rent in year {inp.horizonYears}</dt><dd className="font-semibold text-ink-900">{money0(s.monthlyRentAtHorizon)}/mo</dd></div>
-              <div className="flex justify-between"><dt className="text-muted">Equity built</dt><dd className="font-semibold text-ink-900">$0</dd></div>
+              <div className="flex justify-between"><dt className="text-muted">Equity built</dt><dd className="font-bold text-red-600">$0</dd></div>
             </dl>
           </div>
           <div className="rounded-2xl border border-crush-200 bg-white p-5">

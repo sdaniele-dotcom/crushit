@@ -24,7 +24,7 @@ export const metadata: Metadata = {
   },
   description: site.shortDescription,
   keywords: [
-    "realtor resources",
+    "real estate agent resources",
     "mortgage calculator",
     "loan programs",
     "co-marketing",
@@ -36,7 +36,7 @@ export const metadata: Metadata = {
   },
   openGraph: {
     type: "website",
-    siteName: `${site.brand} — Realtors Suite`,
+    siteName: `${site.brand} — Agent Suite`,
     title: `${site.brand} — ${site.tagline}`,
     description: site.shortDescription,
     url: site.siteUrl,

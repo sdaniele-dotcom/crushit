@@ -93,6 +93,7 @@ export function PaymentCalculator() {
             max={2000000}
             step={5000}
             slider
+            commas
           />
         </div>
         <Field

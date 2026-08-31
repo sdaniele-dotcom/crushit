@@ -82,7 +82,7 @@ export function Footer() {
       <div className="border-t border-white/10">
         <div className="mx-auto w-full max-w-6xl px-5 py-6 sm:px-8">
           <p className="text-xs leading-relaxed text-slate-500">
-            © {2026} {site.company}. {site.brand} Realtors Suite. Company NMLS
+            © {2026} {site.company}. {site.brand} Agent Suite. Company NMLS
             #{site.companyNmls}. This material is for real-estate professional
             and educational use only and is not an advertisement to extend
             consumer credit as defined by Section 1026.2 of Regulation Z. All

@@ -43,6 +43,14 @@ function resizeImage(file: File, max = 640): Promise<string> {
   });
 }
 
+/** Live comma-format an uncontrolled money input as the user types. The submit
+ *  handler strips non-digits, so the real numeric value is preserved. */
+function fmtMoneyInput(e: React.FormEvent<HTMLInputElement>) {
+  const el = e.currentTarget;
+  const d = el.value.replace(/[^\d]/g, "");
+  el.value = d ? Number(d).toLocaleString("en-US") : "";
+}
+
 export function PropertyFlyerTool() {
   const { user, profile, refreshProfile } = useAuth();
   const [status, setStatus] = useState<Status>("idle");
@@ -394,7 +402,7 @@ export function PropertyFlyerTool() {
               </label>
               <label className="block">
                 <span className={label}>Purchase price</span>
-                <input name="purchase_price" className={inputCls} placeholder="Auto-filled from MLS" inputMode="decimal" defaultValue={listing?.price != null ? String(listing.price) : ""} />
+                <input name="purchase_price" className={inputCls} placeholder="Auto-filled from MLS" inputMode="numeric" onInput={fmtMoneyInput} defaultValue={listing?.price != null ? listing.price.toLocaleString("en-US") : ""} />
               </label>
               <label className="block">
                 <span className={label}>Property type</span>
@@ -402,11 +410,11 @@ export function PropertyFlyerTool() {
               </label>
               <label className="block">
                 <span className={label}>Annual property taxes</span>
-                <input name="annual_property_taxes" className={inputCls} placeholder="$7,200" inputMode="decimal" />
+                <input name="annual_property_taxes" className={inputCls} placeholder="7,200" inputMode="numeric" onInput={fmtMoneyInput} />
               </label>
               <label className="block">
                 <span className={label}>Monthly HOA</span>
-                <input name="monthly_hoa" className={inputCls} placeholder="$0" inputMode="decimal" />
+                <input name="monthly_hoa" className={inputCls} placeholder="0" inputMode="numeric" onInput={fmtMoneyInput} />
               </label>
               <label className="block sm:col-span-2">
                 <span className={label}>Listing photo URL</span>
@@ -461,24 +469,28 @@ export function PropertyFlyerTool() {
             </div>
           )}
           {status === "success" && result && (
-            <div>
-              <div className="flex items-center gap-2 text-mint-500">
-                <svg viewBox="0 0 20 20" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
-                  <path d="M4 10l4 4 8-9" />
-                </svg>
-                <span className="font-semibold text-ink-900">Flyer ready!</span>
-              </div>
-              <p className="mt-2 text-sm text-muted">
-                Share the page link or download the print PDF for open houses.
+            <div className="rounded-2xl border-2 border-crush-200 bg-crush-50 p-5 text-center">
+              <p className="text-xl font-extrabold text-ink-900">Your Flyer Is Ready! 🎉</p>
+              <p className="mt-1 text-sm text-muted">
+                Co-branded with your logo and {site.company}. The PDF prints only
+                the flyer — no website or menus.
               </p>
-              <div className="mt-4 flex flex-col gap-3">
-                <a href={result.publicUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center rounded-full bg-crush-500 px-5 py-3 text-sm font-semibold text-white hover:bg-crush-600">
-                  View flyer page
-                </a>
-                <a href={result.pdfUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center rounded-full border border-border bg-white px-5 py-3 text-sm font-semibold text-ink-900 hover:bg-surface-2">
-                  Download print PDF
-                </a>
-              </div>
+              <a
+                href={result.pdfUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-full bg-crush-500 px-5 py-3.5 text-base font-bold text-white shadow-lg shadow-crush-500/20 hover:bg-crush-600"
+              >
+                🖨️ Print Here
+              </a>
+              <a
+                href={result.publicUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-2 inline-flex w-full items-center justify-center rounded-full border border-border bg-white px-5 py-2.5 text-sm font-semibold text-ink-900 hover:bg-surface-2"
+              >
+                View / share online
+              </a>
             </div>
           )}
         </div>

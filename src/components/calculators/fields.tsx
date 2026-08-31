@@ -14,6 +14,7 @@ export function Field({
   suffix,
   slider = false,
   help,
+  commas = false,
 }: {
   label: string;
   value: number;
@@ -25,6 +26,8 @@ export function Field({
   suffix?: string;
   slider?: boolean;
   help?: string;
+  /** Show large dollar amounts with thousands separators (text input). */
+  commas?: boolean;
 }) {
   return (
     <label className="block">
@@ -36,15 +39,25 @@ export function Field({
         {prefix && (
           <span className="pl-3 text-sm text-muted select-none">{prefix}</span>
         )}
-        <input
-          type="number"
-          value={Number.isFinite(value) ? value : ""}
-          min={min}
-          max={max}
-          step={step}
-          onChange={(e) => onChange(parseFloat(e.target.value) || 0)}
-          className="w-full bg-transparent px-3 py-2.5 text-ink-900 outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none"
-        />
+        {commas ? (
+          <input
+            type="text"
+            inputMode="numeric"
+            value={Number.isFinite(value) && value !== 0 ? value.toLocaleString("en-US") : value === 0 ? "0" : ""}
+            onChange={(e) => onChange(Number(e.target.value.replace(/[^\d]/g, "")) || 0)}
+            className="w-full bg-transparent px-3 py-2.5 text-ink-900 outline-none"
+          />
+        ) : (
+          <input
+            type="number"
+            value={Number.isFinite(value) ? value : ""}
+            min={min}
+            max={max}
+            step={step}
+            onChange={(e) => onChange(parseFloat(e.target.value) || 0)}
+            className="w-full bg-transparent px-3 py-2.5 text-ink-900 outline-none [appearance:textfield] [&::-webkit-inner-spin-button]:appearance-none"
+          />
+        )}
         {suffix && (
           <span className="pr-3 text-sm text-muted select-none">{suffix}</span>
         )}

@@ -71,7 +71,7 @@ export default function Home() {
                 Create Free Agent Account
               </Link>
               <Link href="#features" className="inline-flex items-center rounded-full border border-white/20 px-7 py-3.5 text-base font-semibold text-white transition-colors hover:bg-white/10">
-                Explore Realtor Tools
+                Explore Agent Tools
               </Link>
             </div>
             <p className="mt-5 text-sm text-slate-400">

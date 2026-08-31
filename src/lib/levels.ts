@@ -6,7 +6,7 @@
 export type Level = { name: string; min: number; icon?: string; blurb?: string };
 
 export const LEVELS: Level[] = [
-  { name: "CRUSH ROOKIE", min: 0, icon: "⭐", blurb: "Full Realtor Suite access — start earning." },
+  { name: "CRUSH ROOKIE", min: 0, icon: "⭐", blurb: "Full Agent Suite access — start earning." },
   { name: "CRUSH PRO", min: 250, icon: "⭐", blurb: "Extra templates plus occasional perks." },
   { name: "CRUSH ELITE", min: 750, icon: "⭐", blurb: "Priority marketing requests and exclusive events." },
   { name: "CRUSH VIP", min: 1500, icon: "⭐", blurb: "Monthly marketing perks and VIP event access." },

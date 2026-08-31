@@ -72,7 +72,7 @@ function VendorsInner() {
 
   return (
     <>
-      <PageHero eyebrow="Admin" title={<>Resource <span className="text-gradient">partners</span></>} subtitle="Manage the vendor directory Realtors see. Changes are live immediately." />
+      <PageHero eyebrow="Admin" title={<>Resource <span className="text-gradient">partners</span></>} subtitle="Manage the vendor directory agents see. Changes are live immediately." />
       <Container className="py-12">
         <div className="flex items-center justify-between gap-4">
           <Link href="/admin" className="text-sm font-semibold text-crush-600">← Admin overview</Link>

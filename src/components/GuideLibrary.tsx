@@ -43,12 +43,13 @@ function esc(s: string): string {
 export function GuideLibrary() {
   const [openKey, setOpenKey] = useState<GuideKey | null>(null);
   const [name, setName] = useState("");
-  const [title, setTitle] = useState("REALTOR®");
+  const [title, setTitle] = useState("Real Estate Agent");
   const [brokerage, setBrokerage] = useState("");
   const [phone, setPhone] = useState("");
   const [email, setEmail] = useState("");
   const [license, setLicense] = useState("");
   const [photo, setPhoto] = useState<string | null>(null);
+  const [logo, setLogo] = useState<string | null>(null);
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
 
@@ -67,6 +68,7 @@ export function GuideLibrary() {
     if (profile.brokerage) setBrokerage(profile.brokerage);
     if (profile.dre_license) setLicense(profile.dre_license);
     if (profile.headshot_url) setPhoto(profile.headshot_url);
+    if (profile.brokerage_logo_url || profile.team_logo_url) setLogo(profile.brokerage_logo_url || profile.team_logo_url || null);
   }, [profile]);
 
   const active = GUIDES.find((g) => g.key === openKey) || null;
@@ -119,6 +121,7 @@ export function GuideLibrary() {
       .filter(Boolean)
       .join("");
     return `<div class="card">
+      ${logo ? `<img src="${logo}" alt="" style="max-height:0.55in;max-width:2.2in;width:auto;object-fit:contain;display:block;margin:0 auto 10pt;">` : ""}
       <div class="role">Your Real Estate Agent</div>
       ${media}
       <div class="nm">${esc(name.trim())}</div>
@@ -264,7 +267,7 @@ export function GuideLibrary() {
                 </div>
                 <div>
                   <label className={labelCls}>Title</label>
-                  <input className={inputCls} value={title} onChange={(e) => setTitle(e.target.value)} placeholder="REALTOR®" />
+                  <input className={inputCls} value={title} onChange={(e) => setTitle(e.target.value)} placeholder="Real Estate Agent" />
                 </div>
                 <div>
                   <label className={labelCls}>Brokerage</label>

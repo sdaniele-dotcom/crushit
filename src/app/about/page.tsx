@@ -8,7 +8,7 @@ import { site } from "@/lib/site";
 export const metadata: Metadata = {
   title: "About",
   description:
-    "About the Crush It Realtors Suite and Crush Mortgage — who we are, meet the team, and how to reach us.",
+    "About the Crush It Agent Suite and Crush Mortgage — who we are, meet the team, and how to reach us.",
 };
 
 function initials(name: string) {
@@ -27,18 +27,18 @@ export default function AboutPage() {
         eyebrow="About"
         title={
           <>
-            Built for realtors, powered by{" "}
+            Built for agents, powered by{" "}
             <span className="text-gradient">{site.company}</span>
           </>
         }
-        subtitle={`${site.brand} is the Realtors Suite by ${site.company} — one place to run your marketing: co-branded flyers, open house tools, and buyer & seller guides that put your name front and center.`}
+        subtitle={`${site.brand} is the Agent Suite by ${site.company} — one place to run your marketing: co-branded flyers, open house tools, and buyer & seller guides that put your name front and center.`}
       />
 
       <Container className="py-14">
         {/* Intro */}
         <div className="max-w-3xl">
           <p className="text-lg text-muted">
-            We&apos;re a mortgage team that believes the best way to help realtors win is to
+            We&apos;re a mortgage team that believes the best way to help agents win is to
             make them look great in front of their clients — with fast pre-approvals,
             on-time closings, and marketing that&apos;s ready to go. Set up your profile once
             and every tool fills in your branding automatically, so you spend less time on

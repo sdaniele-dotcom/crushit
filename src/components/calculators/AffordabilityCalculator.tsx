@@ -100,6 +100,7 @@ export function AffordabilityCalculator() {
           max={40000}
           step={250}
           slider
+          commas
         />
         <Field
           label="Monthly debt payments"
