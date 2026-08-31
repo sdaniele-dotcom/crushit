@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import {
   AuthShell,
@@ -12,6 +12,33 @@ import {
 } from "@/components/auth/AuthShell";
 import { getSupabase, isSupabaseConfigured } from "@/lib/supabase";
 
+// Optional Cloudflare Turnstile CAPTCHA. When this env var is set (and CAPTCHA
+// is enabled in Supabase Auth with the matching secret), the widget renders and
+// a verified token is required to sign up — the real fix for bot signups.
+const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "";
+
+/** Very light "is this a random bot string?" check — flags a long, low-vowel
+ *  token like "FwTNhhydslRVhfTRKpEQfMBF" without tripping on real names. */
+function looksRandom(name: string): boolean {
+  return name
+    .trim()
+    .split(/\s+/)
+    .some((tok) => {
+      if (tok.length < 12) return false;
+      const vowels = (tok.match(/[aeiouAEIOU]/g) || []).length;
+      return vowels / tok.length < 0.2;
+    });
+}
+
+declare global {
+  interface Window {
+    turnstile?: {
+      render: (el: HTMLElement, opts: Record<string, unknown>) => string;
+      reset: (id?: string) => void;
+    };
+  }
+}
+
 export default function SignupPage() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -20,6 +47,39 @@ export default function SignupPage() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [sent, setSent] = useState(false);
+  const [trap, setTrap] = useState(""); // honeypot — humans never fill this
+  const [captchaToken, setCaptchaToken] = useState("");
+  const mountedAt = useRef(Date.now());
+  const captchaRef = useRef<HTMLDivElement>(null);
+  const captchaRendered = useRef(false);
+
+  // Load + render Turnstile only when a site key is configured.
+  useEffect(() => {
+    if (!TURNSTILE_SITE_KEY || captchaRendered.current) return;
+    const SRC = "https://challenges.cloudflare.com/turnstile/v0/api.js";
+    function render() {
+      if (captchaRendered.current || !captchaRef.current || !window.turnstile) return;
+      captchaRendered.current = true;
+      window.turnstile.render(captchaRef.current, {
+        sitekey: TURNSTILE_SITE_KEY,
+        callback: (t: string) => setCaptchaToken(t),
+        "expired-callback": () => setCaptchaToken(""),
+        "error-callback": () => setCaptchaToken(""),
+      });
+    }
+    if (window.turnstile) return render();
+    const existing = document.querySelector(`script[src="${SRC}"]`);
+    if (existing) {
+      existing.addEventListener("load", render);
+      return;
+    }
+    const s = document.createElement("script");
+    s.src = SRC;
+    s.async = true;
+    s.defer = true;
+    s.onload = render;
+    document.head.appendChild(s);
+  }, []);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -28,8 +88,24 @@ export default function SignupPage() {
       setError("Accounts aren't enabled yet. Please check back soon.");
       return;
     }
+    // Bot defenses — quiet, generic failure so bots learn nothing.
+    if (trap.trim()) return; // honeypot filled
+    if (Date.now() - mountedAt.current < 2500) {
+      setError("Please take a moment and try again.");
+      return;
+    }
+    const fn = firstName.trim();
+    const ln = lastName.trim();
+    if (fn.length > 40 || ln.length > 40 || looksRandom(`${fn} ${ln}`)) {
+      setError("Please enter your real first and last name.");
+      return;
+    }
     if (password.length < 8) {
       setError("Please use a password of at least 8 characters.");
+      return;
+    }
+    if (TURNSTILE_SITE_KEY && !captchaToken) {
+      setError("Please complete the “I'm human” check above.");
       return;
     }
     setBusy(true);
@@ -39,12 +115,14 @@ export default function SignupPage() {
       password,
       options: {
         emailRedirectTo: `${window.location.origin}/auth/callback/`,
-        data: { first_name: firstName.trim(), last_name: lastName.trim() },
+        data: { first_name: fn, last_name: ln },
+        ...(captchaToken ? { captchaToken } : {}),
       },
     });
     if (error) {
       setBusy(false);
       setError(error.message);
+      if (TURNSTILE_SITE_KEY) { window.turnstile?.reset(); setCaptchaToken(""); }
       return;
     }
     // Persist the names onto the profile (created by the DB trigger).
@@ -52,9 +130,9 @@ export default function SignupPage() {
       await sb
         .from("profiles")
         .update({
-          first_name: firstName.trim(),
-          last_name: lastName.trim(),
-          display_name: [firstName.trim(), lastName.trim()].filter(Boolean).join(" "),
+          first_name: fn,
+          last_name: ln,
+          display_name: [fn, ln].filter(Boolean).join(" "),
         })
         .eq("id", data.user.id);
     }
@@ -97,11 +175,11 @@ export default function SignupPage() {
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className={authLabel}>First name</label>
-              <input className={authInput} required value={firstName} onChange={(e) => setFirstName(e.target.value)} autoComplete="given-name" />
+              <input className={authInput} required value={firstName} onChange={(e) => setFirstName(e.target.value)} autoComplete="given-name" maxLength={40} />
             </div>
             <div>
               <label className={authLabel}>Last name</label>
-              <input className={authInput} required value={lastName} onChange={(e) => setLastName(e.target.value)} autoComplete="family-name" />
+              <input className={authInput} required value={lastName} onChange={(e) => setLastName(e.target.value)} autoComplete="family-name" maxLength={40} />
             </div>
           </div>
           <div>
@@ -112,6 +190,15 @@ export default function SignupPage() {
             <label className={authLabel}>Password</label>
             <input className={authInput} type="password" required value={password} onChange={(e) => setPassword(e.target.value)} placeholder="At least 8 characters" autoComplete="new-password" />
           </div>
+
+          {/* Honeypot — hidden from humans; bots fill it and get rejected. */}
+          <div aria-hidden="true" style={{ position: "absolute", left: "-9999px", top: 0, height: 0, overflow: "hidden" }}>
+            <label>Company website</label>
+            <input tabIndex={-1} autoComplete="off" value={trap} onChange={(e) => setTrap(e.target.value)} />
+          </div>
+
+          {TURNSTILE_SITE_KEY && <div ref={captchaRef} className="min-h-[65px]" />}
+
           {error && <p className={authNotice}>{error}</p>}
           <button type="submit" className={authButton} disabled={busy}>
             {busy ? "Creating account…" : "Create free account"}
