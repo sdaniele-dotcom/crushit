@@ -34,7 +34,7 @@ function ListingsInner() {
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState(false);
   const [looking, setLooking] = useState(false);
-  const [photo, setPhoto] = useState("");
+  const [photos, setPhotos] = useState<string[]>([]);
   const [uploading, setUploading] = useState(false);
   const [lookupMsg, setLookupMsg] = useState("");
   const [f, setF] = useState({ address: "", city: "", state: "", zip: "", price: "", beds: "", baths: "", sqft: "", description: "" });
@@ -60,25 +60,33 @@ function ListingsInner() {
       sqft: p.square_footage != null ? String(p.square_footage) : s.sqft,
       description: p.description || s.description,
     }));
-    if (p.photo_url) setPhoto(p.photo_url);
-    setLookupMsg(p.photo_url ? "Filled in from the MLS (photo included)." : "Filled in from the MLS — no photo on file, upload one below.");
+    const found = p.photos && p.photos.length ? p.photos : p.photo_url ? [p.photo_url] : [];
+    if (found.length) setPhotos(found);
+    setLookupMsg(
+      found.length
+        ? `Filled in from the MLS — ${found.length} photo${found.length === 1 ? "" : "s"} pulled from Lofty.`
+        : "Filled in from the MLS — no photo on file, upload one below.",
+    );
   }
 
   async function onPhotoFile(e: React.ChangeEvent<HTMLInputElement>) {
-    const file = e.target.files?.[0];
+    const files = Array.from(e.target.files ?? []);
     e.target.value = "";
-    if (!file) return;
+    if (!files.length) return;
     setUploading(true);
     setLookupMsg("");
     try {
-      const url = await uploadListingPhoto(file);
-      setPhoto(url);
+      const urls = await Promise.all(files.map((file) => uploadListingPhoto(file)));
+      setPhotos((cur) => [...cur, ...urls]);
     } catch (err) {
       toast({ emoji: "⚠️", title: "Upload failed", body: err instanceof Error ? err.message : "Please try again." });
     } finally {
       setUploading(false);
     }
   }
+
+  const removePhoto = (i: number) => setPhotos((cur) => cur.filter((_, idx) => idx !== i));
+  const makeHero = (i: number) => setPhotos((cur) => (i <= 0 ? cur : [cur[i], ...cur.filter((_, idx) => idx !== i)]));
 
   async function add(e: React.FormEvent) {
     e.preventDefault();
@@ -88,13 +96,13 @@ function ListingsInner() {
       address: f.address, city: f.city || undefined, state: f.state || undefined, zip: f.zip || undefined,
       price: num(f.price), beds: num(f.beds), baths: num(f.baths), sqft: num(f.sqft) as number | undefined,
       description: f.description || undefined,
-      photos: photo ? [photo] : undefined,
+      photos: photos.length ? photos : undefined,
     });
     setBusy(false);
     if (res) {
       toast({ emoji: "🏠", title: "Listing saved", body: "Reuse it across every tool." });
       setF({ address: "", city: "", state: "", zip: "", price: "", beds: "", baths: "", sqft: "", description: "" });
-      setPhoto("");
+      setPhotos([]);
       setLookupMsg("");
       setOpen(false);
       load();
@@ -132,20 +140,26 @@ function ListingsInner() {
                 </button>
               </div>
               {lookupMsg && <p className="mt-1.5 text-xs font-medium text-crush-700">{lookupMsg}</p>}
-              <div className="mt-2 flex flex-wrap items-center gap-3">
-                {photo && (
-                  <>
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={photo} alt="Listing" className="h-16 w-24 rounded-lg object-cover" />
-                    <button type="button" onClick={() => setPhoto("")} className="text-xs font-semibold text-muted underline">Remove photo</button>
-                  </>
-                )}
-                <label className="cursor-pointer rounded-xl border border-border bg-white px-4 py-2.5 text-sm font-semibold text-ink-900 hover:bg-surface-2">
-                  {uploading ? "Uploading…" : photo ? "Replace photo" : "Upload a photo"}
-                  <input type="file" accept="image/*" onChange={onPhotoFile} disabled={uploading} className="hidden" />
-                </label>
-              </div>
-              <p className="mt-1 text-xs text-muted">This photo is reused on flyers, postcards, and the open-house flyer. No MLS photo? Snap or upload your own.</p>
+              {photos.length > 0 && (
+                <div className="mt-2 flex flex-wrap gap-2">
+                  {photos.map((src, i) => (
+                    <div key={src + i} className="relative">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={src} alt="Listing" className="h-16 w-24 rounded-lg object-cover ring-1 ring-border" />
+                      {i === 0 && <span className="absolute left-1 top-1 rounded bg-crush-500 px-1.5 py-0.5 text-[9px] font-bold text-white">Hero</span>}
+                      <div className="mt-1 flex justify-between gap-1">
+                        {i !== 0 && <button type="button" onClick={() => makeHero(i)} className="text-[10px] font-semibold text-crush-600">Make hero</button>}
+                        <button type="button" onClick={() => removePhoto(i)} className="ml-auto text-[10px] font-semibold text-muted hover:text-crush-600">Remove</button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+              <label className="mt-2 inline-flex cursor-pointer rounded-xl border border-border bg-white px-4 py-2.5 text-sm font-semibold text-ink-900 hover:bg-surface-2">
+                {uploading ? "Uploading…" : photos.length ? "Add more photos" : "Upload a photo"}
+                <input type="file" accept="image/*" multiple onChange={onPhotoFile} disabled={uploading} className="hidden" />
+              </label>
+              <p className="mt-1 text-xs text-muted">Photos are pulled from Lofty automatically and reused across flyers, postcards, and the open-house flyer. The first is the hero. Add your own too.</p>
             </div>
             <div className="grid gap-4 sm:grid-cols-3">
               <div><label className={label}>City</label><input className={input} value={f.city} onChange={(e) => set("city", e.target.value)} /></div>
