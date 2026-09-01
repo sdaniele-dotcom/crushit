@@ -6,6 +6,7 @@ import { recordUse } from "@/lib/rewards";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { fullName } from "@/lib/profile";
 import { toast } from "@/lib/toast";
+import { site } from "@/lib/site";
 import { CurrencyInput } from "@/components/CurrencyInput";
 
 const inp = "w-full rounded-xl border border-border bg-white px-3.5 py-2.5 text-sm outline-none focus:border-crush-400 focus:ring-2 focus:ring-crush-100";
@@ -25,6 +26,7 @@ export function LoanFinder() {
   const [results, setResults] = useState<Match[] | null>(null);
   const [busy, setBusy] = useState(false);
   const [sent, setSent] = useState(false);
+  const [sending, setSending] = useState(false);
   const [pctStr, setPctStr] = useState(""); // down payment %, linked to the $ amount
 
   const set = <K extends keyof BuyerAnswers>(k: K, v: BuyerAnswers[K]) => setA((s) => ({ ...s, [k]: v }));
@@ -68,12 +70,37 @@ export function LoanFinder() {
   async function send() {
     if (!results) return;
     if (!user) { toast({ emoji: "🔒", title: "Log in to send", body: "Create a free account to send scenarios to Crush Mortgage." }); return; }
-    const ok = await saveScenario(a, results.map((r) => r.program.slug), {
-      name: fullName(profile),
-      email: profile?.email ?? user.email,
-      phone: profile?.phone,
-    });
-    if (ok) { setSent(true); toast({ emoji: "📨", title: "Scenario sent to Crush Mortgage", body: "A loan officer will follow up with you." }); }
+    const agent = { name: fullName(profile), email: profile?.email ?? user.email ?? "", phone: profile?.phone ?? "" };
+    setSending(true);
+    // Record it for the admin panel too (best-effort; doesn't gate the email).
+    void saveScenario(a, results.map((r) => r.program.slug), agent).catch(() => {});
+    try {
+      const res = await fetch(`${site.flyerApiBase}/api/public/loan-scenario`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          agent,
+          scenario: {
+            creditRange: a.creditRange, price: a.price || undefined, down: a.down || undefined,
+            downPct: a.price > 0 && a.down > 0 ? round1((a.down / a.price) * 100) : undefined,
+            firstTime: a.firstTime, veteran: a.veteran, selfEmployed: a.selfEmployed, medical: a.medical,
+            propertyType: a.propertyType, occupancy: a.occupancy, income: a.income || undefined,
+          },
+          programs: results.map((r) => r.program.name),
+        }),
+      });
+      const data = await res.json().catch(() => ({ ok: false }));
+      if (res.ok && data.ok) {
+        setSent(true);
+        toast({ emoji: "📨", title: "Scenario sent to Crush Mortgage", body: "A loan officer will follow up with you." });
+      } else {
+        toast({ emoji: "⚠️", title: "Couldn't send", body: (data.error as string) || "Please try again in a moment." });
+      }
+    } catch {
+      toast({ emoji: "⚠️", title: "Couldn't reach Crush Mortgage", body: "Please check your connection and try again." });
+    } finally {
+      setSending(false);
+    }
   }
 
   return (
@@ -162,8 +189,8 @@ export function LoanFinder() {
           )}
 
           <div className="mt-5 flex flex-wrap items-center gap-3">
-            <button type="button" onClick={send} disabled={sent} className="rounded-full bg-ink-900 px-6 py-3 text-sm font-semibold text-white hover:bg-ink-800 disabled:opacity-60">
-              {sent ? "Sent ✓" : "Send scenario to Crush Mortgage"}
+            <button type="button" onClick={send} disabled={sent || sending} className="rounded-full bg-ink-900 px-6 py-3 text-sm font-semibold text-white hover:bg-ink-800 disabled:opacity-60">
+              {sent ? "Sent ✓" : sending ? "Sending…" : "Send scenario to Crush Mortgage"}
             </button>
             <span className="text-xs text-muted">Your agent info is attached automatically.</span>
           </div>
