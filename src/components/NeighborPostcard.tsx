@@ -41,6 +41,15 @@ export function NeighborPostcard() {
   const [date, setDate] = useState("");
   const [start, setStart] = useState("");
   const [end, setEnd] = useState("");
+  // Editable copy — auto-filled from the listing/defaults, then the agent can tweak.
+  const DEFAULT_HEADLINE = "Come see what's happening in your neighborhood.";
+  const DEFAULT_MESSAGE = "Curious what homes in your neighborhood are selling for? Stop by and take a look — and if you know someone who'd love to move in, bring them by!";
+  const [headline, setHeadline] = useState(DEFAULT_HEADLINE);
+  const [message, setMessage] = useState(DEFAULT_MESSAGE);
+  const [addressStr, setAddressStr] = useState("");
+  const [photoIdx, setPhotoIdx] = useState(0);
+
+  const photos = listing?.photos ?? [];
 
   useEffect(() => {
     if (listing?.open_house_at) {
@@ -51,13 +60,16 @@ export function NeighborPostcard() {
       const d = new Date(listing.open_house_end);
       if (!Number.isNaN(d.getTime())) setEnd(d.toTimeString().slice(0, 5));
     }
+    // Seed the address field from the listing; the agent can still edit it.
+    setAddressStr(listing ? [listing.address, listing.city, listing.state].filter(Boolean).join(", ") : "");
+    setPhotoIdx(0);
   }, [listing]);
 
   function build(): string {
     const s = STYLES[tpl];
     const dim = SIZES[size];
-    const photo = listing?.photos?.[0] ?? "";
-    const address = listing ? [listing.address, listing.city, listing.state].filter(Boolean).join(", ") : "[Property address]";
+    const photo = photos[photoIdx] ?? photos[0] ?? "";
+    const address = addressStr.trim() || "[Property address]";
     const name = fullName(profile) || "Your Name";
     const logo = profile?.brokerage_logo_url || profile?.team_logo_url || "";
     const headshot = profile?.headshot_url || "";
@@ -118,7 +130,7 @@ export function NeighborPostcard() {
       ${logo ? `<img class="flogo" src="${esc(logo)}" alt="">` : ""}
       <div class="fgrad">
         <p class="kicker">You're Invited · Neighborhood Open House</p>
-        <p class="headline">Come see what's happening<br>in your neighborhood.</p>
+        <p class="headline">${esc(headline).replace(/\n/g, "<br>")}</p>
         <p class="addr">${esc(address)}</p>
         <p class="when">${esc(dateFmt)} &nbsp;·&nbsp; ${esc(timeFmt)}</p>
       </div>
@@ -132,7 +144,7 @@ export function NeighborPostcard() {
           <p class="bhead">${listing?.price ? money(listing.price) : "Open House"}</p>
           <p class="addr" style="color:${s.ink}">${esc(address)}</p>
           ${specs ? `<p class="bspecs">${esc(specs)}</p>` : ""}
-          <p class="bcopy">Curious what homes in your neighborhood are selling for? Stop by and take a look — and if you know someone who'd love to move in, bring them by!</p>
+          <p class="bcopy">${esc(message).replace(/\n/g, "<br>")}</p>
         </div>
       </div>
       <div class="agent">
@@ -192,6 +204,32 @@ export function NeighborPostcard() {
           <input type="time" value={start} onChange={(e) => setStart(e.target.value)} className="mt-1 w-full rounded-xl border border-border bg-white px-3 py-2.5 text-sm outline-none focus:border-crush-400" /></label>
         <label className="block"><span className="text-xs font-semibold uppercase tracking-wide text-muted">End</span>
           <input type="time" value={end} onChange={(e) => setEnd(e.target.value)} className="mt-1 w-full rounded-xl border border-border bg-white px-3 py-2.5 text-sm outline-none focus:border-crush-400" /></label>
+      </div>
+
+      {/* Editable copy — tweak anything before you print */}
+      <div className="mt-5 rounded-xl border border-border bg-surface p-4">
+        <p className="text-xs font-bold uppercase tracking-wide text-crush-700">Edit the wording</p>
+        <div className="mt-3 grid gap-3">
+          <label className="block"><span className="text-xs font-semibold uppercase tracking-wide text-muted">Front headline</span>
+            <input value={headline} onChange={(e) => setHeadline(e.target.value)} className="mt-1 w-full rounded-xl border border-border bg-white px-3 py-2.5 text-sm outline-none focus:border-crush-400" /></label>
+          <label className="block"><span className="text-xs font-semibold uppercase tracking-wide text-muted">Property address</span>
+            <input value={addressStr} onChange={(e) => setAddressStr(e.target.value)} placeholder="123 Main St, City, ST" className="mt-1 w-full rounded-xl border border-border bg-white px-3 py-2.5 text-sm outline-none focus:border-crush-400" /></label>
+          <label className="block"><span className="text-xs font-semibold uppercase tracking-wide text-muted">Back message</span>
+            <textarea value={message} onChange={(e) => setMessage(e.target.value)} className="mt-1 min-h-[70px] w-full rounded-xl border border-border bg-white px-3 py-2.5 text-sm outline-none focus:border-crush-400" /></label>
+        </div>
+        {photos.length > 1 && (
+          <div className="mt-3">
+            <p className="text-xs font-semibold uppercase tracking-wide text-muted">Choose the photo</p>
+            <div className="mt-2 flex flex-wrap gap-2">
+              {photos.map((src, i) => (
+                <button key={src} type="button" onClick={() => setPhotoIdx(i)} className={`h-14 w-14 overflow-hidden rounded-lg border-2 ${photoIdx === i ? "border-crush-500" : "border-transparent"}`}>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={src} alt="" className="h-full w-full object-cover" />
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
       </div>
 
       <button type="button" onClick={generate} className="mt-4 inline-flex items-center gap-2 rounded-full bg-crush-500 px-6 py-3 text-sm font-semibold text-white hover:bg-crush-600">
