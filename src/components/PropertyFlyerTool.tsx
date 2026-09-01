@@ -1,12 +1,13 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { site } from "@/lib/site";
 import { useAuth } from "@/components/auth/AuthProvider";
+import { useActiveListing } from "@/components/ActiveListing";
 import { fullName } from "@/lib/profile";
 import { getSupabase } from "@/lib/supabase";
 import { awardStars, logActivity, saveProject } from "@/lib/rewards";
-import { getListing, upsertListing, type Listing } from "@/lib/listings";
+import { upsertListing } from "@/lib/listings";
 
 type Status = "idle" | "loading" | "success" | "error";
 
@@ -73,15 +74,11 @@ export function PropertyFlyerTool() {
   const [logoUrl, setLogoUrl] = useState(""); // brokerage logo from profile
   const [prefilled, setPrefilled] = useState(false);
   const [saveToProfile, setSaveToProfile] = useState(false);
-  const [listing, setListing] = useState<Listing | null>(null);
   const [template, setTemplate] = useState<"classic" | "bold" | "editorial">("classic");
+  const resultRef = useRef<HTMLDivElement>(null);
 
-  // If we arrived from a saved listing (?listing=<id>), load it to prefill the
-  // property fields — enter the property once, reuse it everywhere.
-  useEffect(() => {
-    const id = new URLSearchParams(window.location.search).get("listing");
-    if (id) getListing(id).then(setListing);
-  }, []);
+  // The one shared listing selected anywhere in the suite prefills the property.
+  const { listing } = useActiveListing();
 
   useEffect(() => {
     fetch(`${site.flyerApiBase}/api/public/loan-officers`)
@@ -108,6 +105,12 @@ export function PropertyFlyerTool() {
       setPrefilled(true);
     }
   }, [profile, prefilled, user]);
+
+  // After a flyer is generated, bring the "ready" CTA into view at the bottom
+  // so the agent doesn't have to scroll back up.
+  useEffect(() => {
+    if (status === "success") resultRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+  }, [status]);
 
   async function onPhoto(e: React.ChangeEvent<HTMLInputElement>) {
     const file = e.target.files?.[0];
@@ -148,7 +151,11 @@ export function PropertyFlyerTool() {
         property_type: g("property_type"),
         annual_property_taxes: num("annual_property_taxes"),
         monthly_hoa: num("monthly_hoa"),
-        photo_url: g("photo_url"),
+        // Hero photo: an explicit URL wins, else the selected listing's first
+        // Lofty photo. The server still auto-pulls from Lofty as a fallback.
+        photo_url: g("photo_url") || listing?.photos?.[0] || "",
+        // Full Lofty photo set so the flyer can show a second image.
+        photos: listing?.photos && listing.photos.length ? listing.photos : undefined,
       },
       assumptions: {
         desired_down_pct: num("down_pct"),
@@ -225,6 +232,7 @@ export function PropertyFlyerTool() {
   }
 
   return (
+    <>
     <div className="grid gap-10 lg:grid-cols-[1.4fr_1fr]">
       {/* Form (re-keyed so a loaded listing prefills the uncontrolled fields) */}
       <form onSubmit={handleSubmit} key={listing?.id ?? "blank"}>
@@ -468,33 +476,42 @@ export function PropertyFlyerTool() {
               {error}
             </div>
           )}
-          {status === "success" && result && (
-            <div className="rounded-2xl border-2 border-crush-200 bg-crush-50 p-5 text-center">
-              <p className="text-xl font-extrabold text-ink-900">Your Flyer Is Ready! 🎉</p>
-              <p className="mt-1 text-sm text-muted">
-                Co-branded with your logo and {site.company}. The PDF prints only
-                the flyer — no website or menus.
-              </p>
-              <a
-                href={result.pdfUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-4 inline-flex w-full items-center justify-center gap-2 rounded-full bg-crush-500 px-5 py-3.5 text-base font-bold text-white shadow-lg shadow-crush-500/20 hover:bg-crush-600"
-              >
-                🖨️ Print Here
-              </a>
-              <a
-                href={result.publicUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="mt-2 inline-flex w-full items-center justify-center rounded-full border border-border bg-white px-5 py-2.5 text-sm font-semibold text-ink-900 hover:bg-surface-2"
-              >
-                View / share online
-              </a>
-            </div>
+          {status === "success" && (
+            <p className="text-sm font-semibold text-mint-600">✓ Done — scroll down to print your flyer.</p>
           )}
         </div>
       </div>
-    </div>
+      </div>
+
+      {/* "Your Flyer Is Ready" — full-width at the BOTTOM so there's no scrolling
+          back up after generating. */}
+      {status === "success" && result && (
+        <div ref={resultRef} className="mt-10 rounded-3xl border-2 border-crush-200 bg-crush-50 p-6 text-center sm:p-8">
+          <p className="text-2xl font-extrabold text-ink-900 sm:text-3xl">Your Flyer Is Ready! 🎉</p>
+          <p className="mx-auto mt-2 max-w-md text-sm text-muted">
+            Co-branded with your logo and {site.company}. The PDF prints only the
+            flyer — no website or menus.
+          </p>
+          <div className="mx-auto mt-5 flex max-w-md flex-col gap-3">
+            <a
+              href={result.pdfUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-crush-500 px-6 py-4 text-base font-bold text-white shadow-lg shadow-crush-500/20 hover:bg-crush-600"
+            >
+              🖨️ Print Here
+            </a>
+            <a
+              href={result.publicUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex w-full items-center justify-center rounded-full border border-border bg-white px-6 py-3 text-sm font-semibold text-ink-900 hover:bg-surface-2"
+            >
+              View / share online
+            </a>
+          </div>
+        </div>
+      )}
+    </>
   );
 }

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
 import {
   AuthShell,
@@ -12,6 +12,19 @@ import {
 } from "@/components/auth/AuthShell";
 import { getSupabase, isSupabaseConfigured } from "@/lib/supabase";
 
+/** Very light "is this a random bot string?" check — flags a long, low-vowel
+ *  token like "FwTNhhydslRVhfTRKpEQfMBF" without tripping on real names. */
+function looksRandom(name: string): boolean {
+  return name
+    .trim()
+    .split(/\s+/)
+    .some((tok) => {
+      if (tok.length < 12) return false;
+      const vowels = (tok.match(/[aeiouAEIOU]/g) || []).length;
+      return vowels / tok.length < 0.2;
+    });
+}
+
 export default function SignupPage() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -20,12 +33,26 @@ export default function SignupPage() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [sent, setSent] = useState(false);
+  const [trap, setTrap] = useState(""); // honeypot — humans never fill this
+  const mountedAt = useRef(Date.now());
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
     const sb = getSupabase();
     if (!sb) {
       setError("Accounts aren't enabled yet. Please check back soon.");
+      return;
+    }
+    // Bot defenses — quiet, generic failure so bots learn nothing.
+    if (trap.trim()) return; // honeypot filled
+    if (Date.now() - mountedAt.current < 2500) {
+      setError("Please take a moment and try again.");
+      return;
+    }
+    const fn = firstName.trim();
+    const ln = lastName.trim();
+    if (fn.length > 40 || ln.length > 40 || looksRandom(`${fn} ${ln}`)) {
+      setError("Please enter your real first and last name.");
       return;
     }
     if (password.length < 8) {
@@ -39,7 +66,7 @@ export default function SignupPage() {
       password,
       options: {
         emailRedirectTo: `${window.location.origin}/auth/callback/`,
-        data: { first_name: firstName.trim(), last_name: lastName.trim() },
+        data: { first_name: fn, last_name: ln },
       },
     });
     if (error) {
@@ -47,14 +74,16 @@ export default function SignupPage() {
       setError(error.message);
       return;
     }
-    // Persist the names onto the profile (created by the DB trigger).
+    // Persist the names onto the profile when signed in right away. When email
+    // confirmation is ON there's no session yet — the DB trigger captures the
+    // name from the signup metadata instead.
     if (data.session && data.user) {
       await sb
         .from("profiles")
         .update({
-          first_name: firstName.trim(),
-          last_name: lastName.trim(),
-          display_name: [firstName.trim(), lastName.trim()].filter(Boolean).join(" "),
+          first_name: fn,
+          last_name: ln,
+          display_name: [fn, ln].filter(Boolean).join(" "),
         })
         .eq("id", data.user.id);
     }
@@ -88,20 +117,24 @@ export default function SignupPage() {
         </p>
       )}
       {sent ? (
-        <p className={authOk}>
-          Almost there — we sent a confirmation link to <strong>{email}</strong>.
-          Click it to activate your account, then log in.
-        </p>
+        <div className={authOk}>
+          <p className="font-semibold">Check your email to finish 📬</p>
+          <p className="mt-1">
+            We sent a confirmation link to <strong>{email}</strong>. Click it to
+            activate your account, then log in. (Check spam if you don&apos;t see
+            it in a minute.)
+          </p>
+        </div>
       ) : (
         <form onSubmit={submit} className="grid gap-4">
           <div className="grid grid-cols-2 gap-4">
             <div>
               <label className={authLabel}>First name</label>
-              <input className={authInput} required value={firstName} onChange={(e) => setFirstName(e.target.value)} autoComplete="given-name" />
+              <input className={authInput} required value={firstName} onChange={(e) => setFirstName(e.target.value)} autoComplete="given-name" maxLength={40} />
             </div>
             <div>
               <label className={authLabel}>Last name</label>
-              <input className={authInput} required value={lastName} onChange={(e) => setLastName(e.target.value)} autoComplete="family-name" />
+              <input className={authInput} required value={lastName} onChange={(e) => setLastName(e.target.value)} autoComplete="family-name" maxLength={40} />
             </div>
           </div>
           <div>
@@ -112,6 +145,13 @@ export default function SignupPage() {
             <label className={authLabel}>Password</label>
             <input className={authInput} type="password" required value={password} onChange={(e) => setPassword(e.target.value)} placeholder="At least 8 characters" autoComplete="new-password" />
           </div>
+
+          {/* Honeypot — hidden from humans; bots fill it and get rejected. */}
+          <div aria-hidden="true" style={{ position: "absolute", left: "-9999px", top: 0, height: 0, overflow: "hidden" }}>
+            <label>Company website</label>
+            <input tabIndex={-1} autoComplete="off" value={trap} onChange={(e) => setTrap(e.target.value)} />
+          </div>
+
           {error && <p className={authNotice}>{error}</p>}
           <button type="submit" className={authButton} disabled={busy}>
             {busy ? "Creating account…" : "Create free account"}

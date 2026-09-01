@@ -14,6 +14,8 @@ export type PropertyLookup = {
   bathrooms?: number;
   square_footage?: number;
   photo_url?: string;
+  /** All listing photos from Lofty, for the agent to choose from. */
+  photos?: string[];
   description?: string;
 };
 

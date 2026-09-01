@@ -71,6 +71,27 @@ export async function uploadListingPhoto(file: File): Promise<string> {
   return data.publicUrl;
 }
 
+/** Upload a property walkthrough video to the agent's folder and return its URL. */
+export async function uploadPromoVideo(file: File): Promise<string> {
+  const sb = getSupabase();
+  if (!sb) throw new Error("Not signed in.");
+  const {
+    data: { user },
+  } = await sb.auth.getUser();
+  if (!user) throw new Error("Not signed in.");
+  if (file.size > 200 * 1024 * 1024) {
+    throw new Error("That video is over 200 MB — please share a link instead (Drive, Dropbox, YouTube).");
+  }
+  const ext = (file.name.split(".").pop() || "mp4").toLowerCase().replace(/[^a-z0-9]/g, "") || "mp4";
+  const path = `${user.id}/promo-video-${Date.now()}.${ext}`;
+  const { error } = await sb.storage
+    .from("agent-assets")
+    .upload(path, file, { contentType: file.type || "video/mp4", upsert: true });
+  if (error) throw new Error(error.message || "Upload failed — you can paste a video link instead.");
+  const { data } = sb.storage.from("agent-assets").getPublicUrl(path);
+  return data.publicUrl;
+}
+
 /**
  * Upload a profile image to the agent's own folder in the agent-assets bucket
  * and return its public URL. Requires an authenticated Supabase session.
