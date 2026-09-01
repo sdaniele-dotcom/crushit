@@ -1,6 +1,6 @@
 "use client";
 
-import { createContext, useContext, useEffect, useState, type ReactNode } from "react";
+import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from "react";
 import { getListing, listMyListings, listingLabel, type Listing } from "@/lib/listings";
 
 type Ctx = {
@@ -11,16 +11,44 @@ type Ctx = {
 
 const ActiveListingContext = createContext<Ctx>({ listing: null, listings: [], setListing: () => {} });
 
-/** Provides a currently-selected listing to the marketing tools inside it,
- *  seeded from a ?listing=<id> URL param. Safe to read even outside a provider. */
+/** The one selected listing is remembered here so it persists across every tool
+ *  in the suite and survives printing/downloading — it only changes when the
+ *  agent picks another or clears it. */
+const STORAGE_KEY = "crush:active-listing";
+function readStoredId(): string | null {
+  try { return localStorage.getItem(STORAGE_KEY); } catch { return null; }
+}
+function writeStoredId(id: string | null) {
+  try {
+    if (id) localStorage.setItem(STORAGE_KEY, id);
+    else localStorage.removeItem(STORAGE_KEY);
+  } catch { /* storage blocked — selection is still live in memory */ }
+}
+
+/** Provides the currently-selected listing to the marketing tools inside it.
+ *  Hydrates from a ?listing=<id> deep-link if present, otherwise from the last
+ *  selection saved in the browser. Safe to read even outside a provider. */
 export function ActiveListingProvider({ children }: { children: ReactNode }) {
-  const [listing, setListing] = useState<Listing | null>(null);
+  const [listing, setListingState] = useState<Listing | null>(null);
   const [listings, setListings] = useState<Listing[]>([]);
 
   useEffect(() => {
     listMyListings().then(setListings);
-    const id = new URLSearchParams(window.location.search).get("listing");
-    if (id) getListing(id).then((l) => l && setListing(l));
+    // A ?listing= deep-link wins; otherwise reuse the last selection.
+    const urlId = new URLSearchParams(window.location.search).get("listing");
+    const id = urlId || readStoredId();
+    if (id) {
+      getListing(id).then((l) => {
+        if (l) setListingState(l);
+        else writeStoredId(null); // stale/deleted listing — forget it
+      });
+      if (urlId) writeStoredId(urlId);
+    }
+  }, []);
+
+  const setListing = useCallback((l: Listing | null) => {
+    setListingState(l);
+    writeStoredId(l?.id ?? null);
   }, []);
 
   return (
