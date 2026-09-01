@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { ActiveListingProvider, ListingPicker } from "@/components/ActiveListing";
 import { Container, PageHero, Button, Eyebrow, Card } from "@/components/ui";
 import { CopyCard } from "@/components/CopyCard";
+import { ListingPromo } from "@/components/ListingPromo";
 
 export const metadata: Metadata = {
   title: "Social Media Kit",
@@ -82,6 +83,7 @@ export default function SocialKitPage() {
 
       <Container className="py-14">
         <ListingPicker />
+        <ListingPromo />
         <div className="rounded-2xl border border-border bg-surface p-5 text-sm text-muted">
           <span className="font-semibold text-ink-800">How to use:</span> tap
           Copy, paste into Instagram/Facebook, and replace anything in
