@@ -16,6 +16,8 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
+  const [needsConfirm, setNeedsConfirm] = useState(false);
+  const [resent, setResent] = useState("");
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -26,14 +28,34 @@ export default function LoginPage() {
     }
     setBusy(true);
     setError("");
+    setNeedsConfirm(false);
+    setResent("");
     const { error } = await sb.auth.signInWithPassword({ email: email.trim(), password });
     setBusy(false);
     if (error) {
-      setError(error.message);
+      // Email confirmation is on and this account hasn't confirmed yet.
+      if (/confirm/i.test(error.message) || (error as { code?: string }).code === "email_not_confirmed") {
+        setNeedsConfirm(true);
+        setError("Please confirm your email first — check your inbox for the link we sent.");
+      } else {
+        setError(error.message);
+      }
       return;
     }
     const next = new URLSearchParams(window.location.search).get("next") || "/dashboard";
     window.location.assign(next);
+  }
+
+  async function resend() {
+    const sb = getSupabase();
+    if (!sb || !email.trim()) return;
+    setResent("");
+    const { error } = await sb.auth.resend({
+      type: "signup",
+      email: email.trim(),
+      options: { emailRedirectTo: `${window.location.origin}/auth/callback/` },
+    });
+    setResent(error ? error.message : `New confirmation link sent to ${email.trim()}.`);
   }
 
   return (
@@ -64,6 +86,12 @@ export default function LoginPage() {
           <input className={authInput} type="password" required value={password} onChange={(e) => setPassword(e.target.value)} autoComplete="current-password" />
         </div>
         {error && <p className={authNotice}>{error}</p>}
+        {needsConfirm && (
+          <button type="button" onClick={resend} className="text-center text-sm font-semibold text-crush-600 underline">
+            Resend confirmation email
+          </button>
+        )}
+        {resent && <p className="text-center text-sm font-medium text-mint-600">{resent}</p>}
         <button type="submit" className={authButton} disabled={busy}>
           {busy ? "Logging in…" : "Log in"}
         </button>

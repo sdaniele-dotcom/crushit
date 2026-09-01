@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import Link from "next/link";
 import {
   AuthShell,
@@ -11,11 +11,6 @@ import {
   authOk,
 } from "@/components/auth/AuthShell";
 import { getSupabase, isSupabaseConfigured } from "@/lib/supabase";
-
-// Optional Cloudflare Turnstile CAPTCHA. When this env var is set (and CAPTCHA
-// is enabled in Supabase Auth with the matching secret), the widget renders and
-// a verified token is required to sign up — the real fix for bot signups.
-const TURNSTILE_SITE_KEY = process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY || "";
 
 /** Very light "is this a random bot string?" check — flags a long, low-vowel
  *  token like "FwTNhhydslRVhfTRKpEQfMBF" without tripping on real names. */
@@ -30,15 +25,6 @@ function looksRandom(name: string): boolean {
     });
 }
 
-declare global {
-  interface Window {
-    turnstile?: {
-      render: (el: HTMLElement, opts: Record<string, unknown>) => string;
-      reset: (id?: string) => void;
-    };
-  }
-}
-
 export default function SignupPage() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -48,38 +34,7 @@ export default function SignupPage() {
   const [error, setError] = useState("");
   const [sent, setSent] = useState(false);
   const [trap, setTrap] = useState(""); // honeypot — humans never fill this
-  const [captchaToken, setCaptchaToken] = useState("");
   const mountedAt = useRef(Date.now());
-  const captchaRef = useRef<HTMLDivElement>(null);
-  const captchaRendered = useRef(false);
-
-  // Load + render Turnstile only when a site key is configured.
-  useEffect(() => {
-    if (!TURNSTILE_SITE_KEY || captchaRendered.current) return;
-    const SRC = "https://challenges.cloudflare.com/turnstile/v0/api.js";
-    function render() {
-      if (captchaRendered.current || !captchaRef.current || !window.turnstile) return;
-      captchaRendered.current = true;
-      window.turnstile.render(captchaRef.current, {
-        sitekey: TURNSTILE_SITE_KEY,
-        callback: (t: string) => setCaptchaToken(t),
-        "expired-callback": () => setCaptchaToken(""),
-        "error-callback": () => setCaptchaToken(""),
-      });
-    }
-    if (window.turnstile) return render();
-    const existing = document.querySelector(`script[src="${SRC}"]`);
-    if (existing) {
-      existing.addEventListener("load", render);
-      return;
-    }
-    const s = document.createElement("script");
-    s.src = SRC;
-    s.async = true;
-    s.defer = true;
-    s.onload = render;
-    document.head.appendChild(s);
-  }, []);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();
@@ -104,10 +59,6 @@ export default function SignupPage() {
       setError("Please use a password of at least 8 characters.");
       return;
     }
-    if (TURNSTILE_SITE_KEY && !captchaToken) {
-      setError("Please complete the “I'm human” check above.");
-      return;
-    }
     setBusy(true);
     setError("");
     const { data, error } = await sb.auth.signUp({
@@ -116,16 +67,16 @@ export default function SignupPage() {
       options: {
         emailRedirectTo: `${window.location.origin}/auth/callback/`,
         data: { first_name: fn, last_name: ln },
-        ...(captchaToken ? { captchaToken } : {}),
       },
     });
     if (error) {
       setBusy(false);
       setError(error.message);
-      if (TURNSTILE_SITE_KEY) { window.turnstile?.reset(); setCaptchaToken(""); }
       return;
     }
-    // Persist the names onto the profile (created by the DB trigger).
+    // Persist the names onto the profile when signed in right away. When email
+    // confirmation is ON there's no session yet — the DB trigger captures the
+    // name from the signup metadata instead.
     if (data.session && data.user) {
       await sb
         .from("profiles")
@@ -166,10 +117,14 @@ export default function SignupPage() {
         </p>
       )}
       {sent ? (
-        <p className={authOk}>
-          Almost there — we sent a confirmation link to <strong>{email}</strong>.
-          Click it to activate your account, then log in.
-        </p>
+        <div className={authOk}>
+          <p className="font-semibold">Check your email to finish 📬</p>
+          <p className="mt-1">
+            We sent a confirmation link to <strong>{email}</strong>. Click it to
+            activate your account, then log in. (Check spam if you don&apos;t see
+            it in a minute.)
+          </p>
+        </div>
       ) : (
         <form onSubmit={submit} className="grid gap-4">
           <div className="grid grid-cols-2 gap-4">
@@ -196,8 +151,6 @@ export default function SignupPage() {
             <label>Company website</label>
             <input tabIndex={-1} autoComplete="off" value={trap} onChange={(e) => setTrap(e.target.value)} />
           </div>
-
-          {TURNSTILE_SITE_KEY && <div ref={captchaRef} className="min-h-[65px]" />}
 
           {error && <p className={authNotice}>{error}</p>}
           <button type="submit" className={authButton} disabled={busy}>
