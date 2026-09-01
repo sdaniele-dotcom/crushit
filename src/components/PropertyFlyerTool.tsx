@@ -151,7 +151,11 @@ export function PropertyFlyerTool() {
         property_type: g("property_type"),
         annual_property_taxes: num("annual_property_taxes"),
         monthly_hoa: num("monthly_hoa"),
-        photo_url: g("photo_url"),
+        // Hero photo: an explicit URL wins, else the selected listing's first
+        // Lofty photo. The server still auto-pulls from Lofty as a fallback.
+        photo_url: g("photo_url") || listing?.photos?.[0] || "",
+        // Full Lofty photo set so the flyer can show a second image.
+        photos: listing?.photos && listing.photos.length ? listing.photos : undefined,
       },
       assumptions: {
         desired_down_pct: num("down_pct"),
