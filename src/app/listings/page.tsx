@@ -6,6 +6,9 @@ import { Container, PageHero } from "@/components/ui";
 import { RequireAuth } from "@/components/auth/RequireAuth";
 import { listMyListings, upsertListing, deleteListing, listingLabel, lookupProperty, type Listing } from "@/lib/listings";
 import { uploadListingPhoto } from "@/lib/storage";
+import { useAuth } from "@/components/auth/AuthProvider";
+import { fullName } from "@/lib/profile";
+import { notifyNewListing } from "@/lib/notify";
 import { toast } from "@/lib/toast";
 
 const input =
@@ -30,6 +33,7 @@ function num(v: string): number | undefined {
 }
 
 function ListingsInner() {
+  const { user, profile } = useAuth();
   const [listings, setListings] = useState<Listing[]>([]);
   const [open, setOpen] = useState(false);
   const [busy, setBusy] = useState(false);
@@ -92,6 +96,9 @@ function ListingsInner() {
     e.preventDefault();
     if (!f.address.trim()) return;
     setBusy(true);
+    // A brand-new address (not already saved) triggers the new-listing email.
+    const addr = f.address.trim().toLowerCase();
+    const isNew = !listings.some((l) => (l.address ?? "").trim().toLowerCase() === addr);
     const res = await upsertListing({
       address: f.address, city: f.city || undefined, state: f.state || undefined, zip: f.zip || undefined,
       price: num(f.price), beds: num(f.beds), baths: num(f.baths), sqft: num(f.sqft) as number | undefined,
@@ -100,6 +107,12 @@ function ListingsInner() {
     });
     setBusy(false);
     if (res) {
+      if (isNew) {
+        notifyNewListing(
+          { name: fullName(profile) || null, email: profile?.email ?? user?.email ?? null },
+          { id: res.id, address: listingLabel(res), price: res.price, beds: res.beds, baths: res.baths, sqft: res.sqft },
+        );
+      }
       toast({ emoji: "🏠", title: "Listing saved", body: "Reuse it across every tool." });
       setF({ address: "", city: "", state: "", zip: "", price: "", beds: "", baths: "", sqft: "", description: "" });
       setPhotos([]);
