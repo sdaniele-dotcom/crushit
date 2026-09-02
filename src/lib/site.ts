@@ -28,7 +28,7 @@ export const site = {
   applyUrl: "https://crushmortgage.floify.com/",
   // The public home of this site (custom domain). Used for canonical URLs,
   // Open Graph tags, the sitemap, and robots.txt.
-  siteUrl: "https://crushingitrealestate.com",
+  siteUrl: "https://crushyourmarket.com",
   address: "3750 Schaufele Ave, Suite 270A, Long Beach, CA 90808",
 
   // Where the contact / pre-approval form submits. Uses FormSubmit
