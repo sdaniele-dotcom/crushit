@@ -11,8 +11,11 @@
 export const site = {
   brand: "CRUSH IT",
   tagline: "The Agent Suite by Crush Mortgage",
+  // Home-page title used for search results and social cards. Leads with
+  // the domain name so the page matches searches for Crush Your Market.
+  seoTitle: "Crush Your Market — The CRUSH IT Agent Suite by Crush Mortgage",
   shortDescription:
-    "A complete toolkit of calculators, loan guides, and co-marketing resources built to help agents win more clients and close more deals.",
+    "Crush Your Market is the CRUSH IT agent suite from Crush Mortgage: mortgage calculators, loan-program matching, open house kits, and co-branded marketing.",
 
   // ─── Company / loan-officer details ───────────────────────────────
   company: "Crush Mortgage",
