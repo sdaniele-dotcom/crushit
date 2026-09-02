@@ -163,6 +163,12 @@ export function ChatWidget() {
   const [started, setStarted] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+  // Stable id so the whole conversation logs to one transcript row.
+  const convId = useRef<string>("");
+  if (!convId.current) {
+    try { convId.current = crypto.randomUUID(); }
+    catch { convId.current = `c-${Date.now()}-${Math.random().toString(36).slice(2)}`; }
+  }
 
   // Keep the greeting personalized once the profile loads (before any chat).
   useEffect(() => {
@@ -201,6 +207,8 @@ export function ChatWidget() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           agentName: agentName || undefined,
+          agentEmail: profile?.email || undefined,
+          conversationId: convId.current,
           // Send only real chat turns (strip greeting + curated tool replies).
           messages: next
             .filter((m) => !m.actions && m !== greeting)
