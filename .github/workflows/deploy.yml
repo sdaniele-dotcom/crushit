@@ -24,7 +24,7 @@ jobs:
           node-version: 22
           cache: npm
       - run: npm ci
-      # Served at the root of the custom domain (crushingitrealestate.com),
+      # Served at the root of the custom domain (crushyourmarket.com),
       # so no path prefix. (If you ever revert to the github.io/crushit URL,
       # set BASE_PATH: /crushit here again.)
       - run: npm run build
