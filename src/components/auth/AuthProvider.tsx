@@ -10,8 +10,41 @@ import {
 } from "react";
 import type { Session, User } from "@supabase/supabase-js";
 import { getSupabase, isSupabaseConfigured } from "@/lib/supabase";
-import { sendWelcomeEmail } from "@/lib/notify";
+import { sendWelcomeEmail, claimInvitedListings } from "@/lib/notify";
+import { toast } from "@/lib/toast";
 import type { Profile } from "@/lib/profile";
+
+/**
+ * Import any listing an agent was invited about (via a /signup?claim= link or
+ * an email match) into their account, once, after login. The imported listing
+ * shows up in My Listings with the marketing package ready to download.
+ */
+async function maybeClaimListings(session: Session | null) {
+  const u = session?.user;
+  if (!u || !session.access_token) return;
+  let token: string | null = null;
+  let alreadyDone = false;
+  const flagKey = `crush:claimed:${u.id}`;
+  try {
+    token = localStorage.getItem("crush:claim-token");
+    alreadyDone = !!localStorage.getItem(flagKey);
+  } catch { /* storage blocked */ }
+  if (!token && alreadyDone) return; // nothing new to claim
+
+  const n = await claimInvitedListings(session.access_token, token);
+  try {
+    localStorage.removeItem("crush:claim-token");
+    localStorage.setItem(flagKey, "1");
+  } catch { /* ignore */ }
+  if (n > 0) {
+    try { window.dispatchEvent(new Event("crush:refresh-profile")); } catch { /* ignore */ }
+    toast({
+      emoji: "🎁",
+      title: "Your listing is ready",
+      body: `We added ${n} listing${n === 1 ? "" : "s"} to your account — download the marketing package in My Listings.`,
+    });
+  }
+}
 
 /**
  * Fire the welcome email once, when a freshly-confirmed agent first shows up in
@@ -81,7 +114,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (!mounted) return;
       setSession(data.session ?? null);
       setUser(data.session?.user ?? null);
-      if (data.session?.user) maybeWelcome(data.session.user);
+      if (data.session?.user) { maybeWelcome(data.session.user); void maybeClaimListings(data.session); }
       await loadProfile(data.session?.user?.id);
       setReady(true);
     });
@@ -90,8 +123,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (!mounted) return;
       setSession(s ?? null);
       setUser(s?.user ?? null);
-      // A newly-confirmed agent triggers SIGNED_IN here — send the welcome.
-      if (s?.user && (event === "SIGNED_IN" || event === "USER_UPDATED")) maybeWelcome(s.user);
+      // A newly-confirmed agent triggers SIGNED_IN here — send the welcome and
+      // import any listing they were invited about.
+      if (s?.user && (event === "SIGNED_IN" || event === "USER_UPDATED")) {
+        maybeWelcome(s.user);
+        void maybeClaimListings(s);
+      }
       await loadProfile(s?.user?.id);
     });
 
