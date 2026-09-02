@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import {
   AuthShell,
@@ -35,6 +35,15 @@ export default function SignupPage() {
   const [sent, setSent] = useState(false);
   const [trap, setTrap] = useState(""); // honeypot — humans never fill this
   const mountedAt = useRef(Date.now());
+
+  // A ?claim=<token> from a listing invite — stash it so the listing is
+  // imported into their account once they confirm and log in.
+  useEffect(() => {
+    try {
+      const t = new URLSearchParams(window.location.search).get("claim");
+      if (t) localStorage.setItem("crush:claim-token", t);
+    } catch { /* storage blocked — email match still claims it */ }
+  }, []);
 
   async function submit(e: React.FormEvent) {
     e.preventDefault();

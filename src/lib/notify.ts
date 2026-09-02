@@ -19,6 +19,25 @@ export function sendWelcomeEmail(email: string, name?: string | null): void {
   }).catch(() => {});
 }
 
+/**
+ * Import any listing(s) an agent was invited about into their account (matched
+ * by claim token and their email). Called once after login; returns how many
+ * were added. Best-effort — never throws.
+ */
+export async function claimInvitedListings(accessToken: string, claimToken?: string | null): Promise<number> {
+  try {
+    const res = await fetch(`${site.flyerApiBase}/api/public/claim-listings`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Authorization: `Bearer ${accessToken}` },
+      body: JSON.stringify({ claim: claimToken || undefined }),
+    });
+    const d = await res.json().catch(() => ({}));
+    return res.ok && d.ok ? Number(d.claimed ?? 0) : 0;
+  } catch {
+    return 0;
+  }
+}
+
 /** New-listing nudge, sent when an agent adds a listing for the first time. */
 export function notifyNewListing(
   agent: { name?: string | null; email?: string | null },
