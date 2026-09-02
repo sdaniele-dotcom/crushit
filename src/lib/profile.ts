@@ -16,6 +16,9 @@ export type Profile = {
   website: string | null;
   market_city: string | null;
   leaderboard_visible: boolean;
+  /** Opt-in: auto-send a marketing package when their listing hits the MLS. */
+  listing_marketing_opt_in: boolean;
+  listing_marketing_opt_in_at: string | null;
   is_active: boolean;
   profile_completed: boolean;
   current_stars: number;
