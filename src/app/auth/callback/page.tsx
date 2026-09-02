@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { AuthShell } from "@/components/auth/AuthShell";
 import { getSupabase } from "@/lib/supabase";
-import { sendWelcomeEmail } from "@/lib/notify";
 import type { EmailOtpType } from "@supabase/supabase-js";
 
 /**
@@ -47,20 +46,10 @@ export default function AuthCallbackPage() {
     }
 
     const isRecovery = get("type") === "recovery";
-    // A signup confirmation (not a recovery/magic-link) is the one moment to
-    // send the welcome email — the account is now confirmed and provisioned.
-    const isSignupConfirm = get("type") === "signup" || get("type") === "email";
-    const afterAuth = async () => {
+    // The welcome email is fired centrally in AuthProvider once the confirmed
+    // agent lands in the app — reliable regardless of where this link redirects.
+    const afterAuth = () => {
       if (isRecovery) return window.location.assign("/update-password/");
-      if (isSignupConfirm) {
-        try {
-          const { data } = await sb.auth.getUser();
-          const u = data.user;
-          const meta = (u?.user_metadata ?? {}) as { first_name?: string; last_name?: string };
-          const name = [meta.first_name, meta.last_name].filter(Boolean).join(" ").trim();
-          if (u?.email) sendWelcomeEmail(u.email, name || null);
-        } catch { /* welcome email is best-effort */ }
-      }
       finish();
     };
 

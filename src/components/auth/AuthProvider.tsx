@@ -10,7 +10,32 @@ import {
 } from "react";
 import type { Session, User } from "@supabase/supabase-js";
 import { getSupabase, isSupabaseConfigured } from "@/lib/supabase";
+import { sendWelcomeEmail } from "@/lib/notify";
 import type { Profile } from "@/lib/profile";
+
+/**
+ * Fire the welcome email once, when a freshly-confirmed agent first shows up in
+ * the app — wherever their confirmation link lands them. Guards: only for an
+ * account confirmed in the last 24h (so existing agents aren't emailed on their
+ * next login), and only once per browser via a localStorage flag. The server
+ * dedupes for good once migration 0037 is applied.
+ */
+function maybeWelcome(u: User | null) {
+  if (!u?.email) return;
+  const confirmedAt = u.email_confirmed_at || u.confirmed_at;
+  if (!confirmedAt) return;
+  if (Date.now() - new Date(confirmedAt).getTime() > 24 * 60 * 60 * 1000) return;
+  const key = `crush:welcomed:${u.id}`;
+  try {
+    if (localStorage.getItem(key)) return;
+    localStorage.setItem(key, "1");
+  } catch {
+    /* storage blocked — fall through and send (server dedupe still protects) */
+  }
+  const meta = (u.user_metadata ?? {}) as { first_name?: string; last_name?: string };
+  const name = [meta.first_name, meta.last_name].filter(Boolean).join(" ").trim();
+  sendWelcomeEmail(u.email, name || null);
+}
 
 type AuthState = {
   ready: boolean; // finished initial session check
@@ -56,14 +81,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       if (!mounted) return;
       setSession(data.session ?? null);
       setUser(data.session?.user ?? null);
+      if (data.session?.user) maybeWelcome(data.session.user);
       await loadProfile(data.session?.user?.id);
       setReady(true);
     });
 
-    const { data: sub } = sb.auth.onAuthStateChange(async (_event, s) => {
+    const { data: sub } = sb.auth.onAuthStateChange(async (event, s) => {
       if (!mounted) return;
       setSession(s ?? null);
       setUser(s?.user ?? null);
+      // A newly-confirmed agent triggers SIGNED_IN here — send the welcome.
+      if (s?.user && (event === "SIGNED_IN" || event === "USER_UPDATED")) maybeWelcome(s.user);
       await loadProfile(s?.user?.id);
     });
 
