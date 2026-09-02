@@ -66,7 +66,15 @@ export default function AuthCallbackPage() {
 
         if (code) {
           const { error } = await sb.auth.exchangeCodeForSession(code);
-          if (error) return fail(error.message);
+          if (error) {
+            // PKCE links only work on the same browser/device that started
+            // sign-up (the code verifier lives there). Give a human fix.
+            return fail(
+              /verifier|pkce|code challenge/i.test(error.message)
+                ? "Open the link on the same device and browser you signed up with — or request a fresh link with “Resend confirmation email” on the log-in page."
+                : error.message,
+            );
+          }
           return afterAuth();
         }
 
