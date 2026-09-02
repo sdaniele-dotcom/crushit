@@ -24,12 +24,14 @@ type Form = {
   brokerage_logo_url: string;
   team_logo_url: string;
   leaderboard_visible: boolean;
+  listing_marketing_opt_in: boolean;
 };
 
 const empty: Form = {
   first_name: "", last_name: "", display_name: "", phone: "", brokerage: "",
   dre_license: "", instagram: "", website: "", market_city: "",
   headshot_url: "", brokerage_logo_url: "", team_logo_url: "", leaderboard_visible: true,
+  listing_marketing_opt_in: false,
 };
 
 const input =
@@ -109,6 +111,7 @@ function ProfileInner() {
         brokerage_logo_url: profile.brokerage_logo_url ?? "",
         team_logo_url: profile.team_logo_url ?? "",
         leaderboard_visible: profile.leaderboard_visible ?? true,
+        listing_marketing_opt_in: profile.listing_marketing_opt_in ?? false,
       });
     }
   }, [profile]);
@@ -122,9 +125,14 @@ function ProfileInner() {
     setSaving(true);
     setSaved(false);
     const display = form.display_name.trim() || [form.first_name, form.last_name].filter(Boolean).join(" ").trim();
+    // Stamp when they turn on auto-marketing (the opt-in record); clear on off.
+    const wasOptedIn = profile?.listing_marketing_opt_in ?? false;
+    const optInAt = form.listing_marketing_opt_in
+      ? (wasOptedIn ? profile?.listing_marketing_opt_in_at ?? new Date().toISOString() : new Date().toISOString())
+      : null;
     const { error } = await sb
       .from("profiles")
-      .update({ ...form, display_name: display })
+      .update({ ...form, display_name: display, listing_marketing_opt_in_at: optInAt })
       .eq("id", user.id);
     if (!error) {
       await refreshProfile();
@@ -197,6 +205,22 @@ function ProfileInner() {
                 <input type="checkbox" className="h-4 w-4 accent-crush-500" checked={form.leaderboard_visible} onChange={(e) => set("leaderboard_visible", e.target.checked)} />
                 Show me on the Crush Leaderboard
               </label>
+            </div>
+
+            <div className="rounded-3xl border border-crush-200 bg-crush-50 p-6">
+              <h2 className="text-sm font-bold uppercase tracking-wide text-crush-700">Auto-marketing</h2>
+              <label className="mt-3 flex items-start gap-3 text-sm text-ink-800">
+                <input type="checkbox" className="mt-0.5 h-4 w-4 accent-crush-500" checked={form.listing_marketing_opt_in} onChange={(e) => set("listing_marketing_opt_in", e.target.checked)} />
+                <span>
+                  <span className="font-semibold">Automatically send me a marketing package when my listing hits the MLS.</span>{" "}
+                  When we detect a new listing in LA or Orange County under your name, we&apos;ll email you a co-branded
+                  financing flyer for it — free.
+                </span>
+              </label>
+              <p className="mt-2 text-xs text-muted">
+                By opting in you agree to receive these emails from Crush Mortgage and confirm the listing email on
+                file is yours. You can turn this off here anytime.
+              </p>
             </div>
           </div>
 
