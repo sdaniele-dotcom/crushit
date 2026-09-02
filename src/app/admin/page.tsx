@@ -52,6 +52,7 @@ function AdminInner() {
           <Link href="/admin/loan-programs" className="rounded-full border border-border bg-white px-6 py-3 text-sm font-semibold text-ink-900 hover:bg-surface-2">Loan programs</Link>
           <Link href="/admin/scenarios" className="rounded-full border border-border bg-white px-6 py-3 text-sm font-semibold text-ink-900 hover:bg-surface-2">Buyer scenarios</Link>
           <Link href="/admin/promotions" className="rounded-full border border-border bg-white px-6 py-3 text-sm font-semibold text-ink-900 hover:bg-surface-2">Listing promotions</Link>
+          <Link href="/admin/broadcast" className="rounded-full border border-border bg-white px-6 py-3 text-sm font-semibold text-ink-900 hover:bg-surface-2">Agent newsletter</Link>
           <Link href="/admin/vendors" className="rounded-full border border-border bg-white px-6 py-3 text-sm font-semibold text-ink-900 hover:bg-surface-2">Resource partners</Link>
         </div>
 
