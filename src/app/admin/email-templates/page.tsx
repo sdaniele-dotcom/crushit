@@ -5,9 +5,58 @@ import Link from "next/link";
 import { Container, PageHero } from "@/components/ui";
 import { AdminGuard } from "@/components/auth/AdminGuard";
 import { getSupabase } from "@/lib/supabase";
+import { useAuth } from "@/components/auth/AuthProvider";
+import { fullName } from "@/lib/profile";
 import { site } from "@/lib/site";
 import { toast } from "@/lib/toast";
 import { fetchEmailTemplates, saveEmailTemplate, TEMPLATE_META, type EmailTemplate } from "@/lib/emailTemplates";
+
+/** One-click diagnostic: hits the welcome endpoint directly (needs only the
+ *  Resend key) and shows the raw result, so it's obvious what's configured. */
+function WelcomeTest() {
+  const { user, profile } = useAuth();
+  const [busy, setBusy] = useState(false);
+  const [result, setResult] = useState<string>("");
+  const email = profile?.email ?? user?.email ?? "";
+
+  async function run() {
+    if (!email) { setResult("No email on your account."); return; }
+    setBusy(true);
+    setResult("");
+    try {
+      const res = await fetch(`${site.flyerApiBase}/api/public/welcome-email`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email, name: fullName(profile) || undefined }),
+      });
+      const d = await res.json().catch(() => ({}));
+      if (d.skipped === "email_not_configured") {
+        setResult("⚠️ RESEND_API_KEY isn't active in the backend yet — add it in Vercel and redeploy. (This is the blocker.)");
+      } else if (res.ok && d.ok && (d.outcome === "sent" || d.outcome === undefined)) {
+        setResult(`✅ Sent to ${email}. Check your inbox (and spam). If it lands, the email system works — any signup issue is just the trigger.`);
+      } else if (res.ok && d.ok && d.outcome === "skipped") {
+        setResult(`ℹ️ Skipped (already welcomed, or no matching profile). Sent nothing. Raw: ${JSON.stringify(d)}`);
+      } else {
+        setResult(`❌ ${d.error || "Send failed"} · Raw: ${JSON.stringify(d)} (HTTP ${res.status})`);
+      }
+    } catch (e) {
+      setResult(`❌ Couldn't reach the backend: ${e instanceof Error ? e.message : "network error"}`);
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  return (
+    <div className="mb-8 rounded-2xl border border-crush-200 bg-crush-50 p-5">
+      <h2 className="text-base font-bold text-ink-900">Test the email system</h2>
+      <p className="mt-0.5 text-sm text-muted">Sends a real welcome email to <span className="font-medium">{email || "your account"}</span> right now. Isolates the mail setup from the signup flow.</p>
+      <button type="button" onClick={run} disabled={busy} className="mt-3 rounded-full bg-crush-500 px-5 py-2.5 text-sm font-semibold text-white hover:bg-crush-600 disabled:opacity-50">
+        {busy ? "Sending…" : "Send a welcome email to me"}
+      </button>
+      {result && <p className="mt-3 rounded-xl border border-border bg-white px-4 py-3 text-sm text-ink-800">{result}</p>}
+    </div>
+  );
+}
 
 const input = "w-full rounded-xl border border-border bg-white px-3.5 py-2.5 text-sm outline-none focus:border-crush-400 focus:ring-2 focus:ring-crush-100";
 
@@ -96,6 +145,8 @@ function Inner() {
           <Link href="/admin" className="text-sm font-semibold text-crush-600">← Admin overview</Link>
           <Link href="/admin/broadcast" className="text-sm font-semibold text-crush-600">Send a newsletter →</Link>
         </div>
+
+        <div className="mt-6"><WelcomeTest /></div>
 
         {loading && <div className="flex justify-center py-16"><span className="h-8 w-8 animate-spin rounded-full border-2 border-crush-500 border-t-transparent" /></div>}
         {!loading && rows.length === 0 && (
