@@ -27,7 +27,12 @@ export function getSupabase(): SupabaseClient | null {
       persistSession: true,
       autoRefreshToken: true,
       detectSessionInUrl: true,
-      flowType: "pkce",
+      // Implicit (not PKCE): this is a static SPA with no server to store the
+      // PKCE code verifier, so PKCE email links fail when opened on a different
+      // device/browser than sign-up ("code verifier not found"). Implicit flow
+      // returns the session in the URL hash, which detectSessionInUrl + our
+      // /auth/callback consume — cross-device safe, no email-template edit.
+      flowType: "implicit",
     },
   });
   return cached;
