@@ -60,7 +60,7 @@ export default function Home() {
               {site.brand} · by {site.company}
             </p>
             <h1 className="mt-5 text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl">
-              Your real estate business. <span className="text-gradient">One dashboard.</span>
+              Crush your market. <span className="text-gradient">One dashboard.</span>
             </h1>
             <p className="mt-6 max-w-xl text-lg text-slate-300">
               Market listings. Run buyer numbers. Create content. Prep open houses. Find loan
