@@ -50,7 +50,7 @@ export const site = {
   // ▶ IMPORTANT: the first time a booking is submitted, FormSubmit sends a
   //   one-time activation email to this address — click the link in it once to
   //   turn on notifications. Change the email to reroute booking alerts.
-  contentRoomFormEndpoint: "https://formsubmit.co/ajax/sdaniele@realtygrouphs.com" as string,
+  contentRoomFormEndpoint: "https://formsubmit.co/ajax/amraj@crushmortgage.com" as string,
 
   // Social links — set real URLs to make them appear in the footer.
   // Any value left as a "[...]" placeholder is hidden automatically.
