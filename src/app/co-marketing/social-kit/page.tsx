@@ -4,7 +4,7 @@ import { Container, PageHero, Button, Eyebrow, Card } from "@/components/ui";
 import { CopyCard } from "@/components/CopyCard";
 import { ListingPromo } from "@/components/ListingPromo";
 import { SocialInfographics } from "@/components/SocialInfographics";
-import { site } from "@/lib/site";
+import { ContentRoomBooking } from "@/components/ContentRoomBooking";
 
 export const metadata: Metadata = {
   title: "Social Media Kit",
@@ -124,8 +124,12 @@ export default function SocialKitPage() {
             Infographics you can post
           </h2>
           <p className="mt-3 max-w-2xl text-muted">
-            Educational, share-worthy graphics — already designed and co-branded
-            with your name and Crush Mortgage. Tap{" "}
+            Two kinds, both co-branded with your name and Crush Mortgage:{" "}
+            <span className="font-semibold text-ink-800">Listing graphics</span> that
+            drop your selected property photo into a Just Listed / Open House /
+            Just Sold / New Price post, and{" "}
+            <span className="font-semibold text-ink-800">Educational graphics</span>{" "}
+            with share-worthy homebuyer tips. Tap{" "}
             <span className="font-semibold text-ink-800">Download / Print</span> to
             save a square (1:1) image for Instagram, Facebook, or LinkedIn. No
             design skills needed, nothing to edit.
@@ -138,24 +142,9 @@ export default function SocialKitPage() {
           </p>
         </div>
 
-        {/* Book the in-office content room */}
-        <div className="mt-12 rounded-3xl border border-border bg-surface p-8 sm:p-10">
-          <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
-            <div className="max-w-xl">
-              <Eyebrow>Record your own</Eyebrow>
-              <h2 className="mt-3 text-2xl font-bold tracking-tight text-ink-900 sm:text-3xl">
-                Book our in-office content room
-              </h2>
-              <p className="mt-3 text-muted">
-                Come film your own reels, market updates, and listing walkthroughs
-                in our studio space — lighting, backdrop, and setup ready to go.
-                Reserve a time that works for you.
-              </p>
-            </div>
-            <div className="shrink-0">
-              <Button href={site.contentRoomBookingUrl}>Book the content room</Button>
-            </div>
-          </div>
+        {/* Book the in-office content room (dedicated form → emails on each booking) */}
+        <div className="mt-12">
+          <ContentRoomBooking />
         </div>
 
         <div className="mt-12 rounded-3xl bg-ink-900 p-8 text-center sm:p-12">

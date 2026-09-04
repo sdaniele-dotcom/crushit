@@ -45,10 +45,12 @@ export const site = {
   // Vercel app's public API). Agents' info + a listing are POSTed here.
   flyerApiBase: "https://crushmortgage.vercel.app" as string,
 
-  // Where "Book the content room" sends agents. Drop in a real scheduling
-  // link (Calendly, Google Calendar appointments, etc.) to book studio time.
-  // Defaults to the contact form until a scheduler is set up.
-  contentRoomBookingUrl: "/about/#contact" as string,
+  // Dedicated "Book the content room" form endpoint. Uses FormSubmit so every
+  // booking emails the address below — SEPARATE from the pre-approval lead form.
+  // ▶ IMPORTANT: the first time a booking is submitted, FormSubmit sends a
+  //   one-time activation email to this address — click the link in it once to
+  //   turn on notifications. Change the email to reroute booking alerts.
+  contentRoomFormEndpoint: "https://formsubmit.co/ajax/sdaniele@realtygrouphs.com" as string,
 
   // Social links — set real URLs to make them appear in the footer.
   // Any value left as a "[...]" placeholder is hidden automatically.
