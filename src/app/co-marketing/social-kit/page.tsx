@@ -3,6 +3,8 @@ import { ActiveListingProvider, ListingPicker } from "@/components/ActiveListing
 import { Container, PageHero, Button, Eyebrow, Card } from "@/components/ui";
 import { CopyCard } from "@/components/CopyCard";
 import { ListingPromo } from "@/components/ListingPromo";
+import { SocialInfographics } from "@/components/SocialInfographics";
+import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
   title: "Social Media Kit",
@@ -115,49 +117,45 @@ export default function SocialKitPage() {
           </p>
         </Card>
 
-        {/* Free done-for-you services */}
+        {/* Ready-made infographics agents can download & post */}
         <div className="mt-12">
-          <Eyebrow>Free for our partner agents</Eyebrow>
+          <Eyebrow>Ready to post</Eyebrow>
           <h2 className="mt-4 text-3xl font-bold tracking-tight text-ink-900">
-            We&apos;ll make the content for you
+            Infographics you can post
           </h2>
           <p className="mt-3 max-w-2xl text-muted">
-            Short on time or design skills? Our marketing team will create it for
-            you — at no cost — as part of our co-marketing partnership. Just ask.
+            Educational, share-worthy graphics — already designed and co-branded
+            with your name and Crush Mortgage. Tap{" "}
+            <span className="font-semibold text-ink-800">Download / Print</span> to
+            save a square (1:1) image for Instagram, Facebook, or LinkedIn. No
+            design skills needed, nothing to edit.
           </p>
-          <div className="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
-            {(
-              [
-                ["🎨", "Custom branded graphics", "Just-listed, open house, sold, and price-drop posts designed with your photo and brand colors."],
-                ["✂️", "Free reel & video editing", "Send us your raw walkthrough clips and we'll edit a polished, captioned reel ready to post."],
-                ["📸", "Headshot touch-up", "Professional cleanup and resizing of your headshot for every platform."],
-                ["🗓️", "Monthly content calendar", "A done-for-you plan of what to post each week so you never stare at a blank screen."],
-                ["📝", "Custom captions & scripts", "Tell us the listing or topic — we'll write the caption, hashtags, and a short video script."],
-                ["📐", "Branded templates", "Reusable Canva templates in your brand so you can spin up posts in minutes."],
-              ] as const
-            ).map(([icon, title, desc]) => (
-              <div
-                key={title}
-                className="flex flex-col rounded-2xl border border-border bg-white p-6"
-              >
-                <span className="grid h-12 w-12 place-items-center rounded-xl bg-crush-50 text-2xl">
-                  {icon}
-                </span>
-                <h3 className="mt-4 text-base font-bold text-ink-900">{title}</h3>
-                <p className="mt-2 flex-1 text-sm text-muted">{desc}</p>
-              </div>
-            ))}
-          </div>
-          <div className="mt-8 flex flex-wrap gap-3">
-            <Button href="/about/#contact">Request free content</Button>
-            <Button href="/co-brand" variant="secondary">
-              Make a flyer now
-            </Button>
+          <div className="mt-8">
+            <SocialInfographics />
           </div>
           <p className="mt-4 text-xs text-muted">
-            Co-marketing is provided under RESPA-compliant terms. Ask us for the
-            simple co-marketing agreement to get started.
+            Educational, co-marketing content provided under RESPA-compliant terms.
           </p>
+        </div>
+
+        {/* Book the in-office content room */}
+        <div className="mt-12 rounded-3xl border border-border bg-surface p-8 sm:p-10">
+          <div className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+            <div className="max-w-xl">
+              <Eyebrow>Record your own</Eyebrow>
+              <h2 className="mt-3 text-2xl font-bold tracking-tight text-ink-900 sm:text-3xl">
+                Book our in-office content room
+              </h2>
+              <p className="mt-3 text-muted">
+                Come film your own reels, market updates, and listing walkthroughs
+                in our studio space — lighting, backdrop, and setup ready to go.
+                Reserve a time that works for you.
+              </p>
+            </div>
+            <div className="shrink-0">
+              <Button href={site.contentRoomBookingUrl}>Book the content room</Button>
+            </div>
+          </div>
         </div>
 
         <div className="mt-12 rounded-3xl bg-ink-900 p-8 text-center sm:p-12">
