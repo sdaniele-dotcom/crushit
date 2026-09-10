@@ -52,9 +52,19 @@ function fmtMoneyInput(e: React.FormEvent<HTMLInputElement>) {
   el.value = d ? Number(d).toLocaleString("en-US") : "";
 }
 
+const FLYER_PROGRAMS = [
+  { key: "conv20", label: "Conventional 20%" },
+  { key: "conv10", label: "Conventional 10%" },
+  { key: "fha", label: "FHA 3.5%" },
+  { key: "va", label: "VA" },
+  { key: "dscr", label: "DSCR" },
+  { key: "bankstmt", label: "Bank Statement" },
+] as const;
+
 export function PropertyFlyerTool() {
   const { user, profile, refreshProfile } = useAuth();
   const [status, setStatus] = useState<Status>("idle");
+  const [programs, setPrograms] = useState<string[]>(["conv20", "conv10", "fha", "va"]);
   const [error, setError] = useState<string>("");
   const [result, setResult] = useState<Result | null>(null);
   const [headshot, setHeadshot] = useState<string>(""); // new upload for this flyer only
@@ -165,6 +175,7 @@ export function PropertyFlyerTool() {
       },
       loan_officer_id: officerId || undefined,
       template,
+      programs,
     };
 
     setStatus("loading");
@@ -367,6 +378,47 @@ export function PropertyFlyerTool() {
               <span className="block text-xs text-muted">{t.blurb}</span>
             </button>
           ))}
+        </div>
+
+        {/* Loan programs to show on the flyer */}
+        <div className="mt-8">
+          <h2 className="text-2xl font-bold text-ink-900">Loan programs to show</h2>
+          <p className="mt-1 text-sm text-muted">
+            Pick which programs appear on the flyer — each shows at its own down payment.
+          </p>
+          <div className="mt-4 grid gap-2 sm:grid-cols-3">
+            {FLYER_PROGRAMS.map((p) => {
+              const on = programs.includes(p.key);
+              return (
+                <button
+                  type="button"
+                  key={p.key}
+                  onClick={() =>
+                    setPrograms((cur) =>
+                      cur.includes(p.key) ? cur.filter((k) => k !== p.key) : [...cur, p.key],
+                    )
+                  }
+                  className={`flex items-center gap-2 rounded-xl border px-4 py-3 text-left text-sm transition-colors ${
+                    on ? "border-crush-400 bg-crush-50 text-ink-900" : "border-border text-ink-700 hover:bg-surface-2"
+                  }`}
+                >
+                  <span
+                    className={`grid h-5 w-5 shrink-0 place-items-center rounded-md border text-xs ${
+                      on ? "border-crush-500 bg-crush-500 text-white" : "border-border"
+                    }`}
+                  >
+                    {on ? "✓" : ""}
+                  </span>
+                  <span className="font-semibold">{p.label}</span>
+                </button>
+              );
+            })}
+          </div>
+          {programs.length === 0 && (
+            <p className="mt-2 text-xs text-crush-700">
+              Pick at least one — or leave all unchecked to use our default set.
+            </p>
+          )}
         </div>
 
         {/* Primary CTA — always visible right after the essentials */}
