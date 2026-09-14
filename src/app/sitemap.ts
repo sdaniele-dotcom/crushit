@@ -20,6 +20,7 @@ const routes = [
   "/guides/document-checklist",
   "/guides/closing-day",
   "/guides/glossary",
+  "/guides/condo-rules",
   "/team",
   "/contact",
 ];

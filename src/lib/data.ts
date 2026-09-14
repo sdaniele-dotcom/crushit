@@ -480,6 +480,19 @@ export const resources: Resource[] = [
     ],
   },
   {
+    title: "The 2026 Condo Rules",
+    description: "Limited Review is gone and reserve minimums are rising — what to check before you take a condo listing.",
+    audience: "Before you take the listing",
+    href: "/guides/condo-rules",
+    items: [
+      "Limited Review retired Aug 3, 2026",
+      "Reserves rise to 15% Jan 4, 2027",
+      "What to ask the HOA",
+      "Why townhouses are different",
+      "SB 326 balcony inspections",
+    ],
+  },
+  {
     title: "Closing-Day Prep",
     description: "What to bring and what to expect at the closing table.",
     audience: "Send 3 days before closing",
