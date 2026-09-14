@@ -18,6 +18,13 @@ export const TEMPLATE_META: Record<string, { title: string; blurb: string; token
     tokens: ["first_name", "address", "price", "beds", "baths", "sqft"],
     defaultSubject: "Your listing is ready to market — {{address}} 🏡",
   },
+  condo_note: {
+    title: "Condo guideline note",
+    blurb:
+      "Added to the flyer email only when the listing is a condominium (not a townhouse or PUD). Body only — the subject is ignored. Leave blank for the built-in draft; enter a single dash to switch the note off. Keep this current as agency condo guidelines change.",
+    tokens: [],
+    defaultSubject: "",
+  },
 };
 
 export async function fetchEmailTemplates(): Promise<EmailTemplate[]> {
