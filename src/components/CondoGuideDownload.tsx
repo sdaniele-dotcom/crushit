@@ -3,6 +3,7 @@
 import { useAuth } from "@/components/auth/AuthProvider";
 import { recordUse } from "@/lib/rewards";
 import { realtorBrandHtml, crushFooterHtml, brandingCss, esc } from "@/lib/printBranding";
+import { printHtmlDocument } from "@/lib/printDoc";
 import { site } from "@/lib/site";
 import { team } from "@/lib/data";
 import {
@@ -136,35 +137,8 @@ export function CondoGuideDownload({ className = "" }: { className?: string }) {
 
   function download() {
     void recordUse("condo_guide", { events: ["guide_downloaded"] });
-    const w = window.open("", "_blank", "width=900,height=1100");
-    if (!w) return;
-    w.document.write(build());
-    w.document.close();
-    w.focus();
-
-    // Wait for the headshots/logos before printing, with a safety timeout so it
-    // never hangs on an image that won't load.
-    let done = false;
-    const go = () => {
-      if (done) return;
-      done = true;
-      w.print();
-    };
-    const pending = Array.from(w.document.images).filter((img) => !img.complete);
-    if (pending.length === 0) {
-      setTimeout(go, 150);
-    } else {
-      let left = pending.length;
-      const tick = () => {
-        left -= 1;
-        if (left <= 0) setTimeout(go, 60);
-      };
-      pending.forEach((img) => {
-        img.addEventListener("load", tick);
-        img.addEventListener("error", tick);
-      });
-      setTimeout(go, 2500);
-    }
+    // Waits for the headshots/logos before printing — see lib/printDoc.
+    printHtmlDocument(build());
   }
 
   return (
