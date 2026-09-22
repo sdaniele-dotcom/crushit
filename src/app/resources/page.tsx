@@ -18,7 +18,7 @@ const assets = [
     desc: "Property flyers and financing highlight sheets with your name and photo alongside ours.",
     tags: ["Print-ready PDF"],
     href: "/co-brand",
-    cta: "Make a flyer",
+    cta: "Request a flyer",
   },
   {
     icon: "📱",
@@ -132,7 +132,7 @@ export default function ResourcesPage() {
           </div>
         </div>
 
-        {/* Instant co-branded flyer highlight */}
+        {/* Co-branded financing flyer — a request we price by hand */}
         <Link
           href="/co-brand"
           className="card-hover group mt-8 flex flex-col items-start justify-between gap-4 rounded-3xl border border-border bg-white p-8 sm:flex-row sm:items-center"
@@ -143,20 +143,20 @@ export default function ResourcesPage() {
             </span>
             <div>
               <span className="inline-flex items-center rounded-full bg-crush-50 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-crush-700">
-                Instant &amp; free
+                Free &amp; priced by hand
               </span>
               <h3 className="mt-2 text-xl font-bold text-ink-900">
-                Generate a co-branded property flyer
+                Request a co-branded property flyer
               </h3>
               <p className="mt-1 max-w-xl text-muted">
-                Enter your info and a listing to instantly create a co-branded
-                flyer with financing scenarios and a print-ready PDF — no design
-                work, no waiting.
+                Send us the listing and a loan officer quotes it properly, then
+                sends back a co-branded flyer with financing scenarios and a
+                print-ready PDF. We price it by hand so the numbers hold up.
               </p>
             </div>
           </div>
           <span className="inline-flex shrink-0 items-center gap-2 rounded-full bg-crush-500 px-6 py-3 text-sm font-semibold text-white transition-colors group-hover:bg-crush-600">
-            Make my flyer →
+            Request my flyer →
           </span>
         </Link>
 

@@ -32,7 +32,7 @@ const KIND_ICON: Record<string, string> = {
 };
 
 const QUICK_ACTIONS = [
-  { label: "Create Listing Flyer", desc: "Co-branded property flyer", icon: "🎨", href: "/co-brand", tone: "from-crush-500 to-crush-600" },
+  { label: "Request a Mortgage Flyer", desc: "We price it and co-brand it", icon: "🎨", href: "/co-brand", tone: "from-crush-500 to-crush-600" },
   { label: "Build Open House Kit", desc: "Sign-in, invites & follow-ups", icon: "🏡", href: "/co-marketing/open-house-kit", tone: "from-ink-800 to-ink-900" },
   { label: "Run Buyer Payment", desc: "Mortgage & affordability", icon: "🧮", href: "/calculators", tone: "from-sky-500 to-sky-600" },
   { label: "Find a Loan Program", desc: "Match a buyer to a program", icon: "🏦", href: "/loan-programs", tone: "from-emerald-500 to-emerald-600" },

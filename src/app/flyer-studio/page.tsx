@@ -25,7 +25,7 @@ function StudioInner() {
       <Container className="py-12">
         <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
           <Link href="/dashboard" className="text-sm font-semibold text-crush-600">← Dashboard</Link>
-          <Link href="/co-brand" className="text-sm font-semibold text-crush-600">Need financing on the flyer? Use the co-branded flyer →</Link>
+          <Link href="/co-brand" className="text-sm font-semibold text-crush-600">Need financing on the flyer? Request a co-branded one →</Link>
         </div>
         <ListingPicker />
         <FlyerStudio initialCategory={cat} />
