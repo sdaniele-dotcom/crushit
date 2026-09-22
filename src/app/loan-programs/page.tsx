@@ -2,12 +2,15 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Container, PageHero, Button, Eyebrow } from "@/components/ui";
 import { LoanFinder } from "@/components/LoanFinder";
-import { site } from "@/lib/site";
 import {
-  loanPrograms,
-  specialtyPrograms,
-  otherPrograms,
-} from "@/lib/data";
+  ProgramFlyerDownload,
+  MoreProgramsFlyerDownload,
+} from "@/components/ProgramFlyerDownload";
+import { site } from "@/lib/site";
+import { otherPrograms } from "@/lib/data";
+// The cards render from the flyer list rather than from data.ts directly, so
+// the page and the printable can never describe a program differently.
+import { coreFlyers, specialtyFlyers } from "@/lib/programFlyers";
 
 export const metadata: Metadata = {
   title: "Loan Programs",
@@ -35,6 +38,25 @@ export default function LoanProgramsPage() {
           <LoanFinder />
         </div>
 
+        {/*
+          Says where the branding comes from, once, up front. Every program
+          below has a Download button, and the difference between a flyer with
+          your headshot on it and one without is whether you were signed in —
+          which is not something to discover after printing seventeen of them.
+        */}
+        <div className="mb-10 flex flex-col items-start gap-3 rounded-2xl border border-crush-200 bg-crush-50 p-5 sm:flex-row sm:items-center">
+          <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-white text-2xl">📄</span>
+          <div>
+            <h2 className="font-bold text-ink-900">Every program below has a co-branded flyer</h2>
+            <p className="mt-0.5 text-sm text-muted">
+              Hit <strong>Download</strong> on any program and you get a one-page handout with your headshot,
+              brokerage logo, name and DRE at the top and Crush Mortgage as your financing partner at the
+              bottom. Signed in, it&apos;s yours automatically — fill in your{" "}
+              <Link href="/profile" className="font-semibold text-crush-600">profile</Link> first if it&apos;s blank.
+            </p>
+          </div>
+        </div>
+
         {/* Quick-compare table */}
         <div className="overflow-x-auto rounded-2xl border border-border">
           <table className="w-full min-w-[640px] text-left text-sm">
@@ -47,7 +69,7 @@ export default function LoanProgramsPage() {
               </tr>
             </thead>
             <tbody className="divide-y divide-border bg-white">
-              {loanPrograms.map((p) => (
+              {coreFlyers.map((p) => (
                 <tr key={p.slug} className="hover:bg-surface">
                   <td className="px-5 py-3 font-semibold text-ink-900">
                     {p.name}
@@ -102,7 +124,7 @@ export default function LoanProgramsPage() {
 
         {/* Detail cards */}
         <div className="mt-12 grid gap-6 md:grid-cols-2">
-          {loanPrograms.map((p) => (
+          {coreFlyers.map((p) => (
             <div
               key={p.slug}
               id={p.slug}
@@ -155,6 +177,12 @@ export default function LoanProgramsPage() {
                 <span className="font-semibold text-ink-800">Watch out:</span>{" "}
                 {p.watchOut}
               </p>
+
+              {/* mt-auto so every card's button sits on the same line
+                  regardless of how many highlights the program has. */}
+              <div className="mt-auto">
+                <ProgramFlyerDownload program={p} />
+              </div>
             </div>
           ))}
         </div>
@@ -177,7 +205,7 @@ export default function LoanProgramsPage() {
           </p>
 
           <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-            {specialtyPrograms.map((p) => (
+            {specialtyFlyers.map((p) => (
               <div
                 key={p.name}
                 className="card-hover relative flex flex-col overflow-hidden rounded-2xl border border-crush-100 bg-white p-6 shadow-sm ring-1 ring-crush-100/50"
@@ -222,6 +250,9 @@ export default function LoanProgramsPage() {
                   <span className="font-semibold text-ink-800">Best for:</span>{" "}
                   {p.bestFor}
                 </p>
+                <div className="mt-auto">
+                  <ProgramFlyerDownload program={p} label="Download flyer" />
+                </div>
               </div>
             ))}
           </div>
@@ -244,6 +275,14 @@ export default function LoanProgramsPage() {
               </div>
             ))}
           </div>
+          <div className="mt-8">
+            <MoreProgramsFlyerDownload />
+            <p className="mt-2 text-xs text-muted">
+              All ten on one co-branded page — these are one-liners, so they
+              travel better together than as ten separate flyers.
+            </p>
+          </div>
+
           <p className="mt-6 text-sm text-muted">
             Don&apos;t see the fit? We have access to dozens more niche and
             down-payment-assistance programs —{" "}
