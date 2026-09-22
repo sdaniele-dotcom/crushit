@@ -61,6 +61,18 @@ const FLYER_PROGRAMS = [
   { key: "bankstmt", label: "Bank Statement" },
 ] as const;
 
+/**
+ * NOT ROUTED. The self-serve financing-flyer generator, kept for reference.
+ *
+ * /co-brand now collects a REQUEST (see FlyerRequestForm) because the numbers
+ * on a financing flyer are a quote: they depend on the buyer's credit and
+ * income, the property's real taxes, HOA and insurance, and today's rate sheet.
+ * This form could only ask the agent to estimate those, and an estimate printed
+ * next to our NMLS reads as a quote we have to stand behind.
+ *
+ * If the self-serve path is ever wanted back, importing this into the page is
+ * the only change needed — but the accuracy problem above comes back with it.
+ */
 export function PropertyFlyerTool() {
   const { user, profile, refreshProfile } = useAuth();
   const [status, setStatus] = useState<Status>("idle");
