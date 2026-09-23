@@ -249,17 +249,39 @@ export type SpecialtyProgram = {
 export const specialtyPrograms: SpecialtyProgram[] = [
   {
     name: "Doctor Loans",
-    tagline: "Physician financing with little down and no PMI.",
+    tagline: "Medical professionals loan product — up to 100% financing.",
     bestFor:
       "Doctors, dentists, and residents — strong future income, often with student debt.",
-    badge: "0–10% down · no PMI",
+    badge: "Up to 100% financing",
+    /*
+      Specs from the Medical Professionals Loan Product sheet. Two claims that
+      used to sit here — student-loan debt treated favorably, and closing up to
+      90 days before a new job starts — are NOT on that sheet, so they are not
+      here either. Both are ordinary physician-loan features and may well be
+      true of this product; they go back in the moment someone confirms them
+      against the guidelines, and not before.
+    */
     highlights: [
-      "As little as 0–10% down — up to 100% financing on some tiers",
-      "No monthly mortgage insurance (PMI), even under 20% down",
-      "Student-loan debt treated favorably (IBR/deferred payments often excluded)",
-      "MD, DO, DDS, DMD, and many residents & fellows eligible",
-      "Close up to 90 days before a new job starts — with a signed contract",
-      "High loan amounts for move-up and jumbo price points",
+      "Up to 100% financing — no mortgage insurance",
+      "Loan amounts from $100K up to $2 million",
+      "680 minimum credit score · DTI up to 50%",
+      "One unit, owner occupied — purchase and rate/term",
+      "No first-time-homebuyer restrictions",
+      "Fixed and ARM products available",
+    ],
+    perfectForLabel: "Eligible medical professionals:",
+    perfectFor: [
+      "MD, DO, DDS or DMD",
+      "Ophthalmologist, psychiatrist or podiatrist (DPM)",
+      "Pharmacist (PharmD), veterinarian (DVM or VMD)",
+      "CRNA with a DNAP or DNP",
+      "Residents, fellows and interns with one of these degrees",
+    ],
+    pitch: ["Buy a home with up to 100% financing", "No mortgage insurance"],
+    whyItWorks: [
+      "Up to 100% financing with no mortgage insurance",
+      "Loan amounts to $2 million, DTI up to 50%",
+      "Residents, fellows and interns are eligible too",
     ],
   },
   {
