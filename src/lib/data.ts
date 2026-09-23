@@ -226,6 +226,20 @@ export type SpecialtyProgram = {
   bestFor: string;
   badge: string; // short highlight, e.g. "3.5% down"
   highlights: string[];
+  /**
+   * The extra panels on the printed flyer. All optional, and deliberately so:
+   * the flyer lays out without them, and a program only gets them once someone
+   * has written the real thing. Padding them out from the highlights would put
+   * invented loan terms under our NMLS.
+   */
+  /** Who the "PERFECT FOR …" panel names, e.g. "SELF-EMPLOYED BORROWERS WHO:". */
+  perfectForLabel?: string;
+  /** Bullets under that label. Without these the panel shows `bestFor`. */
+  perfectFor?: string[];
+  /** The two-line pitch: [black line, red line]. Falls back to the tagline. */
+  pitch?: [string, string];
+  /** "WHY THIS PROGRAM WORKS" bullets. The panel is omitted without them. */
+  whyItWorks?: string[];
 };
 
 /**
@@ -254,13 +268,30 @@ export const specialtyPrograms: SpecialtyProgram[] = [
     bestFor:
       "Self-employed borrowers who write off too much income to qualify the traditional way.",
     badge: "3.5% down",
+    // Taken from the printed Self-Employed FHA Special flyer, which is the
+    // authoritative copy for this program. The wording is kept as it reads
+    // there rather than paraphrased.
     highlights: [
-      "3.5% down payment · 640 minimum FICO",
-      "No tax returns and no pay stubs required",
-      "Income qualifies using P&L + balance sheet",
+      "3.5% down payment",
+      "640 minimum FICO",
+      "NO tax returns required",
+      "NO paycheck stubs required",
+      "Income qualifies using profit & loss + balance sheet",
       "Borrower-prepared financials accepted",
-      "2+ years of business ownership required",
+      "Proof of business ownership / license (2+ full years required)",
       "100% gift funds allowed",
+    ],
+    perfectForLabel: "Self-employed borrowers who:",
+    perfectFor: [
+      "Write off too much income",
+      "Don't show enough on tax returns",
+      "Need flexible qualification options",
+    ],
+    pitch: ["Qualify based on your business", "Not just your taxes"],
+    whyItWorks: [
+      "Uses real business income (P&L)",
+      "Not limited by tax write-offs",
+      "Offers flexible qualification options",
     ],
   },
   {

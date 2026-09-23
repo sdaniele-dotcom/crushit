@@ -3,7 +3,7 @@
 import { useAuth } from "@/components/auth/AuthProvider";
 import { recordUse } from "@/lib/rewards";
 import { printHtmlDocument } from "@/lib/printDoc";
-import { programFlyerHtml, moreProgramsFlyerHtml } from "@/lib/programFlyerHtml";
+import { programFlyerHtml } from "@/lib/programFlyerHtml";
 import type { ProgramFlyer } from "@/lib/programFlyers";
 
 /**
@@ -42,29 +42,6 @@ export function ProgramFlyerDownload({
       }
     >
       {label}
-    </button>
-  );
-}
-
-/** The remaining programs as one sheet — see moreProgramsSheet for why. */
-export function MoreProgramsFlyerDownload({ className = "" }: { className?: string }) {
-  const { profile } = useAuth();
-
-  function download() {
-    void recordUse("program_flyer", { events: ["marketing_piece_created"] });
-    printHtmlDocument(moreProgramsFlyerHtml(profile));
-  }
-
-  return (
-    <button
-      type="button"
-      onClick={download}
-      className={
-        className ||
-        "inline-flex items-center gap-2 rounded-full bg-crush-500 px-6 py-3 text-sm font-semibold text-white hover:bg-crush-600"
-      }
-    >
-      Download the co-branded sheet
     </button>
   );
 }
