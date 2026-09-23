@@ -2,10 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { Container, PageHero, Button, Eyebrow } from "@/components/ui";
 import { LoanFinder } from "@/components/LoanFinder";
-import {
-  ProgramFlyerDownload,
-  MoreProgramsFlyerDownload,
-} from "@/components/ProgramFlyerDownload";
+import { ProgramFlyerDownload } from "@/components/ProgramFlyerDownload";
 import { site } from "@/lib/site";
 import { otherPrograms } from "@/lib/data";
 // The cards render from the flyer list rather than from data.ts directly, so
@@ -47,12 +44,13 @@ export default function LoanProgramsPage() {
         <div className="mb-10 flex flex-col items-start gap-3 rounded-2xl border border-crush-200 bg-crush-50 p-5 sm:flex-row sm:items-center">
           <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-white text-2xl">📄</span>
           <div>
-            <h2 className="font-bold text-ink-900">Every program below has a co-branded flyer</h2>
+            <h2 className="font-bold text-ink-900">Every exclusive program has a co-branded flyer</h2>
             <p className="mt-0.5 text-sm text-muted">
-              Hit <strong>Download</strong> on any program and you get a one-page handout with your headshot,
-              brokerage logo, name and DRE at the top and Crush Mortgage as your financing partner at the
-              bottom. Signed in, it&apos;s yours automatically — fill in your{" "}
-              <Link href="/profile" className="font-semibold text-crush-600">profile</Link> first if it&apos;s blank.
+              Hit <strong>Download</strong> on any program in the Specialty section and you get a one-page
+              handout with <strong>your</strong> name, photo, phone and DRE on it — Crush Mortgage is the
+              lender in the footer, you&apos;re the one your buyer calls. Fill in your{" "}
+              <Link href="/profile" className="font-semibold text-crush-600">profile</Link> first so it comes
+              out branded rather than blank.
             </p>
           </div>
         </div>
@@ -173,16 +171,17 @@ export default function LoanProgramsPage() {
                 ))}
               </ul>
 
+              {/*
+                No flyer download here. Conventional, FHA and VA are on every
+                lender's website — a co-branded handout for them says nothing a
+                buyer can't find in ten seconds, and it puts our NMLS behind
+                terms that vary by lender overlay anyway. The exclusive
+                programs below are the ones worth printing.
+              */}
               <p className="mt-5 rounded-lg bg-surface px-4 py-3 text-xs text-muted">
                 <span className="font-semibold text-ink-800">Watch out:</span>{" "}
                 {p.watchOut}
               </p>
-
-              {/* mt-auto so every card's button sits on the same line
-                  regardless of how many highlights the program has. */}
-              <div className="mt-auto">
-                <ProgramFlyerDownload program={p} />
-              </div>
             </div>
           ))}
         </div>
@@ -275,14 +274,6 @@ export default function LoanProgramsPage() {
               </div>
             ))}
           </div>
-          <div className="mt-8">
-            <MoreProgramsFlyerDownload />
-            <p className="mt-2 text-xs text-muted">
-              All ten on one co-branded page — these are one-liners, so they
-              travel better together than as ten separate flyers.
-            </p>
-          </div>
-
           <p className="mt-6 text-sm text-muted">
             Don&apos;t see the fit? We have access to dozens more niche and
             down-payment-assistance programs —{" "}

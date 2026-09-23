@@ -226,6 +226,20 @@ export type SpecialtyProgram = {
   bestFor: string;
   badge: string; // short highlight, e.g. "3.5% down"
   highlights: string[];
+  /**
+   * The extra panels on the printed flyer. All optional, and deliberately so:
+   * the flyer lays out without them, and a program only gets them once someone
+   * has written the real thing. Padding them out from the highlights would put
+   * invented loan terms under our NMLS.
+   */
+  /** Who the "PERFECT FOR …" panel names, e.g. "SELF-EMPLOYED BORROWERS WHO:". */
+  perfectForLabel?: string;
+  /** Bullets under that label. Without these the panel shows `bestFor`. */
+  perfectFor?: string[];
+  /** The two-line pitch: [black line, red line]. Falls back to the tagline. */
+  pitch?: [string, string];
+  /** "WHY THIS PROGRAM WORKS" bullets. The panel is omitted without them. */
+  whyItWorks?: string[];
 };
 
 /**
@@ -254,13 +268,30 @@ export const specialtyPrograms: SpecialtyProgram[] = [
     bestFor:
       "Self-employed borrowers who write off too much income to qualify the traditional way.",
     badge: "3.5% down",
+    // Taken from the printed Self-Employed FHA Special flyer, which is the
+    // authoritative copy for this program. The wording is kept as it reads
+    // there rather than paraphrased.
     highlights: [
-      "3.5% down payment · 640 minimum FICO",
-      "No tax returns and no pay stubs required",
-      "Income qualifies using P&L + balance sheet",
+      "3.5% down payment",
+      "640 minimum FICO",
+      "NO tax returns required",
+      "NO paycheck stubs required",
+      "Income qualifies using profit & loss + balance sheet",
       "Borrower-prepared financials accepted",
-      "2+ years of business ownership required",
+      "Proof of business ownership / license (2+ full years required)",
       "100% gift funds allowed",
+    ],
+    perfectForLabel: "Self-employed borrowers who:",
+    perfectFor: [
+      "Write off too much income",
+      "Don't show enough on tax returns",
+      "Need flexible qualification options",
+    ],
+    pitch: ["Qualify based on your business", "Not just your taxes"],
+    whyItWorks: [
+      "Uses real business income (P&L)",
+      "Not limited by tax write-offs",
+      "Offers flexible qualification options",
     ],
   },
   {
@@ -274,6 +305,18 @@ export const specialtyPrograms: SpecialtyProgram[] = [
       "No tax returns · 100% gift funds allowed",
       "FICO scores down to 620",
       "SFR, PUD, condo, and 1–4 units eligible",
+    ],
+    perfectForLabel: "Borrowers who:",
+    perfectFor: [
+      "Have no pay stubs, W-2s or tax returns to hand over",
+      "Had an FHA loan turned down recently",
+      "Work in the service industry",
+    ],
+    pitch: ["Far less income documentation", "than a standard FHA loan"],
+    whyItWorks: [
+      "A VOE is all we need for income — no 4506-T",
+      "No tax returns · 100% gift funds allowed",
+      "FICO down to 620 · SFR, PUD, condo, 1–4 units",
     ],
   },
   {
@@ -289,6 +332,18 @@ export const specialtyPrograms: SpecialtyProgram[] = [
       "Credit scores down to 580 · 1 day out of BK/FC OK",
       "ITIN, DACA, and U.S. citizens welcome",
     ],
+    perfectForLabel: "Buyers who:",
+    perfectFor: [
+      "Can't qualify for traditional financing yet",
+      "Are ITIN, DACA or U.S. citizens",
+      "Are one day out of a bankruptcy or foreclosure",
+    ],
+    pitch: ["3.5% down for ITINs", "is here"],
+    whyItWorks: [
+      "Part of every lease payment goes to principal",
+      "You own the equity you earn, as long as you don't default",
+      "Assume the FHA loan when you're ready — or sell",
+    ],
   },
   {
     name: "Self-Employed HELOC",
@@ -302,6 +357,18 @@ export const specialtyPrograms: SpecialtyProgram[] = [
       "5-year draw period, 30-year total term",
       "Rates tied to prime, margins starting around 2%",
     ],
+    perfectForLabel: "Self-employed homeowners who:",
+    perfectFor: [
+      "Find traditional loan qualification challenging",
+      "Would rather not hand over tax returns",
+      "Want to leverage their property's value",
+    ],
+    pitch: ["Finally — a HELOC designed for", "self-employed homeowners"],
+    whyItWorks: [
+      "Qualifies on your year-end profit & loss statement",
+      "Access up to 75% of your home's equity",
+      "5-year draw period, 30-year total term",
+    ],
   },
   {
     name: "Down Payment Assistance (DPA)",
@@ -314,6 +381,18 @@ export const specialtyPrograms: SpecialtyProgram[] = [
       "Up to 2 units · manufactured homes OK",
       "6% seller credits allowed for closing costs",
       "Second is 0% forgivable or amortized over 10 years",
+    ],
+    perfectForLabel: "Buyers who:",
+    perfectFor: [
+      "Don't have the down payment saved",
+      "Aren't first-time buyers — it isn't required",
+      "Have a 600 FICO",
+    ],
+    pitch: ["Don't let a down payment", "stand in the way of homeownership"],
+    whyItWorks: [
+      "FHA 100% financing — 96.5% first + 3.5% second",
+      "Fast in-house underwriting, FHA guidelines and AUS approval",
+      "The second is 0% forgivable or amortized over 10 years",
     ],
   },
   {
@@ -330,6 +409,18 @@ export const specialtyPrograms: SpecialtyProgram[] = [
       "Blended and no-doc income options",
       "No prepayment penalties",
     ],
+    perfectForLabel: "Self-employed borrowers who:",
+    perfectFor: [
+      "Are penalised by tax-return-only guidelines",
+      "Need a loan amount up to $7 million",
+      "Have blended household income",
+    ],
+    pitch: ["Real financing built around your income", "not your tax returns"],
+    whyItWorks: [
+      "P&L, 1099s, or 12–24 month bank statements",
+      "Blended income — one spouse's deposits, the other's W-2",
+      "Rental income qualifies an investment property · no prepayment penalties",
+    ],
   },
   {
     name: "Renovation HELOC",
@@ -343,6 +434,18 @@ export const specialtyPrograms: SpecialtyProgram[] = [
       "1–2 units, ADUs, PUDs, townhomes, warrantable condos",
       "Customized underwriting · no draw required",
       "No cash-out restrictions or prepayment penalty",
+    ],
+    perfectForLabel: "Homeowners who:",
+    perfectFor: [
+      "Want to build an ADU",
+      "Have no equity and no cash to build with",
+      "Are buying a home and want to add an ADU",
+    ],
+    pitch: ["Home improvement financing,", "improved"],
+    whyItWorks: [
+      "Borrows against the after-renovation value, not today's",
+      "Owner-occupied, full doc — taxes, W-2s and pay stubs",
+      "Funded from a drawing, a contractor's estimate and a cost breakdown",
     ],
   },
   {
@@ -358,6 +461,18 @@ export const specialtyPrograms: SpecialtyProgram[] = [
       "1–4 units, PUD, SFR & condo",
       "Primary, second home & investment · foreign nationals OK",
     ],
+    perfectForLabel: "Borrowers who:",
+    perfectFor: [
+      "Can't document income the traditional way",
+      "Are foreign nationals",
+      "Want a first lien, or a second",
+    ],
+    pitch: ["You asked,", "we delivered"],
+    whyItWorks: [
+      "WVOE, P&L, bank statement or DSCR qualifying",
+      "No-income owner-occupied and no-ratio investment",
+      "Primary, second home and investment",
+    ],
   },
   {
     name: "Hope for Homeownership (HOPER)",
@@ -371,6 +486,19 @@ export const specialtyPrograms: SpecialtyProgram[] = [
       "Same competitive rates as a standard FHA loan",
       "Add solar to your FHA loan at purchase",
       "Complete 6 hours of HOPER homebuyer education to qualify",
+    ],
+    perfectForLabel: "Buyers who fit:",
+    perfectFor: [
+      "Primary residence, single-family — no condos",
+      "620 minimum credit score",
+      "First-time or repeat buyers",
+      "CA, AZ, NV, TX, FL, ID, IL & UT",
+    ],
+    pitch: ["Earn up to $13,000", "No repayment, no income limits"],
+    whyItWorks: [
+      "Up to $13,000, or 3.5% of the purchase price, paid to you",
+      "The same competitive FHA rate — no second loan to carry",
+      "Solar rolls into the mortgage with no upfront cost",
     ],
   },
 ];

@@ -1,167 +1,244 @@
 /**
- * programFlyerHtml.ts — the co-branded program flyer as a string.
+ * programFlyerHtml.ts — the co-branded specialty program flyer.
+ *
+ * Follows the printed Self-Employed FHA Special flyer: a dark hero with the
+ * Crush mark on a white angled panel, the program name on a red angled banner,
+ * a checklist of features, a dark "perfect for" panel, a two-line pitch, and
+ * the contact block bottom-right.
+ *
+ * ONE thing is deliberately different from that printed sheet. The contact
+ * block carries the AGENT, not the loan officer: this is the agent's handout,
+ * given to their buyer, and their name and face belong on it. Crush Mortgage
+ * stays on it as the lender — logo, company NMLS, and the disclosure line —
+ * because a flyer that advertises loan terms has to say who is doing the
+ * lending, and that is never the real estate agent.
  *
  * Kept out of the React component on purpose: a printable that can only be
- * produced by clicking a button in a browser can only be checked by clicking
- * a button in a browser. As a pure function it can be rendered headless and
- * measured, which is how the condo guide's page count was pinned down and how
- * this one's is too.
- *
- * Branding hierarchy is lib/printBranding's: the agent is primary at the top,
- * Crush Mortgage is the financing partner at the bottom.
+ * produced by clicking a button can only be checked by clicking a button. As a
+ * pure function it renders headless and gets measured.
  */
 
-import { realtorBrandHtml, crushFooterHtml, brandingCss, esc } from "@/lib/printBranding";
+import { crushLogoPrimaryDataUri } from "@/lib/brandLogo";
+import { esc } from "@/lib/printBranding";
 import { site } from "@/lib/site";
 import type { Profile } from "@/lib/profile";
-import {
-  moreProgramsSheet,
-  PROGRAM_DISCLAIMER,
-  type ProgramFlyer,
-} from "@/lib/programFlyers";
+import { fullName } from "@/lib/profile";
+import { PROGRAM_DISCLAIMER, type ProgramFlyer } from "@/lib/programFlyers";
 
-const SHARED_CSS = `
+const CSS = `
   *{box-sizing:border-box;-webkit-print-color-adjust:exact;print-color-adjust:exact}
   html,body{margin:0;padding:0}
-  body{font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;color:#16181d;
-    padding:0.5in 0.5in 0.9in;font-size:10.5pt;line-height:1.5}
-  h1{font-family:'Poppins',Arial,sans-serif;font-size:28pt;margin:16px 0 2px;letter-spacing:-.8px}
-  .sub{color:#e11b22;font-size:12.5pt;font-weight:600;margin:0 0 2px}
-  h2{font-family:'Poppins',Arial,sans-serif;font-size:10pt;text-transform:uppercase;letter-spacing:1.6px;
-    color:#62666e;margin:18px 0 7px;page-break-after:avoid}
-  .lead{margin:0 0 8px;color:#3c414b}
-  .stats{display:flex;gap:10px;margin:14px 0 0}
-  .stat{flex:1;border:1px solid #e4e5e8;border-radius:8px;padding:10px 14px;background:#fafafa}
-  .stat-v{font-family:'Poppins',Arial,sans-serif;font-size:19pt;font-weight:800;color:#e11b22;line-height:1.1}
-  .stat-l{font-size:7.5pt;text-transform:uppercase;letter-spacing:1.2px;color:#62666e;margin-top:3px}
-  .badge{display:inline-block;background:#e11b22;color:#fff;font-weight:700;font-size:10pt;
-    border-radius:999px;padding:5px 15px;margin-top:12px}
-  ul{margin:0;padding-left:0;list-style:none}
-  li{margin:7px 0;padding-left:22px;position:relative;page-break-inside:avoid}
-  li:before{content:"";position:absolute;left:2px;top:6px;width:10px;height:5px;
-    border-left:2.5px solid #e11b22;border-bottom:2.5px solid #e11b22;transform:rotate(-45deg)}
-  .watch{margin-top:16px;padding:11px 14px;background:#fef2f2;border-left:3px solid #e11b22;
-    border-radius:4px;font-size:10pt}
-  .cta{margin-top:18px;padding:13px 16px;border:1px solid #e4e5e8;border-radius:8px;
-    background:#fafafa;page-break-inside:avoid}
-  .cta-h{font-family:'Poppins',Arial,sans-serif;font-weight:700;font-size:11.5pt}
-  .cta-b{font-size:9.5pt;color:#3c414b;margin-top:3px}
-  .more{display:flex;flex-wrap:wrap;gap:9px;margin-top:4px}
-  .mi{width:calc(50% - 5px);border:1px solid #e4e5e8;border-radius:6px;padding:9px 11px;
-    page-break-inside:avoid}
-  .mi-n{font-weight:700;font-size:10pt}
-  .mi-d{font-size:9pt;color:#3c414b;margin-top:2px;line-height:1.45}
-  .disc{margin-top:14px;font-size:8pt;color:#62666e;line-height:1.5}
-  @media print{body{padding:0.4in 0.45in 0.85in}h2{page-break-after:avoid}}
+  body{font-family:-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif;
+    color:#16181d;font-size:10.5pt;line-height:1.45;background:#fff}
+  .sheet{width:8.5in;min-height:11in;display:flex;flex-direction:column}
 
-  /*
-    Single-program flyers run larger.
-    A program has four to seven highlights, which at the base size leaves a
-    third of the page blank under the CTA — a handout that looks like it ran
-    out of things to say. The "more programs" sheet carries ten items and is
-    already near the bottom, so it keeps the base size; the difference is one
-    body class rather than two stylesheets.
+  /* ── Hero ─────────────────────────────────────────────────────────────
+     No photograph. The printed original uses a stock image we do not hold a
+     licence to redistribute, and a co-branded handout is redistribution. The
+     brand gradient carries the same weight behind the same angled shapes. */
+  .hero{position:relative;height:2.35in;background:
+      radial-gradient(120% 140% at 82% 12%, #4a1116 0%, rgba(74,17,22,0) 55%),
+      linear-gradient(135deg,#1b1d22 0%,#26292f 48%,#141519 100%);
+    overflow:hidden}
+  .hero:after{content:"";position:absolute;inset:auto -10% -38% 40%;height:70%;
+    background:linear-gradient(120deg,rgba(225,27,34,.22),rgba(225,27,34,0));
+    transform:rotate(-8deg)}
+  .nmls{position:absolute;top:22px;left:30px;color:#fff;font-weight:800;
+    font-size:15pt;letter-spacing:.4px;z-index:3}
+  .logoPanel{position:absolute;top:0;right:0;background:#fff;padding:16px 30px 16px 46px;
+    clip-path:polygon(9% 0,100% 0,100% 100%,0 100%);z-index:3}
+  .logoPanel img{height:52px;display:block;object-fit:contain}
+  .titleBar{position:absolute;left:0;bottom:26px;background:#e11b22;
+    padding:13px 74px 13px 30px;clip-path:polygon(0 0,100% 0,88% 100%,0 100%);z-index:3;
+    box-shadow:0 8px 20px rgba(0,0,0,.28)}
+  .titleBar h1{margin:0;color:#fff;font-size:27pt;font-weight:800;line-height:1.05;
+    letter-spacing:-.4px;text-transform:uppercase;font-style:italic;max-width:5.1in}
 
-    The ceiling is real and close. Rendering all eighteen in headless Chromium
-    at Letter size puts the tallest core flyer at 941px against ~950px of
-    usable height before the fixed footer. Adding a fifth highlight to a core
-    program, or loosening anything below, needs that render repeated — the
-    overflow would not be visible from the code, and a flyer that silently
-    becomes two pages is one an agent prints and throws away.
-  */
-  body.p1{font-size:12pt;line-height:1.62}
-  .p1 h1{font-size:34pt;margin-top:18px}
-  .p1 .sub{font-size:14.5pt}
-  .p1 h2{font-size:10.5pt;margin:24px 0 9px}
-  .p1 .stat{padding:14px 18px}
-  .p1 .stat-v{font-size:25pt}
-  .p1 .stat-l{font-size:8pt}
-  .p1 li{margin:11px 0;font-size:11.5pt;padding-left:26px}
-  .p1 li:before{top:7px;width:12px;height:6px}
-  .p1 .watch{margin-top:20px;padding:14px 17px;font-size:11pt}
-  .p1 .cta{margin-top:20px;padding:16px 18px}
-  .p1 .cta-h{font-size:12.5pt}
-  .p1 .cta-b{font-size:10.5pt}
+  /* ── Body grid ─────────────────────────────────────────────────────
+     The checklist SPREADS to fill its column rather than stacking at the top.
+     Programs carry four to eight features, so a fixed line gap leaves either a
+     half-empty column or an overflowing one depending on the program; letting
+     the list distribute itself means every flyer fills the page the same way.
+     This is why the lines are spaced by justify-content and not by margin. */
+  .grid{flex:1;display:flex;gap:0;align-items:stretch}
+  .left{width:56%;padding:26px 22px 20px 30px;display:flex;flex-direction:column}
+  .right{width:44%;display:flex;flex-direction:column}
+
+  ul{margin:0;padding:0;list-style:none}
+  .feat{flex:1;display:flex;flex-direction:column;justify-content:space-evenly}
+  .feat li{position:relative;padding-left:32px;margin:0;font-size:12.5pt;line-height:1.32}
+  .feat li:before{content:"";position:absolute;left:4px;top:4px;width:12px;height:6px;
+    border-left:3px solid #2e7d32;border-bottom:3px solid #2e7d32;transform:rotate(-45deg)}
+  .feat b{font-weight:800}
+
+  .panel{background:#16181d;color:#fff;padding:22px 22px 24px}
+  .panel .kicker{color:#e11b22;font-weight:800;font-size:9.5pt;letter-spacing:1.4px;
+    text-transform:uppercase;margin:0 0 4px}
+  .panel h2{margin:0 0 12px;font-size:15pt;line-height:1.15;font-weight:800;
+    text-transform:uppercase;letter-spacing:-.2px}
+  .panel li{position:relative;padding-left:26px;margin:0 0 11px;font-size:11pt;line-height:1.3}
+  .panel li:before{content:"";position:absolute;left:3px;top:4px;width:11px;height:5px;
+    border-left:2.5px solid #c8a951;border-bottom:2.5px solid #c8a951;transform:rotate(-45deg)}
+  .panel .sentence{font-size:11pt;line-height:1.45;color:#e8e9ea;margin:0}
+  .panel .sentence.lg{font-size:13pt;line-height:1.38;color:#fff;font-weight:600}
+
+  .pitch{padding:14px 22px 12px;background:#fff}
+  .pitch .p1{font-size:13.5pt;font-weight:800;line-height:1.2}
+  .pitch .p2{font-size:13.5pt;font-weight:800;line-height:1.2;color:#e11b22;margin-top:2px}
+
+  /* ── Bottom row ──────────────────────────────────────────────────── */
+  .bottom{display:flex;align-items:stretch;margin-top:auto}
+  .why{width:56%;background:#16181d;color:#fff;padding:18px 22px 18px 30px}
+  .why.wide{width:100%}
+  .why h3{margin:0 0 11px;font-size:12.5pt;font-weight:800;text-transform:uppercase;letter-spacing:.3px}
+  .why h3 span{color:#e11b22}
+  .why li{position:relative;padding-left:26px;margin:0 0 9px;font-size:11pt;line-height:1.3}
+  .why li:before{content:"";position:absolute;left:3px;top:4px;width:11px;height:5px;
+    border-left:2.5px solid #c8a951;border-bottom:2.5px solid #c8a951;transform:rotate(-45deg)}
+  /* The pitch, when it has moved down to fill the band — see programFlyerHtml. */
+  .why.pitchdown{display:flex;flex-direction:column;justify-content:center}
+  .why.pitchdown .p1{font-size:16pt;font-weight:800;line-height:1.2;color:#fff}
+  .why.pitchdown .p2{font-size:16pt;font-weight:800;line-height:1.2;color:#ff5a60;margin-top:3px}
+
+  .card{width:44%;background:#fff;padding:16px 22px 14px;display:flex;gap:12px;
+    align-items:flex-end;border-top:1px solid #e4e5e8}
+  .card.full{width:100%;border-top:0}
+  .card-txt{flex:1;min-width:0}
+  .card-name{font-size:15pt;font-weight:800;line-height:1.1}
+  .card-role{font-size:10pt;color:#3c414b;margin-top:1px}
+  .card-phone{display:inline-block;background:#e11b22;color:#fff;font-weight:800;
+    font-size:13pt;padding:6px 16px;margin:9px 0 7px;
+    clip-path:polygon(0 0,100% 0,96% 100%,0 100%)}
+  .card-line{font-size:9.5pt;color:#16181d;margin-top:3px;word-break:break-word}
+  .card-head{width:1.18in;height:1.42in;object-fit:cover;object-position:top center;
+    border-radius:4px;flex-shrink:0}
+  .card-logo{max-width:1.18in;max-height:.6in;object-fit:contain;flex-shrink:0}
+
+  .foot{background:#0f1013;color:#9a9ea6;font-size:6.8pt;line-height:1.4;
+    padding:7px 30px 8px;text-align:center}
+  .foot b{color:#d7d9dc}
+
+  @page{size:letter;margin:0}
+  @media print{.sheet{min-height:0}}
 `;
 
-function head(title: string, bodyClass = ""): string {
+function head(title: string): string {
   return `<!doctype html><html><head><meta charset="utf-8"/>
 <title>${esc(title)}</title>
-<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;700;800&display=swap" rel="stylesheet">
-<style>${brandingCss}${SHARED_CSS}</style></head><body class="${bodyClass}">`;
+<style>${CSS}</style></head><body>`;
 }
 
-function ctaHtml(): string {
-  return `<div class="cta">
-    <div class="cta-h">Think this fits your buyer?</div>
-    <div class="cta-b">Send them over for a no-pressure conversation and a same-day pre-approval —
-      ${esc(site.phone)} · ${esc(site.email)}<br>${esc(site.applyUrl)}</div>
+/**
+ * The agent's block, bottom right.
+ *
+ * Falls back to placeholder text rather than collapsing, because an agent who
+ * prints this before filling in their profile should see what is missing on
+ * the page instead of wondering why the corner is empty.
+ */
+function agentCardHtml(profile: Profile | null | undefined, full = false): string {
+  const name = fullName(profile) || "Your name here";
+  const role = profile?.brokerage || "Your brokerage";
+  const dre = profile?.dre_license ? ` · DRE #${esc(profile.dre_license)}` : "";
+  const phone = profile?.phone || "Add your phone in your profile";
+  const email = profile?.email || "";
+  const web = profile?.website || "";
+  const head = profile?.headshot_url || "";
+  const logo = profile?.brokerage_logo_url || profile?.team_logo_url || "";
+
+  return `<div class="card${full ? " full" : ""}">
+    <div class="card-txt">
+      <div class="card-name">${esc(name)}</div>
+      <div class="card-role">${esc(role)}${dre}</div>
+      <div class="card-phone">${esc(phone)}</div>
+      ${email ? `<div class="card-line">${esc(email)}</div>` : ""}
+      ${web ? `<div class="card-line">${esc(web)}</div>` : ""}
+    </div>
+    ${head
+      ? `<img class="card-head" src="${esc(head)}" alt="">`
+      : logo
+        ? `<img class="card-logo" src="${esc(logo)}" alt="">`
+        : ""}
   </div>`;
 }
 
-/** One program, one page. */
+/**
+ * The lender disclosure strip.
+ *
+ * Not optional and not decorative. The sheet advertises rates, down payments
+ * and credit minimums, which makes it an advertisement for a mortgage however
+ * it is handed over — so it names the lender, the company NMLS and Equal
+ * Housing, and says it is not a commitment to lend. The agent's name being the
+ * prominent one on the page is exactly why this line has to be here.
+ */
+function footerHtml(): string {
+  return `<div class="foot">
+    <b>Financing by ${esc(site.company)}</b> · Company NMLS #${esc(site.companyNmls)} ·
+    ${esc(site.phone)} · ${esc(site.website)} · Equal Housing Opportunity.<br>
+    ${esc(PROGRAM_DISCLAIMER)} Information deemed reliable but not guaranteed.
+  </div>`;
+}
+
+/** One specialty program, one page. */
 export function programFlyerHtml(
   program: ProgramFlyer,
   profile: Profile | null | undefined,
 ): string {
-  // Only the stats a program actually has. A core program shows minimum down
-  // and credit; a specialty one shows its badge instead. An empty box labelled
-  // "Min credit" reads as "no minimum", which is not what a blank means.
-  const stats = [
-    program.minDown ? (["Min down", program.minDown] as const) : null,
-    program.minCredit ? (["Min credit", program.minCredit] as const) : null,
-  ].filter(Boolean) as readonly (readonly [string, string])[];
+  const pitch = program.pitch ?? null;
+  const why = program.whyItWorks ?? null;
 
-  return `${head(`${program.name} — Crush Mortgage`, "p1")}
-  ${realtorBrandHtml(profile)}
+  // The dark panel always says something: the written bullets when a program
+  // has them, otherwise the one-line "best for" carried at heading size. An
+  // empty panel, or a filler heading like "THIS PROGRAM:", reads as a design
+  // mistake rather than as copy nobody has written yet.
+  const perfectBody = program.perfectFor?.length
+    ? `${program.perfectForLabel ? `<h2>${esc(program.perfectForLabel)}</h2>` : ""}
+       <ul>${program.perfectFor.map((i) => `<li>${esc(i)}</li>`).join("")}</ul>`
+    : program.bestFor
+      ? `<p class="sentence lg">${esc(program.bestFor)}</p>`
+      : "";
 
-  <h1>${esc(program.name)}</h1>
-  <p class="sub">${esc(program.tagline)}</p>
-  ${program.badge ? `<div class="badge">${esc(program.badge)}</div>` : ""}
+  /*
+    Where the pitch line goes.
+    With a "why this works" list, the bottom band is that list and the pitch
+    sits under the panel as on the printed sheet. Without one, the band would
+    be a white half-page with a contact block adrift in it — so the pitch moves
+    down to fill it, and the flyer still ends on a dark bar.
+  */
+  const pitchLine = `<div class="p1">${esc(pitch ? pitch[0] : program.tagline)}</div>
+    ${pitch ? `<div class="p2">${esc(pitch[1])}</div>` : ""}`;
 
-  ${stats.length
-    ? `<div class="stats">${stats
-        .map(([l, v]) => `<div class="stat"><div class="stat-v">${esc(v)}</div><div class="stat-l">${esc(l)}</div></div>`)
-        .join("")}</div>`
-    : ""}
+  return `${head(`${program.name} — ${site.company}`)}
+<div class="sheet">
+  <div class="hero">
+    <div class="nmls">NMLS# ${esc(site.companyNmls)}</div>
+    <div class="logoPanel"><img src="${crushLogoPrimaryDataUri}" alt="${esc(site.company)}"></div>
+    <div class="titleBar"><h1>${esc(program.name)}</h1></div>
+  </div>
 
-  ${program.bestFor ? `<h2>Best for</h2><p class="lead">${esc(program.bestFor)}</p>` : ""}
+  <div class="grid">
+    <div class="left">
+      <ul class="feat">${program.highlights.map((h) => `<li>${esc(h)}</li>`).join("")}</ul>
+    </div>
+    <div class="right">
+      <div class="panel">
+        <p class="kicker">Perfect for</p>
+        ${perfectBody}
+      </div>
+      ${why?.length ? `<div class="pitch">${pitchLine}</div>` : ""}
+    </div>
+  </div>
 
-  <h2>What it does</h2>
-  <ul>${program.highlights.map((h) => `<li>${esc(h)}</li>`).join("")}</ul>
+  <div class="bottom">
+    ${why?.length
+      ? `<div class="why">
+          <h3>Why this program <span>works:</span></h3>
+          <ul>${why.map((i) => `<li>${esc(i)}</li>`).join("")}</ul>
+        </div>`
+      : `<div class="why pitchdown">${pitchLine}</div>`}
+    ${agentCardHtml(profile)}
+  </div>
 
-  ${program.watchOut
-    ? `<div class="watch"><strong>Watch out:</strong> ${esc(program.watchOut)}</div>`
-    : ""}
-
-  ${ctaHtml()}
-
-  <p class="disc">${esc(PROGRAM_DISCLAIMER)}</p>
-
-  ${crushFooterHtml()}
-</body></html>`;
-}
-
-/** The remaining programs as one sheet — see moreProgramsSheet for why. */
-export function moreProgramsFlyerHtml(profile: Profile | null | undefined): string {
-  return `${head("More programs — Crush Mortgage")}
-  ${realtorBrandHtml(profile)}
-
-  <h1>${esc(moreProgramsSheet.title)}</h1>
-  <p class="sub">Programs most lenders don&rsquo;t offer</p>
-  <p class="lead" style="margin-top:10px">${esc(moreProgramsSheet.intro)}</p>
-
-  <h2>What we can place</h2>
-  <div class="more">${moreProgramsSheet.items
-    .map(
-      (i) => `<div class="mi"><div class="mi-n">${esc(i.name)}</div><div class="mi-d">${esc(i.description)}</div></div>`,
-    )
-    .join("")}</div>
-
-  ${ctaHtml()}
-
-  <p class="disc">${esc(PROGRAM_DISCLAIMER)}</p>
-
-  ${crushFooterHtml()}
+  ${footerHtml()}
+</div>
 </body></html>`;
 }
