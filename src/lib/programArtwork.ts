@@ -36,11 +36,15 @@ export type ProgramArtwork = {
   /** Regions painted over before anything is drawn (the LO's own details). */
   cover?: (Rect & { fill: string })[];
   /**
-   * A lender strip redrawn at the foot of the page. Used where covering the
-   * officer's contact details would otherwise remove the only statement of who
-   * is doing the lending — which an advertisement quoting loan terms must keep.
+   * A lender strip redrawn over painted-out officer details. Used where
+   * covering them would otherwise remove the only statement of who is doing
+   * the lending — which an advertisement quoting loan terms must keep.
+   *
+   * `text` is per-flyer because these strips are not the same shape: a full
+   * page-width footer holds a sentence, a gap between a logo and an Equal
+   * Housing mark holds three words.
    */
-  lenderStrip?: Rect & { fill: string; color: string };
+  lenderStrip?: Rect & { fill: string; color: string; text?: string };
 };
 
 export const PROGRAM_ARTWORK: Record<string, ProgramArtwork> = {
@@ -81,6 +85,25 @@ export const PROGRAM_ARTWORK: Record<string, ProgramArtwork> = {
     w: 1024,
     h: 1536,
     agent: { left: 47.7, top: 88.8, width: 48.6, height: 8.8 },
+  },
+
+  "doctor-loans": {
+    src: "/program-flyers/doctor-loans.webp",
+    w: 1024,
+    h: 1536,
+    // The officer appears TWICE on this sheet: as the "contact me today" half
+    // of the light call-to-action band, and again in the black footer bar.
+    // Both go; the agent takes the first, the lender line takes the second.
+    cover: [{ left: 58.3, top: 77.15, width: 39.2, height: 11.1, fill: "#f2f2f2" }],
+    agent: { left: 59.2, top: 77.2, width: 37.6, height: 10.9 },
+    lenderStrip: {
+      left: 49.0, top: 89.2, width: 38.5, height: 8.2,
+      fill: "#000000", color: "#c9ccd1",
+      // Short, because it sits between the Crush mark and the Equal Housing
+      // logo. The sheet prints no NMLS of its own, so the website stays: with
+      // the officer's lines gone it is the only way to reach the lender.
+      text: "Financing by Crush Mortgage · www.crushmortgage.com · Equal Housing Lender",
+    },
   },
 
   "fha-plus": {

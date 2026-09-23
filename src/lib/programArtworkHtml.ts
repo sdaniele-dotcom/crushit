@@ -78,11 +78,22 @@ export function programArtworkFlyerHtml(
     one the compliance team signed off on. This strip only replaces the contact
     details that were painted out.
   */
+  // The domain without its scheme: "https://" is noise in print, and on the
+  // narrow strips it is the difference between one line and two.
+  const domain = site.website.replace(/^https?:\/\//, "").replace(/\/$/, "");
+
+  /*
+    The content is ONE span inside the flex box, not loose text next to a <b>.
+    A flex container drops whitespace-only nodes between its items, so
+    "Financing by <b>Crush Mortgage</b>" renders as "Financing byCrush
+    Mortgage" when the text sits directly in the flex parent.
+  */
   const strip = art.lenderStrip
-    ? `<div class="strip" style="${pct(art.lenderStrip)};background:${art.lenderStrip.fill};color:${art.lenderStrip.color}">
-         Financing by <b>${esc(site.company)}</b> · ${esc(site.website)} ·
-         Equal Housing Lender. Not a commitment to lend.
-       </div>`
+    ? `<div class="strip" style="${pct(art.lenderStrip)};background:${art.lenderStrip.fill};color:${art.lenderStrip.color}"><span>${
+        art.lenderStrip.text
+          ? esc(art.lenderStrip.text)
+          : `Financing by <b>${esc(site.company)}</b> · ${esc(domain)} · Equal Housing Lender. Not a commitment to lend.`
+      }</span></div>`
     : "";
 
   return `<!doctype html><html><head><meta charset="utf-8"/>
@@ -110,11 +121,15 @@ export function programArtworkFlyerHtml(
   .a-logo{max-height:60cqh;max-width:30%;object-fit:contain;flex-shrink:0}
   .a-txt{min-width:0;flex:1}
   .a-name{font-size:26cqh;font-weight:800;line-height:1.05;letter-spacing:-.01em}
-  .a-sub{font-size:14cqh;color:#3c414b;margin-top:3cqh;line-height:1.2}
+  /* Sized against the panel's WIDTH as well as its height. "Home Smart Realty
+     Group · DRE #01884689" is a long line, and a panel can be short and wide
+     (HOPER) or tall and narrow (Doctor Loans) — height alone wraps one of
+     them. min() takes whichever dimension is the binding constraint. */
+  .a-sub{font-size:min(14cqh,4.4cqw);color:#3c414b;margin-top:3cqh;line-height:1.2}
   .a-phone{display:inline-block;background:#e11b22;color:#fff;font-weight:800;
     font-size:19cqh;line-height:1;padding:6cqh 10cqh;margin-top:8cqh;
     clip-path:polygon(0 0,100% 0,96% 100%,0 100%)}
-  .a-mail{font-size:13.5cqh;color:#16181d;margin-top:6cqh;
+  .a-mail{font-size:min(13.5cqh,4.2cqw);color:#16181d;margin-top:6cqh;
     overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 
   @media print{html,body{width:${art.w}px;height:${art.h}px}}
