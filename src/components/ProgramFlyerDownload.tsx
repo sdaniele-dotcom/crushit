@@ -4,6 +4,8 @@ import { useAuth } from "@/components/auth/AuthProvider";
 import { recordUse } from "@/lib/rewards";
 import { printHtmlDocument } from "@/lib/printDoc";
 import { programFlyerHtml } from "@/lib/programFlyerHtml";
+import { programArtworkFlyerHtml } from "@/lib/programArtworkHtml";
+import { artworkFor } from "@/lib/programArtwork";
 import type { ProgramFlyer } from "@/lib/programFlyers";
 
 /**
@@ -13,8 +15,13 @@ import type { ProgramFlyer } from "@/lib/programFlyers";
  * logged-in agent's profile OBJECT, because the headshot and brokerage logo
  * are images and the [TOKEN] substitution in PrintButton can only supply text.
  *
- * The document itself is built in lib/programFlyerHtml so it can be rendered
- * headless and measured without a browser click.
+ * Where Crush has a designed flyer for the program, that artwork is used and
+ * the agent's details are placed on it. Where it doesn't yet, the generated
+ * layout stands in — so a program without artwork still prints something
+ * rather than nothing, and adding its file later needs no code change here.
+ *
+ * Both documents are built in lib/ rather than inline so they can be rendered
+ * headless and looked at without a browser click.
  */
 export function ProgramFlyerDownload({
   program,
@@ -29,7 +36,14 @@ export function ProgramFlyerDownload({
 
   function download() {
     void recordUse("program_flyer", { events: ["marketing_piece_created"] });
-    printHtmlDocument(programFlyerHtml(program, profile));
+    const art = artworkFor(program.slug);
+    // The print window is about:blank, so a relative /program-flyers/… path
+    // resolves to nothing there. The artwork needs an absolute URL.
+    printHtmlDocument(
+      art
+        ? programArtworkFlyerHtml(art, program.name, profile, window.location.origin)
+        : programFlyerHtml(program, profile),
+    );
   }
 
   return (
