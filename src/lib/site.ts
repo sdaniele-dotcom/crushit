@@ -45,6 +45,17 @@ export const site = {
   // Vercel app's public API). Agents' info + a listing are POSTed here.
   flyerApiBase: "https://crushmortgage.vercel.app" as string,
 
+  // Down Payment Connect — the CRMLS-provided Down Payment Resource tool,
+  // subscribed under Shannon and branded "provided by Shannon Daniele" on the
+  // page itself. A buyer answers a few questions about the property, the
+  // household and their income, and it returns the assistance programs they
+  // may qualify for.
+  //
+  // Embedded rather than linked (see DownPaymentTool). Set to "" to take the
+  // section down everywhere at once — the pages that use it check for that.
+  downPaymentToolUrl:
+    "https://www.workforce-resource.com/dpr/pmt/CRMLS/SHANNON_DANIELE" as string,
+
   // Dedicated "Book the content room" form endpoint. Uses FormSubmit so every
   // booking emails the address below — SEPARATE from the pre-approval lead form.
   // ▶ IMPORTANT: the first time a booking is submitted, FormSubmit sends a

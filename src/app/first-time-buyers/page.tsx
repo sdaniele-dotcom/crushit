@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { Container, PageHero, Button, Eyebrow, Card } from "@/components/ui";
+import { DownPaymentTool } from "@/components/DownPaymentTool";
 import { site } from "@/lib/site";
 
 export const metadata: Metadata = {
@@ -253,6 +254,26 @@ export default function FirstTimeBuyersPage() {
               ))}
             </div>
           </div>
+        </section>
+
+        {/*
+          Directly after the section that says you probably don't need 20% down,
+          because this is the question that raises: fine, so what IS out there
+          for me? Every other answer on this page is general; this one is about
+          their address, their household and their income.
+        */}
+        <section className="mt-16">
+          <Eyebrow>Down payment help</Eyebrow>
+          <h2 className="mt-4 text-3xl font-bold tracking-tight text-ink-900">
+            There may be money waiting for you
+          </h2>
+          <p className="mt-3 max-w-2xl text-muted">
+            California has hundreds of down payment assistance programs — grants, forgivable
+            seconds, deferred loans — run by cities, counties, the state and employers. Most buyers
+            never hear about them, and many have income limits far higher than people assume.
+            Check which ones fit your situation in about two minutes.
+          </p>
+          <DownPaymentTool className="mt-8" />
         </section>
 
         {/* Documents + mistakes */}
