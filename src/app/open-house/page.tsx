@@ -77,6 +77,16 @@ export default function OpenHouseSignInPage() {
               <button type="submit" disabled={busy} className="rounded-full bg-crush-500 px-6 py-3.5 text-base font-semibold text-white hover:bg-crush-600 disabled:opacity-50">
                 {busy ? "Submitting…" : "Sign in"}
               </button>
+              {/*
+                Said before they submit, not after. Someone is handing over a
+                phone number at a front door on a stranger's phone, and the
+                details now leave for the agent's own CRM — that is a thing to
+                state plainly rather than to bury in a policy nobody opens.
+              */}
+              <p className="text-xs leading-relaxed text-muted">
+                Your details go to the listing agent and the software they use to keep in touch, and
+                to {site.company} if you ask about financing. Nobody else.
+              </p>
             </form>
             <p className="mt-4 text-center text-xs text-muted">Powered by {site.brand} · Financing by {site.company}</p>
           </>

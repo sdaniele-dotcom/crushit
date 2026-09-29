@@ -19,6 +19,16 @@ export type Profile = {
   /** Opt-in: auto-send a marketing package when their listing hits the MLS. */
   listing_marketing_opt_in: boolean;
   listing_marketing_opt_in_at: string | null;
+  /**
+   * Where open-house sign-ins and feedback are forwarded, on top of being
+   * stored here (migration 0058). Both blank means nothing is forwarded.
+   *
+   * `crm_email` is the CRM's own lead-capture address; `crm_webhook_url` is an
+   * https endpoint that receives the lead as JSON. Neither is a credential,
+   * which is the whole reason the integration is shaped this way.
+   */
+  crm_email: string | null;
+  crm_webhook_url: string | null;
   is_active: boolean;
   profile_completed: boolean;
   current_stars: number;
