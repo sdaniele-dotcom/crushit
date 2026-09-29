@@ -119,7 +119,7 @@ export const CALIFORNIA: Section = {
 export const PRE_APPROVAL: Section = {
   heading: "Condo pre-approval — the building, not just the buyer",
   intro:
-    "Condo financing is no longer only about qualifying the buyer: the project itself has to qualify too. Send Crush Mortgage the HOA documents when you take the listing and we will flag potential financing problems before the property goes into escrow — insurance, reserves, deferred maintenance, special assessments, structural repairs — while building out the financing options for both warrantable and non-warrantable condos.",
+    "Condo financing is no longer only about qualifying the buyer: the project itself has to qualify too. Send Crush Mortgage the HOA documents when you take the listing and we will flag potential financing problems before the property goes into escrow — insurance, reserves, deferred maintenance, special assessments, structural repairs — while building out the financing options for traditional and non-warranted condos.",
   items: [
     "HOA master insurance policy",
     "Current annual HOA budget",

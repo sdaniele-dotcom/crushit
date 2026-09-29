@@ -195,8 +195,8 @@ export default function CondoRulesPage() {
             <p className="font-bold text-ink-900">Taking a condo listing?</p>
             <p className="mt-1 text-sm text-muted">
               Send us the HOA documents and we&apos;ll pre-approve the building before it goes into
-              escrow — no cost, no obligation. Warrantable or not, we&apos;ll come back with the
-              financing options.
+              escrow — no cost, no obligation. Traditional or non-warranted, we&apos;ll come back
+              with the financing options.
             </p>
           </div>
           <Button href="/contact" className="shrink-0">
