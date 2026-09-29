@@ -25,13 +25,15 @@ type Form = {
   team_logo_url: string;
   leaderboard_visible: boolean;
   listing_marketing_opt_in: boolean;
+  crm_email: string;
+  crm_webhook_url: string;
 };
 
 const empty: Form = {
   first_name: "", last_name: "", display_name: "", phone: "", brokerage: "",
   dre_license: "", instagram: "", website: "", market_city: "",
   headshot_url: "", brokerage_logo_url: "", team_logo_url: "", leaderboard_visible: true,
-  listing_marketing_opt_in: false,
+  listing_marketing_opt_in: false, crm_email: "", crm_webhook_url: "",
 };
 
 const input =
@@ -112,6 +114,8 @@ function ProfileInner() {
         team_logo_url: profile.team_logo_url ?? "",
         leaderboard_visible: profile.leaderboard_visible ?? true,
         listing_marketing_opt_in: profile.listing_marketing_opt_in ?? false,
+        crm_email: profile.crm_email ?? "",
+        crm_webhook_url: profile.crm_webhook_url ?? "",
       });
     }
   }, [profile]);
@@ -220,6 +224,63 @@ function ProfileInner() {
               <p className="mt-2 text-xs text-muted">
                 By opting in you agree to receive these emails from Crush Mortgage and confirm the listing email on
                 file is yours. You can turn this off here anytime.
+              </p>
+            </div>
+
+            {/*
+              CRM forwarding. Two fields rather than a list of logos to pick
+              from: every CRM worth naming issues a lead-capture address, and
+              anything that doesn't takes a webhook. Neither asks the agent to
+              hand over credentials, which is the reason there is no "Connect
+              with Follow Up Boss" button here.
+            */}
+            <div className="rounded-3xl border border-border bg-white p-6">
+              <h2 className="text-sm font-bold uppercase tracking-wide text-crush-700">Your CRM</h2>
+              <p className="mt-2 text-sm text-ink-800">
+                Send every open-house sign-in and feedback form straight to your CRM as it comes in.
+                They stay in Crush It either way — this is a copy, not a handoff.
+              </p>
+
+              <label className="mt-5 block">
+                <span className={label}>CRM lead email</span>
+                <input
+                  className={input}
+                  type="email"
+                  autoComplete="off"
+                  placeholder="you@followupboss.me"
+                  value={form.crm_email}
+                  onChange={(e) => set("crm_email", e.target.value)}
+                />
+              </label>
+              <p className="mt-1.5 text-xs text-muted">
+                The lead-capture address your CRM gave you. Follow Up Boss calls it your{" "}
+                <span className="font-semibold">lead email address</span> (ends in{" "}
+                <span className="font-mono">@followupboss.me</span>); BoldTrail/kvCORE, Lofty, Chime,
+                Sierra and Wise Agent all have their own. It is usually under Settings → Lead flow,
+                Lead routing or Email parsing.
+              </p>
+
+              <label className="mt-5 block">
+                <span className={label}>Webhook URL (optional)</span>
+                <input
+                  className={input}
+                  type="url"
+                  autoComplete="off"
+                  placeholder="https://hooks.zapier.com/…"
+                  value={form.crm_webhook_url}
+                  onChange={(e) => set("crm_webhook_url", e.target.value)}
+                />
+              </label>
+              <p className="mt-1.5 text-xs text-muted">
+                For anything the email route can&apos;t reach. Paste your CRM&apos;s inbound webhook,
+                or a Zapier / Make catch hook, and we&apos;ll POST each lead as JSON —
+                name, email, phone, property and every answer on the form. Must be{" "}
+                <span className="font-mono">https://</span>.
+              </p>
+
+              <p className="mt-4 text-xs text-muted">
+                Leave both blank and nothing is forwarded. Visitors are told on the sign-in form that
+                their details go to you and your CRM.
               </p>
             </div>
           </div>

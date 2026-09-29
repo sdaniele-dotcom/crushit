@@ -132,6 +132,13 @@ export default function FeedbackPage() {
             <button type="submit" disabled={busy} className="rounded-full bg-crush-500 px-6 py-3.5 text-base font-semibold text-white hover:bg-crush-600 disabled:opacity-50">
               {busy ? "Submitting…" : "Submit feedback"}
             </button>
+            {/* Same disclosure as the sign-in sheet — contact details are optional
+                here, and it should be clear where they go before they are given. */}
+            <p className="text-xs leading-relaxed text-muted">
+              Your feedback goes to the listing agent and the software they use to keep in touch. If
+              you leave your name or contact details they go with it; leave them blank and the
+              feedback is anonymous.
+            </p>
             <p className="text-center text-xs text-muted">Powered by {site.brand} · Financing by {site.company}</p>
           </form>
         )}
