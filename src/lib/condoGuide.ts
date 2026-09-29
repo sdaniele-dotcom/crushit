@@ -99,13 +99,60 @@ export const STILL_EASIER: Section = {
 export const CALIFORNIA: Section = {
   heading: "California: SB 326",
   intro:
-    "Separate from agency guidelines, and it feeds straight into them. SB 326 requires HOAs in buildings with three or more multifamily units to have exterior elevated elements — balconies, decks, stairs, walkways — inspected by a licensed professional, then re-inspected every nine years.",
+    "Separate from agency guidelines, and it feeds straight into them. Following increased scrutiny of condominium safety and deferred maintenance, California associations must have their qualifying balconies and other exterior elevated elements — decks, stairs, walkways — inspected by a licensed professional, then re-inspected every nine years. Before taking a condo listing, find out whether the HOA has completed its SB 326 inspection, and get the report when there is one.",
   items: [
     "Ask whether the inspection has been done and what it found.",
     "A finding of required repair becomes deferred maintenance in the eyes of a project review, and often a special assessment on the reserve line.",
+    "An association with unresolved structural issues, deferred maintenance, thin reserves or a significant special assessment creates problems in both the sale and the financing — and they surface in escrow, when there is least room to solve them.",
     "This is one of the most common ways a Long Beach or LA building that looks fine on paper turns out not to be.",
   ],
 };
+
+/**
+ * The offer, and the reason the rest of this page exists.
+ *
+ * Deliberately framed as PRE-APPROVAL rather than as a document request. Agents
+ * already know what a pre-approval is and already ask buyers for one; the point
+ * being made is that the building now needs the same thing, and that it can be
+ * done at listing time instead of discovered in escrow.
+ */
+export const PRE_APPROVAL: Section = {
+  heading: "Condo pre-approval — the building, not just the buyer",
+  intro:
+    "Condo financing is no longer only about qualifying the buyer: the project itself has to qualify too. Send Crush Mortgage the HOA documents when you take the listing and we will flag potential financing problems before the property goes into escrow — insurance, reserves, deferred maintenance, special assessments, structural repairs — while building out the financing options for traditional and non-warranted condos.",
+  items: [
+    "HOA master insurance policy",
+    "Current annual HOA budget",
+    "Most recent reserve study",
+    "Most recent HOA meeting minutes",
+    "Condo questionnaire",
+    "Any current or proposed special assessments",
+    "Any structural, engineering or balcony inspection reports (SB 326)",
+    "Documentation of any major deferred maintenance or required repairs",
+  ],
+};
+
+/**
+ * The two public registries, linked rather than summarised.
+ *
+ * Both are searchable by anyone in under a minute and both are authoritative,
+ * which is the opposite of the rest of condo eligibility — so the useful thing
+ * is the link and the caveat, not a paragraph explaining them.
+ */
+export const APPROVAL_LOOKUPS: { label: string; url: string; body: string }[] = [
+  {
+    label: "Is the condo FHA approved?",
+    url: "https://entp.hud.gov/idapp/html/condlook.cfm",
+    body:
+      "HUD's condominium lookup. Search by name or address; check the status and the expiry date, because approvals lapse and a lapsed one reads as approved at a glance.",
+  },
+  {
+    label: "Is the condo VA approved?",
+    url: "https://lgy.va.gov/lgyhub/condo-report",
+    body:
+      "The VA's condo report. A project can be VA approved and not FHA approved, or the reverse — they are separate lists maintained by separate agencies.",
+  },
+];
 
 export const IF_IT_FAILS: Section = {
   heading: "If a project doesn't qualify",
@@ -130,6 +177,7 @@ export const CHECKLIST: string[] = [
   "Is the HOA in litigation, and is it about the building?",
   "Who completes the HOA questionnaire, how long do they take, and what do they charge?",
   "California: has the SB 326 balcony inspection been done, and what did it find?",
+  "Is there documentation of any outstanding repairs, and what is the plan and the timeline for them?",
 ];
 
 export const MISREADS: [string, string][] = [

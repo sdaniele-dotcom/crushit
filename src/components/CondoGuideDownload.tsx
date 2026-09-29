@@ -8,6 +8,8 @@ import { site } from "@/lib/site";
 import { team } from "@/lib/data";
 import {
   TIMELINE,
+  PRE_APPROVAL,
+  APPROVAL_LOOKUPS,
   REVIEW_DOCS,
   RESERVE_MATH,
   DISQUALIFIERS,
@@ -108,6 +110,13 @@ export function CondoGuideDownload({ className = "" }: { className?: string }) {
   <strong>full project review</strong> — Limited Review is retired. On <strong>January 4, 2027</strong>,
   minimum reserves rise from <strong>10% to 15%</strong> of the association's annual budgeted assessment
   income. HOA questionnaires, budgets and reserve studies are gating documents now, not paperwork.</p>
+
+  ${sectionHtml(PRE_APPROVAL)}
+
+  <h2>Check the public lists first</h2>
+  <ul>${APPROVAL_LOOKUPS.map(
+    (l) => `<li><strong>${esc(l.label)}</strong> ${esc(l.url)} — ${esc(l.body)}</li>`,
+  ).join("")}</ul>
 
   <h2>What changed and when</h2>
   <table>${TIMELINE.map(

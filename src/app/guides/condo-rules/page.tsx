@@ -3,6 +3,8 @@ import { Container, PageHero, Button, Card, Eyebrow } from "@/components/ui";
 import { CondoGuideDownload } from "@/components/CondoGuideDownload";
 import {
   TIMELINE,
+  PRE_APPROVAL,
+  APPROVAL_LOOKUPS,
   REVIEW_DOCS,
   RESERVE_MATH,
   DISQUALIFIERS,
@@ -67,6 +69,57 @@ export default function CondoRulesPage() {
             <strong>10% to 15%</strong> of the association&apos;s annual budgeted assessment income.
             HOA questionnaires, budgets and reserve studies are gating documents now, not paperwork.
           </p>
+        </div>
+
+        {/*
+          The offer, directly under the summary rather than at the foot of the
+          page. Everything below it explains why a building can fail; this is
+          the one thing an agent can DO about it, and it costs them a folder of
+          documents they can request the same week they take the listing.
+        */}
+        <div className="mt-12">
+          <Eyebrow>{PRE_APPROVAL.heading}</Eyebrow>
+        </div>
+        <Card className="mt-5 border-crush-500/40 p-6">
+          <p className="text-ink-800">{PRE_APPROVAL.intro}</p>
+          <p className="mt-5 text-sm font-bold uppercase tracking-wide text-crush-700">
+            Send us these
+          </p>
+          <ul className="mt-3 grid gap-3 sm:grid-cols-2">
+            {PRE_APPROVAL.items.map((i) => (
+              <li key={i} className="flex gap-3 text-sm text-ink-800">
+                <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-crush-500" />
+                <span>{i}</span>
+              </li>
+            ))}
+          </ul>
+          <div className="mt-6">
+            <Button href="/contact">Send us a condo to pre-approve</Button>
+          </div>
+        </Card>
+
+        {/*
+          Two public registries, linked rather than summarised — both answer in
+          under a minute and both are authoritative, which nothing else on this
+          page is. The caveats are the part worth writing down.
+        */}
+        <div className="mt-12">
+          <Eyebrow>Check the public lists first</Eyebrow>
+        </div>
+        <div className="mt-5 grid gap-4 sm:grid-cols-2">
+          {APPROVAL_LOOKUPS.map((l) => (
+            <Card key={l.url} className="p-5">
+              <a
+                href={l.url}
+                target="_blank"
+                rel="noreferrer"
+                className="font-semibold text-crush-700 underline"
+              >
+                {l.label}
+              </a>
+              <p className="mt-2 text-sm text-muted">{l.body}</p>
+            </Card>
+          ))}
         </div>
 
         <div className="mt-12">
@@ -139,14 +192,15 @@ export default function CondoRulesPage() {
 
         <Card className="mt-6 flex flex-col items-start justify-between gap-4 bg-surface p-6 sm:flex-row sm:items-center">
           <div>
-            <p className="font-bold text-ink-900">Got a condo under contract?</p>
+            <p className="font-bold text-ink-900">Taking a condo listing?</p>
             <p className="mt-1 text-sm text-muted">
-              Send us the address and we&apos;ll check the project before you list it — no cost, no
-              obligation.
+              Send us the HOA documents and we&apos;ll pre-approve the building before it goes into
+              escrow — no cost, no obligation. Traditional or non-warranted, we&apos;ll come back
+              with the financing options.
             </p>
           </div>
           <Button href="/contact" className="shrink-0">
-            Ask us to check a project
+            Pre-approve a condo project
           </Button>
         </Card>
 
