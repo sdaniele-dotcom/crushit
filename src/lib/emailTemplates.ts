@@ -14,8 +14,9 @@ export const TEMPLATE_META: Record<string, { title: string; blurb: string; token
   },
   new_listing: {
     title: "New-listing email",
-    blurb: "Sent to an agent when they add a brand-new listing.",
-    tokens: ["first_name", "address", "price", "beds", "baths", "sqft"],
+    blurb:
+      "Sent to an agent when they add a brand-new listing. The built-in design ends with a down-payment-assistance prompt for that address; a custom body replaces the whole email, so include {{dpa_url}} if you want that link to stay.",
+    tokens: ["first_name", "address", "price", "beds", "baths", "sqft", "dpa_url"],
     defaultSubject: "Your listing is ready to market — {{address}} 🏡",
   },
   condo_note: {
