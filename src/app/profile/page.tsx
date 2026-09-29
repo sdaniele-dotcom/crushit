@@ -9,6 +9,7 @@ import { uploadAgentImage } from "@/lib/storage";
 import { awardStars, refreshProfileSoon } from "@/lib/rewards";
 import { toast } from "@/lib/toast";
 import { level_name } from "@/lib/levels";
+import { CRM_OPTIONS, crmOption } from "@/lib/crmOptions";
 
 type Form = {
   first_name: string;
@@ -25,6 +26,7 @@ type Form = {
   team_logo_url: string;
   leaderboard_visible: boolean;
   listing_marketing_opt_in: boolean;
+  crm_name: string;
   crm_email: string;
   crm_webhook_url: string;
 };
@@ -33,7 +35,7 @@ const empty: Form = {
   first_name: "", last_name: "", display_name: "", phone: "", brokerage: "",
   dre_license: "", instagram: "", website: "", market_city: "",
   headshot_url: "", brokerage_logo_url: "", team_logo_url: "", leaderboard_visible: true,
-  listing_marketing_opt_in: false, crm_email: "", crm_webhook_url: "",
+  listing_marketing_opt_in: false, crm_name: "", crm_email: "", crm_webhook_url: "",
 };
 
 const input =
@@ -94,6 +96,8 @@ function ImageField({
 function ProfileInner() {
   const { user, profile, refreshProfile } = useAuth();
   const [form, setForm] = useState<Form>(empty);
+  // Drives the instructions under the picker; null until they choose.
+  const chosenCrm = crmOption(form.crm_name);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
 
@@ -114,6 +118,7 @@ function ProfileInner() {
         team_logo_url: profile.team_logo_url ?? "",
         leaderboard_visible: profile.leaderboard_visible ?? true,
         listing_marketing_opt_in: profile.listing_marketing_opt_in ?? false,
+        crm_name: profile.crm_name ?? "",
         crm_email: profile.crm_email ?? "",
         crm_webhook_url: profile.crm_webhook_url ?? "",
       });
@@ -228,11 +233,18 @@ function ProfileInner() {
             </div>
 
             {/*
-              CRM forwarding. Two fields rather than a list of logos to pick
-              from: every CRM worth naming issues a lead-capture address, and
-              anything that doesn't takes a webhook. Neither asks the agent to
-              hand over credentials, which is the reason there is no "Connect
-              with Follow Up Boss" button here.
+              CRM forwarding.
+
+              The CRM is PICKED but not required, and nothing about delivery
+              depends on the answer — a lead-capture address works the same
+              whoever issued it. It is asked so the instructions underneath can
+              be about the agent's own CRM instead of a sentence naming six of
+              them, and because nobody here knows what these agents actually
+              use, which is why this was built generic in the first place.
+
+              Still no credentials, and so still no "Connect with Follow Up
+              Boss" button: that button means storing an API key for every agent
+              on the platform.
             */}
             <div className="rounded-3xl border border-border bg-white p-6">
               <h2 className="text-sm font-bold uppercase tracking-wide text-crush-700">Your CRM</h2>
@@ -242,26 +254,51 @@ function ProfileInner() {
               </p>
 
               <label className="mt-5 block">
-                <span className={label}>CRM lead email</span>
+                <span className={label}>Which CRM do you use?</span>
+                <select
+                  className={input}
+                  value={form.crm_name}
+                  onChange={(e) => set("crm_name", e.target.value)}
+                >
+                  <option value="">Choose your CRM…</option>
+                  {CRM_OPTIONS.map((o) => (
+                    <option key={o.value} value={o.value}>{o.label}</option>
+                  ))}
+                </select>
+              </label>
+              {chosenCrm ? (
+                <p className="mt-2 rounded-xl bg-crush-50 px-4 py-3 text-xs leading-relaxed text-ink-800">
+                  {chosenCrm.hint}
+                </p>
+              ) : (
+                <p className="mt-1.5 text-xs text-muted">
+                  Pick yours and we&apos;ll tell you where to find its lead address. Not listed?
+                  Choose “Something else” — almost every CRM has one.
+                </p>
+              )}
+
+              <label className="mt-5 block">
+                <span className={label}>
+                  CRM lead email{chosenCrm?.webhookFirst ? " (optional)" : ""}
+                </span>
                 <input
                   className={input}
                   type="email"
                   autoComplete="off"
-                  placeholder="you@followupboss.me"
+                  placeholder={chosenCrm?.placeholder ?? "you@yourcrm.com"}
                   value={form.crm_email}
                   onChange={(e) => set("crm_email", e.target.value)}
                 />
               </label>
               <p className="mt-1.5 text-xs text-muted">
-                The lead-capture address your CRM gave you. Follow Up Boss calls it your{" "}
-                <span className="font-semibold">lead email address</span> (ends in{" "}
-                <span className="font-mono">@followupboss.me</span>); BoldTrail/kvCORE, Lofty, Chime,
-                Sierra and Wise Agent all have their own. It is usually under Settings → Lead flow,
-                Lead routing or Email parsing.
+                The lead-capture address your CRM gave you. Every lead arrives there as a plain
+                message your CRM can file automatically.
               </p>
 
               <label className="mt-5 block">
-                <span className={label}>Webhook URL (optional)</span>
+                <span className={label}>
+                  Webhook URL{chosenCrm?.webhookFirst ? "" : " (optional)"}
+                </span>
                 <input
                   className={input}
                   type="url"

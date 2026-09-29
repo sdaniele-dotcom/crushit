@@ -29,6 +29,12 @@ export type Profile = {
    */
   crm_email: string | null;
   crm_webhook_url: string | null;
+  /**
+   * Which CRM they picked, by name. Display and analytics only — delivery does
+   * not depend on it, and an agent who pastes an address without choosing a CRM
+   * is fully connected.
+   */
+  crm_name: string | null;
   is_active: boolean;
   profile_completed: boolean;
   current_stars: number;
