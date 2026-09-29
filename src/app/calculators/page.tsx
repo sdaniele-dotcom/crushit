@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { CalculatorTabs } from "@/components/calculators/CalculatorTabs";
 import { Container, PageHero, Button } from "@/components/ui";
 import { site } from "@/lib/site";
@@ -50,6 +51,16 @@ export default function CalculatorsPage() {
             see which ones match.
           </p>
           <DownPaymentTool className="mt-6" title="Check down payment assistance" />
+          <p className="mt-4 text-sm text-muted">
+            More on how to use this —{" "}
+            <Link
+              href="/down-payment-assistance"
+              className="font-semibold text-crush-600 hover:text-crush-700"
+            >
+              the down payment assistance section
+            </Link>
+            , including why you should run your own listings through it.
+          </p>
         </section>
 
         <div className="mt-14 rounded-3xl border border-border bg-surface p-8 text-center sm:p-12">

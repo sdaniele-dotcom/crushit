@@ -7,6 +7,7 @@ import { AdminGuard } from "@/components/auth/AdminGuard";
 import { getSupabase } from "@/lib/supabase";
 import { site } from "@/lib/site";
 import { toast } from "@/lib/toast";
+import { BROADCAST_PRESETS } from "@/lib/broadcastPresets";
 
 const input = "w-full rounded-xl border border-border bg-white px-3.5 py-2.5 text-sm outline-none focus:border-crush-400 focus:ring-2 focus:ring-crush-100";
 
@@ -73,6 +74,37 @@ function Inner() {
 
         <div className="mt-6 grid gap-8 lg:grid-cols-[1.3fr_1fr]">
           <div>
+            {/*
+              Written drafts rather than a scheduled send. Loading one fills the
+              boxes below; the review-and-confirm step is untouched, because a
+              mass email to every agent should always pass through a person.
+            */}
+            <div className="mb-5 rounded-2xl border border-border bg-surface p-4">
+              <p className="text-xs font-semibold uppercase tracking-wide text-muted">Start from a draft</p>
+              <div className="mt-3 flex flex-wrap gap-2">
+                {BROADCAST_PRESETS.map((p) => (
+                  <button
+                    key={p.key}
+                    type="button"
+                    title={p.when}
+                    onClick={() => {
+                      setSubject(p.subject);
+                      setMessage(p.body);
+                      setConfirm(false);
+                      setResult(null);
+                      toast({ emoji: "📝", title: "Draft loaded", body: "Edit it, send yourself a test, then review and send." });
+                    }}
+                    className="rounded-full border border-crush-200 bg-crush-50 px-4 py-2 text-xs font-semibold text-crush-700 hover:bg-crush-100"
+                  >
+                    {p.label}
+                  </button>
+                ))}
+              </div>
+              <p className="mt-2.5 text-xs text-muted">
+                Nothing sends until you confirm below. Each draft is editable — treat it as a starting point, not final copy.
+              </p>
+            </div>
+
             <label className="block">
               <span className="text-xs font-semibold uppercase tracking-wide text-muted">Subject</span>
               <input className={`${input} mt-1.5`} placeholder="August rate update 🎯" value={subject} onChange={(e) => setSubject(e.target.value)} maxLength={140} />

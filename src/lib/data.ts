@@ -604,6 +604,20 @@ export const resources: Resource[] = [
     ],
   },
   {
+    title: "Down Payment Assistance",
+    description:
+      "Check any California address against thousands of assistance programs — and find out why you should run your own listings through it.",
+    audience: "Buyers who think they can't buy yet",
+    href: "/down-payment-assistance",
+    items: [
+      "Grants, forgivable and deferred seconds",
+      "Mortgage Credit Certificates",
+      "Eligibility often follows the address",
+      "What each program actually asks for",
+      "What to sort out before the offer",
+    ],
+  },
+  {
     title: "Document Checklist",
     description: "Everything a buyer needs to gather for a smooth approval.",
     audience: "Give at first meeting",

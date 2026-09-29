@@ -274,6 +274,17 @@ export default function FirstTimeBuyersPage() {
             Check which ones fit your situation in about two minutes.
           </p>
           <DownPaymentTool className="mt-8" />
+          <p className="mt-4 text-sm text-muted">
+            Want to understand what you&apos;re looking at?{" "}
+            <Link
+              href="/down-payment-assistance"
+              className="font-semibold text-crush-600 hover:text-crush-700"
+            >
+              The full down payment assistance section
+            </Link>{" "}
+            explains the kinds of help that exist, what eligibility turns on, and
+            what to sort out before you write an offer.
+          </p>
         </section>
 
         {/* Documents + mistakes */}

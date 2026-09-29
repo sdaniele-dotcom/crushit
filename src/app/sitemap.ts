@@ -9,6 +9,7 @@ const routes = [
   "/calculators",
   "/rent-vs-own",
   "/loan-programs",
+  "/down-payment-assistance",
   "/mls-search",
   "/resources",
   "/co-marketing/social-kit",
