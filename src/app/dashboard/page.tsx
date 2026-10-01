@@ -5,6 +5,7 @@ import Link from "next/link";
 import { Container } from "@/components/ui";
 import { RequireAuth } from "@/components/auth/RequireAuth";
 import { useAuth } from "@/components/auth/AuthProvider";
+import { ApplicationPageCard } from "@/components/ApplicationPageCard";
 import { getSupabase } from "@/lib/supabase";
 import { levelProgress } from "@/lib/levels";
 import { useLevels } from "@/lib/useLevels";
@@ -156,6 +157,8 @@ function DashboardInner() {
           <Link href="/leaderboard" className="rounded-full border border-crush-200 bg-white px-4 py-2 text-sm font-semibold text-crush-700 hover:bg-crush-50">Leaderboard</Link>
         </div>
       </div>
+
+      <ApplicationPageCard />
 
       {/* Main grid */}
       <div className="mt-8 grid gap-8 lg:grid-cols-3">
