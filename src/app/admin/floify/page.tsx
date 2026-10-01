@@ -103,8 +103,8 @@ function Inner() {
           </ol>
           <p className="mt-3 text-xs text-muted">
             Only Floify&apos;s general landing page can be co-branded, so that&apos;s the
-            link to use. This is manual because Floify&apos;s API reference isn&apos;t
-            public — if they confirm partner creation is supported, this step goes away.
+            link to use. Each request also emails the team with the agent&apos;s details
+            and headshot, so this list is a backstop rather than the only signal.
           </p>
         </div>
 

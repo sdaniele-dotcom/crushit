@@ -88,18 +88,28 @@ export default function ApplyPagePage() {
   async function request() {
     if (!user) return;
     setBusy(true);
-    const ok = await requestFloifyPage(user.id);
+    const { ok, notified } = await requestFloifyPage();
     setBusy(false);
-    if (ok) {
-      await refreshProfile();
-      toast({
-        emoji: "📨",
-        title: "Request sent",
-        body: "We'll build your page and email you the link, usually within a business day.",
-      });
-    } else {
+    if (!ok) {
       toast({ emoji: "⚠️", title: "Couldn't send that", body: "Please try again in a moment." });
+      return;
     }
+    await refreshProfile();
+    toast(
+      notified
+        ? {
+            emoji: "📨",
+            title: "Request sent",
+            body: "We'll build your page and email you the link, usually within a business day.",
+          }
+        : {
+            // Recorded but the team email did not go out. Saying so beats
+            // promising a reply that nothing was told to send.
+            emoji: "📝",
+            title: "Request saved",
+            body: "It's on our list. If you don't hear back in a couple of days, give us a nudge.",
+          },
+    );
   }
 
   return (
