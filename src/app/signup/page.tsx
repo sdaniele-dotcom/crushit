@@ -193,8 +193,8 @@ export default function SignupPage() {
               <Link href="/terms" target="_blank" className="font-semibold text-crush-600 underline">
                 Agent Terms of Use
               </Link>
-              , including the permission in section 3 for Crush Mortgage to use my
-              name, headshot and the marketing materials I make here.
+              , including the permission in section 3 for Crush Mortgage to feature
+              me in co-marketing.
             </span>
           </label>
 
