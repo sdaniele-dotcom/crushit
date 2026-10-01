@@ -90,6 +90,11 @@ export function Footer() {
             application, credit approval, and current market rates. Equal Housing
             Opportunity.
           </p>
+          <p className="mt-3 text-xs text-slate-500">
+            <Link href="/terms" className="underline hover:text-slate-300">
+              Agent Terms of Use
+            </Link>
+          </p>
         </div>
       </div>
     </footer>

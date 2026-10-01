@@ -11,6 +11,7 @@ import {
   authOk,
 } from "@/components/auth/AuthShell";
 import { getSupabase, isSupabaseConfigured } from "@/lib/supabase";
+import { TERMS_VERSION } from "@/lib/terms";
 
 /** Very light "is this a random bot string?" check — flags a long, low-vowel
  *  token like "FwTNhhydslRVhfTRKpEQfMBF" without tripping on real names. */
@@ -33,6 +34,7 @@ export default function SignupPage() {
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState("");
   const [sent, setSent] = useState(false);
+  const [agreed, setAgreed] = useState(false);
   const [trap, setTrap] = useState(""); // honeypot — humans never fill this
   const mountedAt = useRef(Date.now());
 
@@ -68,6 +70,10 @@ export default function SignupPage() {
       setError("Please use a password of at least 8 characters.");
       return;
     }
+    if (!agreed) {
+      setError("Please agree to the Agent Terms of Use to continue.");
+      return;
+    }
     setBusy(true);
     setError("");
     const { data, error } = await sb.auth.signUp({
@@ -93,9 +99,23 @@ export default function SignupPage() {
           first_name: fn,
           last_name: ln,
           display_name: [fn, ln].filter(Boolean).join(" "),
+          terms_version: TERMS_VERSION,
+          terms_accepted_at: new Date().toISOString(),
         })
         .eq("id", data.user.id);
+      await sb.from("terms_acceptances").insert({
+        user_id: data.user.id,
+        version: TERMS_VERSION,
+        user_agent: navigator.userAgent.slice(0, 500),
+      });
     }
+    /*
+      With email confirmation ON there is no session here, so neither write can
+      happen — the tick above is real assent but nothing is signed in to record
+      it against. That is fine and deliberate: the agent meets TermsGate on
+      their first login and the record is written there instead. Better a second
+      ask than a consent row written by an unauthenticated client.
+    */
     setBusy(false);
     if (data.session) {
       // Signed in immediately (email confirmation is off). Start onboarding at
@@ -161,13 +181,29 @@ export default function SignupPage() {
             <input tabIndex={-1} autoComplete="off" value={trap} onChange={(e) => setTrap(e.target.value)} />
           </div>
 
+          <label className="flex cursor-pointer items-start gap-2.5">
+            <input
+              type="checkbox"
+              checked={agreed}
+              onChange={(e) => setAgreed(e.target.checked)}
+              className="mt-0.5 h-4 w-4 shrink-0 rounded border-border text-crush-500 focus:ring-crush-400"
+            />
+            <span className="text-xs leading-relaxed text-muted">
+              I agree to the{" "}
+              <Link href="/terms" target="_blank" className="font-semibold text-crush-600 underline">
+                Agent Terms of Use
+              </Link>
+              , including the permission in section 3 for Crush Mortgage to use my
+              name, headshot and the marketing materials I make here.
+            </span>
+          </label>
+
           {error && <p className={authNotice}>{error}</p>}
-          <button type="submit" className={authButton} disabled={busy}>
+          <button type="submit" className={authButton} disabled={busy || !agreed}>
             {busy ? "Creating account…" : "Create free account"}
           </button>
           <p className="text-center text-xs text-muted">
-            By creating an account you agree to use Crushing It for real-estate
-            marketing. We never sell your data.
+            We never sell your data.
           </p>
         </form>
       )}

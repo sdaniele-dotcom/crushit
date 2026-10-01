@@ -35,6 +35,14 @@ export type Profile = {
    * is fully connected.
    */
   crm_name: string | null;
+  /**
+   * The terms version this agent accepted, and when (migration 0059). A value
+   * that is null or older than TERMS_VERSION puts the consent gate in front of
+   * the app. The durable evidence lives in `terms_acceptances`; this is just
+   * the flag the gate reads.
+   */
+  terms_version: string | null;
+  terms_accepted_at: string | null;
   is_active: boolean;
   profile_completed: boolean;
   current_stars: number;
