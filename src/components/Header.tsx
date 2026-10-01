@@ -20,6 +20,7 @@ const GROUPS: { label: string; items: Item[] }[] = [
       { label: "Open House Kit", href: "/co-marketing/open-house-kit" },
       { label: "Email Templates", href: "/co-marketing/email-templates" },
       { label: "Video Scripts", href: "/co-marketing/video-scripts" },
+      { label: "Application Page", href: "/apply-page" },
       { label: "Buyer & Seller Guides", href: "/resources" },
     ],
   },
