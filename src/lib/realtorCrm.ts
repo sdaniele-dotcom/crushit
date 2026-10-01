@@ -119,26 +119,51 @@ export async function fetchContacts(): Promise<Contact[]> {
 }
 
 /** Everything we've sent this realtor, newest first. */
-export async function fetchTimeline(email: string): Promise<TimelineItem[]> {
+export async function fetchTimeline(
+  email: string,
+): Promise<{ items: TimelineItem[]; errors: string[] }> {
   const sb = getSupabase();
-  if (!sb) return [];
+  if (!sb) return { items: [], errors: [] };
   const e = lower(email);
   const items: TimelineItem[] = [];
+  /*
+    Collected and returned rather than swallowed. Every one of these queries
+    used to drop its error on the floor, so a missing migration or a missing
+    RLS policy rendered as "nothing recorded yet" — the one message guaranteed
+    to send someone looking in the wrong place.
+  */
+  const errors: string[] = [];
 
   /*
-    Flyers come through the embedded join on listing_flyers, which is where the
-    recipient lives — flyer_records itself only knows the listing. `!inner`
-    makes the filter on the embedded table actually restrict the parent rows.
+    TWO QUERIES RATHER THAN AN EMBEDDED JOIN. This was
+    `flyer_records...listing_flyers!inner(agent_email)` filtered on the embedded
+    column, which depends on PostgREST detecting the relationship and on the
+    embedded filter restricting parent rows. When any of that does not hold the
+    result is an empty array, not an error, so a broken query and a realtor with
+    no flyers looked identical. Finding the listings first and matching on their
+    ids is one more round trip and has nothing to go quietly wrong.
   */
-  const { data: recs } = await sb
-    .from("flyer_records")
-    .select("id, generated_at, purpose, generated_by, street_address, city, listing_flyers!inner(agent_email)")
-    .ilike("listing_flyers.agent_email", e)
-    .order("generated_at", { ascending: false })
-    .limit(300);
+  const { data: flyerRows, error: flyerErr } = await sb
+    .from("listing_flyers")
+    .select("id")
+    .ilike("agent_email", e);
+  if (flyerErr) errors.push(`flyers: ${flyerErr.message}`);
 
+  const ids = ((flyerRows as { id: string }[]) ?? []).map((f) => f.id);
   type Rec = { id: string; generated_at: string; purpose: string | null; generated_by: string | null; street_address: string | null; city: string | null };
-  for (const r of (recs as Rec[]) ?? []) {
+  let recs: Rec[] = [];
+  if (ids.length) {
+    const { data, error } = await sb
+      .from("flyer_records")
+      .select("id, generated_at, purpose, generated_by, street_address, city")
+      .in("listing_flyer_id", ids)
+      .order("generated_at", { ascending: false })
+      .limit(300);
+    if (error) errors.push(`flyer records: ${error.message}`);
+    recs = (data as Rec[]) ?? [];
+  }
+
+  for (const r of recs) {
     const where = [r.street_address, r.city].filter(Boolean).join(", ") || "a listing";
     items.push({
       id: `f-${r.id}`,
@@ -154,12 +179,13 @@ export async function fetchTimeline(email: string): Promise<TimelineItem[]> {
     });
   }
 
-  const { data: mails } = await sb
+  const { data: mails, error: mailErr } = await sb
     .from("email_log")
     .select("id, created_at, subject, kind, status, error, from_email")
     .ilike("to_email", e)
     .order("created_at", { ascending: false })
     .limit(300);
+  if (mailErr) errors.push(`emails: ${mailErr.message}`);
 
   type Mail = { id: string; created_at: string; subject: string; kind: string; status: string; error: string | null; from_email: string };
   for (const m of (mails as Mail[]) ?? []) {
@@ -174,12 +200,13 @@ export async function fetchTimeline(email: string): Promise<TimelineItem[]> {
     });
   }
 
-  const { data: touches } = await sb
+  const { data: touches, error: touchErr } = await sb
     .from("contact_touches")
     .select("id, occurred_at, kind, direction, body, logged_by_name")
     .ilike("contact_email", e)
     .order("occurred_at", { ascending: false })
     .limit(300);
+  if (touchErr) errors.push(`logged touches: ${touchErr.message}`);
 
   type T = { id: string; occurred_at: string; kind: TouchKind; direction: "outbound" | "inbound"; body: string | null; logged_by_name: string | null };
   for (const t of (touches as T[]) ?? []) {
@@ -201,7 +228,7 @@ export async function fetchTimeline(email: string): Promise<TimelineItem[]> {
     });
   }
 
-  return items.sort((a, b) => b.at.localeCompare(a.at));
+  return { items: items.sort((a, b) => b.at.localeCompare(a.at)), errors };
 }
 
 export async function logTouch(input: {
