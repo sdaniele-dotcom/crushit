@@ -6,6 +6,8 @@ import { Header } from "@/components/Header";
 import { Footer } from "@/components/Footer";
 import { ChatWidget } from "@/components/ChatWidget";
 import { useAuth } from "@/components/auth/AuthProvider";
+import { TermsGate } from "@/components/auth/TermsGate";
+import { TERMS_VERSION } from "@/lib/terms";
 import { Container } from "@/components/ui";
 
 /**
@@ -27,6 +29,14 @@ const AUTH_ROUTES = [
   "/open-house", "/feedback",
 ];
 
+/**
+ * Readable without an account AND without having accepted the terms. /terms
+ * has to be on this list or the gate traps you: the gate links to the terms,
+ * and a gate that blocks the document it is asking you to agree to is asking
+ * you to agree to something you cannot read.
+ */
+const PUBLIC_ROUTES = ["/terms"];
+
 function normalize(p: string): string {
   if (p.length > 1 && p.endsWith("/")) return p.slice(0, -1);
   return p;
@@ -41,20 +51,41 @@ function Spinner() {
 }
 
 export function AppFrame({ children }: { children: ReactNode }) {
-  const { configured, ready, user } = useAuth();
+  const { configured, ready, user, profile, refreshProfile } = useAuth();
   const path = normalize(usePathname() || "/");
   const isAuthRoute = AUTH_ROUTES.includes(path);
+  const isPublicRoute = PUBLIC_ROUTES.includes(path);
   const isHome = path === "/";
+
+  /*
+    Gate on the profile actually having loaded. `profile` is null both while it
+    is in flight and when the row is genuinely missing, so gating on a null
+    would flash the terms screen at every agent on every page load. Waiting for
+    a row means an agent who has already accepted never sees this again.
+
+    AND on the COLUMN existing, which is the part that is not obvious. If this
+    code ships before migration 0059 runs, `terms_version` is not a key on the
+    row at all — and `undefined !== TERMS_VERSION` is true, so every agent would
+    be shown a gate whose accept button writes to a column that does not exist
+    and therefore always fails. That is a total lockout of the whole suite,
+    caused purely by deploy order. Checking for the key means the gate stays
+    dormant until the migration lands and then switches itself on, in either
+    order, with no window where anybody is stuck.
+  */
+  const termsColumnExists = !!profile && "terms_version" in profile;
+  const needsTerms =
+    !!user && termsColumnExists && profile.terms_version !== TERMS_VERSION;
 
   useEffect(() => {
     if (!configured || !ready) return;
+    if (isPublicRoute) return;
     if (isHome && user) {
       window.location.assign("/dashboard/");
     } else if (!isHome && !isAuthRoute && !user) {
       const next = encodeURIComponent(window.location.pathname);
       window.location.assign(`/login/?next=${next}`);
     }
-  }, [configured, ready, user, isHome, isAuthRoute]);
+  }, [configured, ready, user, isHome, isAuthRoute, isPublicRoute]);
 
   // Not configured yet → behave like the original public site.
   if (!configured) {
@@ -74,8 +105,16 @@ export function AppFrame({ children }: { children: ReactNode }) {
 
   if (isAuthRoute) {
     content = children; // self-contained auth pages
+  } else if (isPublicRoute) {
+    content = children; // readable logged-out and before accepting the terms
+    chrome = true;
   } else if (!ready) {
     content = <Spinner />; // wait for the session check before deciding
+  } else if (needsTerms) {
+    // Ahead of every other signed-in branch, including the home redirect, so
+    // there is no route that reaches the app around it.
+    content = <TermsGate onAccepted={() => void refreshProfile()} />;
+    chrome = false;
   } else if (isHome) {
     if (user) {
       content = <Spinner />; // signed-in → redirecting to dashboard
