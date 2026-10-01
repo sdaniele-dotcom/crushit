@@ -124,6 +124,7 @@ function Inner() {
   const [selected, setSelected] = useState<Contact | null>(null);
   const [timeline, setTimeline] = useState<TimelineItem[]>([]);
   const [tlLoading, setTlLoading] = useState(false);
+  const [tlErrors, setTlErrors] = useState<string[]>([]);
 
   const load = useCallback(async () => {
     setLoading(true);
@@ -134,7 +135,9 @@ function Inner() {
 
   const loadTimeline = useCallback(async (c: Contact) => {
     setTlLoading(true);
-    setTimeline(await fetchTimeline(c.email));
+    const { items, errors } = await fetchTimeline(c.email);
+    setTimeline(items);
+    setTlErrors(errors);
     setTlLoading(false);
   }, []);
 
@@ -263,6 +266,18 @@ function Inner() {
                 </div>
 
                 <div className="mt-6 space-y-2">
+                  {tlErrors.length > 0 && (
+                    <div className="rounded-2xl border border-crush-200 bg-crush-50 p-4 text-sm text-crush-700">
+                      <p className="font-bold">Part of this timeline couldn&apos;t load.</p>
+                      <ul className="mt-1.5 list-disc pl-5 text-xs">
+                        {tlErrors.map((er) => <li key={er}>{er}</li>)}
+                      </ul>
+                      <p className="mt-2 text-xs">
+                        Usually a migration that hasn&apos;t been run yet — 0060 for
+                        emails, 0062 for flyers and logged touches.
+                      </p>
+                    </div>
+                  )}
                   {tlLoading && <p className="text-sm text-muted">Loading timeline…</p>}
                   {!tlLoading && timeline.length === 0 && (
                     <p className="rounded-2xl border border-border bg-surface p-5 text-sm text-muted">
