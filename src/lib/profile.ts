@@ -43,6 +43,15 @@ export type Profile = {
    */
   terms_version: string | null;
   terms_accepted_at: string | null;
+  /**
+   * The agent's co-branded Floify application page (migration 0061).
+   *
+   * Set by an admin after building it in Floify — see lib/floify.ts for why it
+   * is not created automatically. `floify_requested_at` is the agent asking;
+   * `floify_url` is it existing.
+   */
+  floify_url: string | null;
+  floify_requested_at: string | null;
   is_active: boolean;
   profile_completed: boolean;
   current_stars: number;
