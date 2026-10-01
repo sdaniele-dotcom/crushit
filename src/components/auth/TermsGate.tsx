@@ -77,8 +77,9 @@ export function TermsGate({ onAccepted }: { onAccepted: () => void }) {
           We&apos;ve added terms for the suite
         </h1>
         <p className="mt-3 text-sm leading-relaxed text-muted">
-          Short version of the part that affects you most — the full terms are one
-          click away and worth a read.
+          Nothing changes about how you use the suite. Here&apos;s the short
+          version of section 3, which is about featuring you in our co-marketing —
+          the full terms are one click away.
         </p>
 
         <ul className="mt-5 space-y-3 rounded-2xl border border-border bg-surface p-5">
@@ -106,8 +107,8 @@ export function TermsGate({ onAccepted }: { onAccepted: () => void }) {
             >
               Agent Terms of Use
             </Link>
-            , including the permission in section 3 to use my name, headshot and
-            marketing materials.
+            , including the permission in section 3 for Crush to feature me in
+            co-marketing.
           </span>
         </label>
 
