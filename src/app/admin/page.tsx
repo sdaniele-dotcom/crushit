@@ -56,6 +56,7 @@ function AdminInner() {
           <Link href="/admin/broadcast" className="rounded-full border border-border bg-white px-6 py-3 text-sm font-semibold text-ink-900 hover:bg-surface-2">Agent newsletter</Link>
           <Link href="/admin/chat-transcripts" className="rounded-full border border-border bg-white px-6 py-3 text-sm font-semibold text-ink-900 hover:bg-surface-2">Chat transcripts</Link>
           <Link href="/admin/email-templates" className="rounded-full border border-border bg-white px-6 py-3 text-sm font-semibold text-ink-900 hover:bg-surface-2">Email templates</Link>
+          <Link href="/admin/realtors" className="rounded-full border border-border bg-white px-6 py-3 text-sm font-semibold text-ink-900 hover:bg-surface-2">Realtor contacts</Link>
           <Link href="/admin/floify" className="rounded-full border border-border bg-white px-6 py-3 text-sm font-semibold text-ink-900 hover:bg-surface-2">Application pages</Link>
           <Link href="/admin/emails" className="rounded-full border border-border bg-white px-6 py-3 text-sm font-semibold text-ink-900 hover:bg-surface-2">Email archive</Link>
           <Link href="/admin/vendors" className="rounded-full border border-border bg-white px-6 py-3 text-sm font-semibold text-ink-900 hover:bg-surface-2">Resource partners</Link>
