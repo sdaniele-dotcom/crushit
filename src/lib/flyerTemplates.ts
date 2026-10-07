@@ -94,6 +94,30 @@ export type FlyerData = {
   dreLicense: string;
 };
 
+/**
+ * A typed number with thousands separators — or the text back, untouched.
+ *
+ * THE BUG THIS REPLACES printed "NaN SQ FT" on the flyer for anybody who typed
+ * "2,450". The old expression was
+ *
+ *     numText(d.sqft)
+ *
+ * and the `|| d.sqft` was clearly meant to catch exactly that. It cannot:
+ * Number("2,450") is NaN, NaN.toLocaleString() returns the STRING "NaN", and a
+ * non-empty string is truthy, so the fallback never ran. A comma is how most
+ * people write a square footage, so this was not an edge case.
+ *
+ * Commas and spaces come out before parsing, and anything that is not purely a
+ * number is passed through as the agent typed it — "2,450+" and "approx 2450"
+ * are things people put in this box, and printing them verbatim is better than
+ * printing nothing or printing NaN.
+ */
+function numText(raw: string): string {
+  const cleaned = raw.replace(/[,\s]/g, "");
+  if (!cleaned || !/^\d+(\.\d+)?$/.test(cleaned)) return raw;
+  return Number(cleaned).toLocaleString("en-US");
+}
+
 const FONTS = {
   sans: { head: "'Poppins',Arial,sans-serif", body: "Arial,Helvetica,sans-serif" },
   serif: { head: "'Playfair Display',Georgia,serif", body: "Georgia,'Times New Roman',serif" },
@@ -103,7 +127,7 @@ function specsHtml(d: FlyerData, accent: string, headFont: string): string {
   const items = [
     d.beds && { v: d.beds, l: "Beds" },
     d.baths && { v: d.baths, l: "Baths" },
-    d.sqft && { v: Number(d.sqft).toLocaleString?.() || d.sqft, l: "Sq Ft" },
+    d.sqft && { v: numText(d.sqft), l: "Sq Ft" },
   ].filter(Boolean) as { v: string; l: string }[];
   if (!items.length) return "";
   return `<div style="display:flex;gap:26px;margin:14px 0 2px">${items
@@ -181,7 +205,7 @@ function statsHtml(d: FlyerData, headFont: string, size = 19): string {
   const items = [
     d.beds && { v: d.beds, l: "Beds" },
     d.baths && { v: d.baths, l: "Baths" },
-    d.sqft && { v: Number(d.sqft).toLocaleString?.() || d.sqft, l: "Sq Ft" },
+    d.sqft && { v: numText(d.sqft), l: "Sq Ft" },
   ].filter(Boolean) as { v: string; l: string }[];
   if (!items.length) return "";
   return `<div style="display:flex;gap:30px;margin-top:14px">${items
@@ -340,7 +364,7 @@ export function renderFlyer(tpl: FlyerTemplate, d: FlyerData, photos: string[]):
             ${d.cityLine ? `<div style="font-size:11pt;color:#6e675a;margin-top:3px">${esc(d.cityLine)}</div>` : ""}
             <div style="display:flex;align-items:baseline;justify-content:center;gap:22px;margin-top:12px">
               ${d.price ? `<div style="font-family:${f.head};font-weight:700;font-size:22pt;letter-spacing:-.6px;color:${a}">${esc(d.price)}</div>` : ""}
-              ${[d.beds && `${d.beds} Bed`, d.baths && `${d.baths} Bath`, d.sqft && `${Number(d.sqft).toLocaleString?.() || d.sqft} Sq Ft`].filter(Boolean).length ? `<div style="font-size:10.5pt;font-weight:600;letter-spacing:1.6px;text-transform:uppercase;color:#6e675a">${[d.beds && `${d.beds} Bed`, d.baths && `${d.baths} Bath`, d.sqft && `${Number(d.sqft).toLocaleString?.() || d.sqft} Sq Ft`].filter(Boolean).map(esc).join("&nbsp;&nbsp;·&nbsp;&nbsp;")}</div>` : ""}
+              ${[d.beds && `${d.beds} Bed`, d.baths && `${d.baths} Bath`, d.sqft && `${numText(d.sqft)} Sq Ft`].filter(Boolean).length ? `<div style="font-size:10.5pt;font-weight:600;letter-spacing:1.6px;text-transform:uppercase;color:#6e675a">${[d.beds && `${d.beds} Bed`, d.baths && `${d.baths} Bath`, d.sqft && `${numText(d.sqft)} Sq Ft`].filter(Boolean).map(esc).join("&nbsp;&nbsp;·&nbsp;&nbsp;")}</div>` : ""}
             </div>
           </div>
           ${d.description ? `<p style="margin:0.22in auto 0;font-size:10.5pt;line-height:1.6;color:#3c3a33;text-align:center;max-width:6in">${esc(d.description)}</p>` : ""}
@@ -356,7 +380,7 @@ export function renderFlyer(tpl: FlyerTemplate, d: FlyerData, photos: string[]):
           <div style="display:inline-block;border:1.5px solid #fff;color:#fff;font-family:${f.head};font-weight:700;font-size:10pt;letter-spacing:5px;text-transform:uppercase;padding:5px 14px">${esc(d.kicker || tpl.kicker)}</div>
           <div style="font-family:${f.head};font-weight:800;font-size:26pt;color:#fff;margin-top:12px">${esc(d.price || "")}</div>
           <div style="font-family:${f.head};font-weight:600;font-size:15pt;color:#fff">${esc(d.address || "[Property address]")}</div>
-          <div style="color:#eee;font-size:11pt;margin-top:2px">${esc(d.cityLine)}${d.beds || d.baths || d.sqft ? ` · ${[d.beds && `${d.beds} bd`, d.baths && `${d.baths} ba`, d.sqft && `${Number(d.sqft).toLocaleString?.() || d.sqft} sqft`].filter(Boolean).join(" · ")}` : ""}</div>
+          <div style="color:#eee;font-size:11pt;margin-top:2px">${esc(d.cityLine)}${d.beds || d.baths || d.sqft ? ` · ${[d.beds && `${d.beds} bd`, d.baths && `${d.baths} ba`, d.sqft && `${numText(d.sqft)} sqft`].filter(Boolean).join(" · ")}` : ""}</div>
           ${d.openDate || d.openTime ? `<div style="color:#fff;font-family:${f.head};font-weight:700;margin-top:10px">Open House · ${[d.openDate, d.openTime].filter(Boolean).map(esc).join(" · ")}</div>` : ""}
         </div>
       </div>

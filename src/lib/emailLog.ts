@@ -10,6 +10,8 @@ export type EmailLogRow = {
   to_email: string;
   from_email: string;
   cc_email: string | null;
+  /** The blind copy (migration 0065) — the assigned loan officer on a flyer. */
+  bcc_email: string | null;
   reply_to: string | null;
   subject: string;
   html: string | null;

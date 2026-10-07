@@ -176,6 +176,14 @@ function Inner() {
                 ["To", open.to_email],
                 ["From", open.from_email],
                 ["CC", open.cc_email],
+                /*
+                  BCC is the answer to "did the loan officer get their copy?",
+                  and it was missing from this list — the column arrived with
+                  migration 0065, after this page was written. Its absence read
+                  as "no blind copy was sent", which is the one thing this
+                  archive exists not to leave anybody guessing about.
+                */
+                ["BCC", open.bcc_email],
                 ["Reply-to", open.reply_to],
                 ["Type", KIND_LABELS[open.kind] ?? open.kind],
                 ["When", when(open.created_at)],
