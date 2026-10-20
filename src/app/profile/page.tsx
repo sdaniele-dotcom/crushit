@@ -25,6 +25,7 @@ type Form = {
   brokerage_logo_url: string;
   team_logo_url: string;
   leaderboard_visible: boolean;
+  email_opt_in: boolean;
   listing_marketing_opt_in: boolean;
   crm_name: string;
   crm_email: string;
@@ -35,7 +36,9 @@ const empty: Form = {
   first_name: "", last_name: "", display_name: "", phone: "", brokerage: "",
   dre_license: "", instagram: "", website: "", market_city: "",
   headshot_url: "", brokerage_logo_url: "", team_logo_url: "", leaderboard_visible: true,
-  listing_marketing_opt_in: false, crm_name: "", crm_email: "", crm_webhook_url: "",
+  // Default false here only matters before the profile loads; the real value
+  // comes from the row below. An invited agent's row says false (0067).
+  email_opt_in: false, listing_marketing_opt_in: false, crm_name: "", crm_email: "", crm_webhook_url: "",
 };
 
 const input =
@@ -117,6 +120,7 @@ function ProfileInner() {
         brokerage_logo_url: profile.brokerage_logo_url ?? "",
         team_logo_url: profile.team_logo_url ?? "",
         leaderboard_visible: profile.leaderboard_visible ?? true,
+        email_opt_in: profile.email_opt_in ?? false,
         listing_marketing_opt_in: profile.listing_marketing_opt_in ?? false,
         crm_name: profile.crm_name ?? "",
         crm_email: profile.crm_email ?? "",
@@ -213,6 +217,25 @@ function ProfileInner() {
               <label className="mt-3 flex items-center gap-3 text-sm text-ink-800">
                 <input type="checkbox" className="h-4 w-4 accent-crush-500" checked={form.leaderboard_visible} onChange={(e) => set("leaderboard_visible", e.target.checked)} />
                 Show me on the Crush Leaderboard
+              </label>
+              {/*
+                email_opt_in has existed since migration 0036 and /admin/broadcast
+                has always filtered on it, but there was no control for it anywhere
+                — so an agent on the list had no way off it except replying to ask.
+                That became untenable with the brokerage roster invited in bulk:
+                those accounts are provisioned opted OUT (0067) precisely because
+                nobody asked them, and the set-password page offers the opt-in. A
+                preference you can be given and never change is not a preference.
+              */}
+              <label className="mt-3 flex items-start gap-3 text-sm text-ink-800">
+                <input type="checkbox" className="mt-0.5 h-4 w-4 accent-crush-500" checked={form.email_opt_in} onChange={(e) => set("email_opt_in", e.target.checked)} />
+                <span>
+                  Email me market updates and new tools.{" "}
+                  <span className="text-muted">
+                    Your flyers and account emails arrive either way — this is just the
+                    newsletter.
+                  </span>
+                </span>
               </label>
             </div>
 

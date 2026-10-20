@@ -16,6 +16,13 @@ export type Profile = {
   website: string | null;
   market_city: string | null;
   leaderboard_visible: boolean;
+  /**
+   * Newsletter/broadcast consent (migration 0036). /admin/broadcast filters on
+   * it. It was missing from this type while the column existed and was being
+   * queried, so nothing type-checked the one field that decides who gets
+   * marketing email. Agents invited in bulk are provisioned false (0067).
+   */
+  email_opt_in: boolean;
   /** Opt-in: auto-send a marketing package when their listing hits the MLS. */
   listing_marketing_opt_in: boolean;
   listing_marketing_opt_in_at: string | null;

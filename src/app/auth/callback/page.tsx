@@ -45,11 +45,29 @@ export default function AuthCallbackPage() {
       return;
     }
 
-    const isRecovery = get("type") === "recovery";
+    /*
+      TWO LINK TYPES LAND ON THE PASSWORD PAGE, not one.
+
+      `recovery` is the obvious one — somebody asked to reset. `invite` is the
+      one that was missing, and leaving it out was a one-way door: an agent
+      invited in bulk has NO PASSWORD AT ALL, because an invite creates the
+      account without one. Sending them to the dashboard let them in once, on
+      the strength of the link's session, and then locked them out forever —
+      there was no password to log in with and nothing told them to set one.
+
+      `welcome=1` is passed on so the page can say "set your password" to
+      somebody who has never had one, instead of "set a NEW password".
+    */
+    const type0 = get("type");
+    const needsPassword = type0 === "recovery" || type0 === "invite";
     // The welcome email is fired centrally in AuthProvider once the confirmed
     // agent lands in the app — reliable regardless of where this link redirects.
     const afterAuth = () => {
-      if (isRecovery) return window.location.assign("/update-password/");
+      if (needsPassword) {
+        return window.location.assign(
+          type0 === "invite" ? "/update-password/?welcome=1" : "/update-password/",
+        );
+      }
       finish();
     };
 
