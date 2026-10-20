@@ -58,6 +58,21 @@ export default function UpdatePasswordPage() {
         const { data } = await sb.auth.getSession();
         if (!alive) return;
         if (data.session) {
+          /*
+            Seed the checkbox from what the account actually says rather than
+            assuming off. Whether the brokerage subscribed them is a per-batch
+            choice at invite time, so this page cannot know it in advance — and
+            an unchecked box shown to somebody who IS subscribed turns a real
+            control into a lie, and silently unsubscribes them if they save.
+          */
+          const uid = data.session.user.id;
+          const { data: prof } = await sb
+            .from("profiles")
+            .select("email_opt_in")
+            .eq("id", uid)
+            .maybeSingle();
+          if (!alive) return;
+          setOptIn(((prof as { email_opt_in?: boolean } | null)?.email_opt_in) ?? false);
           setReady(true);
           return;
         }
@@ -99,16 +114,17 @@ export default function UpdatePasswordPage() {
       that worked plus a preference that did not is a far better outcome than
       sending somebody back to re-enter a password they already set.
     */
-    if (optIn) {
-      const { data } = await sb.auth.getUser();
-      const uid = data.user?.id;
-      if (uid) {
-        const { error: optErr } = await sb
-          .from("profiles")
-          .update({ email_opt_in: true })
-          .eq("id", uid);
-        if (optErr) console.error("[update-password] opt-in not saved:", optErr.message);
-      }
+    const { data: who } = await sb.auth.getUser();
+    const uid = who.user?.id;
+    if (uid) {
+      // Written in BOTH directions. Only writing `true` made the box one-way:
+      // an agent the brokerage had subscribed could untick it, save, and still
+      // be subscribed — a control that silently ignores you is worse than none.
+      const { error: optErr } = await sb
+        .from("profiles")
+        .update({ email_opt_in: optIn })
+        .eq("id", uid);
+      if (optErr) console.error("[update-password] email preference not saved:", optErr.message);
     }
     setBusy(false);
     setDone(true);
@@ -168,10 +184,10 @@ export default function UpdatePasswordPage() {
                 disabled={!ready}
               />
               <span>
-                Email me market updates and new tools.{" "}
+                Send me market updates and new tools.{" "}
                 <span className="text-muted">
-                  Optional — your flyers and account emails arrive either way, and you can
-                  change this in your profile.
+                  Optional, and changeable in your profile whenever you like — your flyers and
+                  account emails arrive either way.
                 </span>
               </span>
             </label>
