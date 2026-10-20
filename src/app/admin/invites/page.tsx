@@ -28,11 +28,14 @@ const input =
   "w-full rounded-xl border border-border bg-white px-3.5 py-2.5 text-sm outline-none focus:border-crush-400 focus:ring-2 focus:ring-crush-100";
 
 type Outcome =
-  | "invited" | "reinvited" | "suppressed" | "invalid"
+  | "would_invite" | "invited" | "reinvited" | "suppressed" | "invalid"
   | "duplicate" | "link_failed" | "send_failed";
 type Result = { email: string; name: string | null; outcome: Outcome; detail?: string };
 
 const LABEL: Record<Outcome, string> = {
+  // "Invited" was used for the dry run too, with the explanation tucked into
+  // the detail column — so a dry run read as a completed send.
+  would_invite: "Would be invited — NOT sent",
   invited: "Invited",
   reinvited: "Re-sent (already had an account)",
   suppressed: "Skipped — on do-not-contact",
@@ -41,7 +44,7 @@ const LABEL: Record<Outcome, string> = {
   link_failed: "Failed — no link",
   send_failed: "Failed — not delivered",
 };
-const GOOD = new Set<Outcome>(["invited", "reinvited"]);
+const GOOD = new Set<Outcome>(["would_invite", "invited", "reinvited"]);
 
 function Inner() {
   const [text, setText] = useState("");
@@ -49,6 +52,8 @@ function Inner() {
   const [results, setResults] = useState<Result[]>([]);
   const [busy, setBusy] = useState(false);
   const [confirm, setConfirm] = useState(false);
+  const [optIn, setOptIn] = useState(true);
+  const [lastWasDry, setLastWasDry] = useState(false);
 
   const parsed = useMemo(() => parseRoster(text), [text]);
   // Everything not yet attempted in this session, so pressing the button again
@@ -78,6 +83,7 @@ function Inner() {
         headers: { "Content-Type": "application/json", Authorization: `Bearer ${token}` },
         body: JSON.stringify({
           dryRun,
+          optIn,
           agents: batch.map((r: RosterRow) => ({
             email: r.email,
             first_name: r.first_name,
@@ -97,6 +103,7 @@ function Inner() {
       }
       const got = d.results ?? [];
       setResults((prev) => [...prev, ...got]);
+      setLastWasDry(dryRun);
       if (!dryRun) {
         // Mark EVERY address the backend reported on, not just the successes:
         // a bad address or a suppressed one must not be retried on the next
@@ -250,11 +257,46 @@ function Inner() {
                 3 · Send a wave of {Math.min(WAVE, remaining.length)}
               </h2>
               <p className="mt-2 text-sm text-ink-800">
-                {batches.length} wave{batches.length === 1 ? "" : "s"} to go. Each agent gets a
-                link to set their own password — <strong>no password is created or emailed</strong>.
-                They are added <strong>opted out</strong> of marketing email; the set-password page
-                offers it as a checkbox.
+                {batches.length} wave{batches.length === 1 ? "" : "s"} to go.
               </p>
+              <div className="mt-3 rounded-xl border border-crush-200 bg-white p-4 text-sm text-ink-800">
+                <p className="font-semibold">What each agent receives</p>
+                <ul className="mt-1.5 grid gap-1 pl-4 text-[13px] [list-style:disc]">
+                  <li>
+                    One email, subject &ldquo;Your Crush account from{" "}
+                    {remaining[0]?.brokerage || "your brokerage"}&rdquo;
+                  </li>
+                  <li>
+                    A <strong>Set my password</strong> button —{" "}
+                    <strong>no password is created or emailed</strong>, they choose their own
+                  </li>
+                  <li>Their name, phone, DRE and brokerage already in the account</li>
+                  <li>What the suite includes, and an unsubscribe link</li>
+                </ul>
+              </div>
+              <label className="mt-3 flex items-start gap-3 rounded-xl border border-crush-200 bg-white p-4 text-sm text-ink-800">
+                <input
+                  type="checkbox"
+                  className="mt-0.5 h-4 w-4 accent-crush-500"
+                  checked={optIn}
+                  onChange={(e) => setOptIn(e.target.checked)}
+                />
+                <span>
+                  <strong>Subscribe them to market-update emails.</strong>{" "}
+                  {optIn ? (
+                    <span className="text-muted">
+                      The invite will say their brokerage subscribed them and how to stop. They can
+                      untick it when they set their password, change it in their profile, or
+                      unsubscribe — none of which touches their account or flyers.
+                    </span>
+                  ) : (
+                    <span className="text-muted">
+                      Off — they get the account and their flyers, and the set-password page offers
+                      the newsletter as a checkbox they can tick themselves.
+                    </span>
+                  )}
+                </span>
+              </label>
               <p className="mt-2 text-xs text-muted">
                 Anyone on the do-not-contact list is skipped. That list lives on the mortgage
                 side — clear wrongly-suppressed agents at{" "}
@@ -312,8 +354,14 @@ function Inner() {
           {results.length > 0 && (
             <div className="rounded-3xl border border-border bg-white p-6">
               <h2 className="text-sm font-bold uppercase tracking-wide text-crush-700">
-                Outcomes
+                {lastWasDry ? "Dry run — nothing was sent" : "Outcomes"}
               </h2>
+              {lastWasDry && (
+                <p className="mt-2 rounded-xl border border-border bg-surface-2 p-3 text-sm text-ink-800">
+                  No accounts were created and no email left the building. This is what would
+                  happen. Tick through it, then use <strong>Invite this wave</strong>.
+                </p>
+              )}
               <p className="mt-2 text-sm text-ink-800">
                 {Object.entries(tally)
                   .map(([k, n]) => `${n} ${LABEL[k as Outcome] ?? k}`)
