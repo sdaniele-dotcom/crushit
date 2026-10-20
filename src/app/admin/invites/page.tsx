@@ -29,6 +29,17 @@ import { parseRoster, waves, type RosterRow } from "@/lib/rosterParse";
  */
 
 const WAVE = 25;
+/*
+  The brokerage named in every invite, and the default because it is who is
+  sending them.
+
+  It overrides whatever the uploaded CSV carried in its Brokerage column. That
+  column was the source before, which made the sender's name a property of a
+  spreadsheet: a blank cell printed "your brokerage", and an MLS export of other
+  people's listings printed Compass or Coldwell Banker at agents who work for
+  neither. Spelled the way HomeSmart's own MLS exports spell it.
+*/
+const DEFAULT_BROKERAGE = "HomeSmart Realty Group";
 const input =
   "w-full rounded-xl border border-border bg-white px-3.5 py-2.5 text-sm outline-none focus:border-crush-400 focus:ring-2 focus:ring-crush-100";
 
@@ -61,6 +72,7 @@ function Inner() {
   const [lastWasDry, setLastWasDry] = useState(false);
   const [picked, setPicked] = useState<Set<string>>(new Set());
   const [find, setFind] = useState("");
+  const [brokerage, setBrokerage] = useState(DEFAULT_BROKERAGE);
 
   const parsed = useMemo(() => parseRoster(text), [text]);
 
@@ -132,6 +144,7 @@ function Inner() {
         body: JSON.stringify({
           dryRun,
           optIn,
+          brokerage: brokerage.trim(),
           agents: batch.map((r: RosterRow) => ({
             email: r.email,
             first_name: r.first_name,
@@ -373,7 +386,7 @@ function Inner() {
                 <ul className="mt-1.5 grid gap-1 pl-4 text-[13px] [list-style:disc]">
                   <li>
                     One email, subject &ldquo;Your Crush account from{" "}
-                    {remaining[0]?.brokerage || "your brokerage"}&rdquo;
+                    {brokerage.trim() || "your brokerage"}&rdquo;
                   </li>
                   <li>
                     A <strong>Set my password</strong> button —{" "}
@@ -382,6 +395,24 @@ function Inner() {
                   <li>Their name, phone, DRE and brokerage already in the account</li>
                   <li>What the suite includes, and an unsubscribe link</li>
                 </ul>
+              </div>
+              <div className="mt-3 rounded-xl border border-crush-200 bg-white p-4">
+                <label className="text-xs font-semibold uppercase tracking-wide text-muted">
+                  Brokerage named in every email
+                </label>
+                <input
+                  className={`${input} mt-1.5`}
+                  value={brokerage}
+                  onChange={(e) => setBrokerage(e.target.value)}
+                  placeholder={DEFAULT_BROKERAGE}
+                />
+                <p className="mt-1.5 text-xs text-muted">
+                  Used in the subject, the heading and the first line, for every agent in the
+                  batch — it ignores whatever the Brokerage column of your file says, so one
+                  blank cell or an MLS export of someone else&apos;s listings can&apos;t put the
+                  wrong name on an invite. Leave it empty and the emails say &ldquo;You now
+                  have&rdquo; with no brokerage at all.
+                </p>
               </div>
               <label className="mt-3 flex items-start gap-3 rounded-xl border border-crush-200 bg-white p-4 text-sm text-ink-800">
                 <input
