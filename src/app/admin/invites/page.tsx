@@ -1,6 +1,6 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Container, PageHero } from "@/components/ui";
 import { AdminGuard } from "@/components/auth/AdminGuard";
 import { getSupabase } from "@/lib/supabase";
@@ -15,6 +15,11 @@ import { parseRoster, waves, type RosterRow } from "@/lib/rosterParse";
  * emails a link to set it, so there is no credential in an inbox, nothing
  * stored, and nothing for anyone here to know. "Email them their login" is the
  * thing this page exists to avoid.
+ *
+ * YOU PICK WHO GOES. Every row has a checkbox and a fresh paste selects them
+ * all, so inviting the whole roster is still one press — but the first send
+ * should be five people you can walk over to, and that was impossible when the
+ * button simply took the first 25 in file order.
  *
  * IT SENDS IN WAVES, AND THAT IS NOT A TECHNICAL LIMIT. A domain that normally
  * sends a handful of flyers a day looks like a different sender if it emits 150
@@ -54,15 +59,58 @@ function Inner() {
   const [confirm, setConfirm] = useState(false);
   const [optIn, setOptIn] = useState(true);
   const [lastWasDry, setLastWasDry] = useState(false);
+  const [picked, setPicked] = useState<Set<string>>(new Set());
+  const [find, setFind] = useState("");
 
   const parsed = useMemo(() => parseRoster(text), [text]);
-  // Everything not yet attempted in this session, so pressing the button again
-  // continues rather than re-mailing the wave that just went out.
-  const remaining = useMemo(
+
+  /*
+    A FRESH PASTE SELECTS EVERYBODY. The common case is still "invite the whole
+    roster", so the default has to be one click — the selection exists so you
+    can send to FIVE PEOPLE YOU CAN WALK OVER TO before trusting it with 150,
+    which was impossible when the button just took the first 25 in file order.
+  */
+  useEffect(() => {
+    setPicked(new Set(parsed.rows.map((r) => r.email)));
+  }, [parsed.rows]);
+
+  // Not yet attempted in this session, so pressing the button again continues
+  // rather than re-mailing the wave that just went out.
+  const unsent = useMemo(
     () => parsed.rows.filter((r) => !sentEmails.has(r.email)),
     [parsed.rows, sentEmails],
   );
+  const remaining = useMemo(
+    () => unsent.filter((r) => picked.has(r.email)),
+    [unsent, picked],
+  );
   const batches = waves(remaining, WAVE);
+
+  // Narrowing the table, not the selection: typing a name must never silently
+  // change who is about to be emailed.
+  const needle = find.trim().toLowerCase();
+  const shown = needle
+    ? parsed.rows.filter((r) =>
+        `${r.first_name} ${r.last_name} ${r.email} ${r.brokerage}`.toLowerCase().includes(needle))
+    : parsed.rows;
+
+  const toggle = (email: string) =>
+    setPicked((prev) => {
+      const next = new Set(prev);
+      if (next.has(email)) next.delete(email);
+      else next.add(email);
+      return next;
+    });
+  // Acts on what is VISIBLE, so "find smith, select these" works as expected.
+  const setAllShown = (on: boolean) =>
+    setPicked((prev) => {
+      const next = new Set(prev);
+      for (const r of shown) {
+        if (on) next.add(r.email);
+        else next.delete(r.email);
+      }
+      return next;
+    });
 
   async function send(dryRun: boolean) {
     const sb = getSupabase();
@@ -189,8 +237,9 @@ function Inner() {
                       <> · <strong>{parsed.skipped.length}</strong> row
                         {parsed.skipped.length === 1 ? "" : "s"} skipped</>
                     )}
-                    {remaining.length !== parsed.rows.length && (
-                      <> · <strong>{remaining.length}</strong> still to send</>
+                    {" "}· <strong>{remaining.length}</strong> selected to send
+                    {sentEmails.size > 0 && (
+                      <> · <strong>{sentEmails.size}</strong> already attempted</>
                     )}
                   </p>
                   <p className="mt-1 text-xs text-muted">
@@ -199,23 +248,71 @@ function Inner() {
                       .map(([k, v]) => `${k} → "${v}"`)
                       .join(" · ") || "none"}
                   </p>
-                  <div className="mt-4 max-h-72 overflow-auto rounded-xl border border-border">
+                  <div className="mt-4 flex flex-wrap items-center gap-2">
+                    <input
+                      className={`${input} max-w-xs`}
+                      value={find}
+                      onChange={(e) => setFind(e.target.value)}
+                      placeholder="Find by name, email or brokerage…"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => setAllShown(true)}
+                      className="rounded-full border border-border bg-white px-3.5 py-2 text-xs font-semibold text-ink-900"
+                    >
+                      Select {needle ? `these ${shown.length}` : "all"}
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setAllShown(false)}
+                      className="rounded-full border border-border bg-white px-3.5 py-2 text-xs font-semibold text-ink-900"
+                    >
+                      Clear {needle ? "these" : "all"}
+                    </button>
+                    {needle && (
+                      <span className="text-xs text-muted">
+                        showing {shown.length} of {parsed.rows.length} — the filter does not change
+                        who is selected
+                      </span>
+                    )}
+                  </div>
+                  <div className="mt-3 max-h-72 overflow-auto rounded-xl border border-border">
                     <table className="w-full text-left text-xs">
                       <thead className="bg-ink-50 text-muted">
                         <tr>
+                          <th className="w-8 px-3 py-2">
+                            <input
+                              type="checkbox"
+                              className="h-3.5 w-3.5 accent-crush-500"
+                              aria-label="Select all shown"
+                              checked={shown.length > 0 && shown.every((r) => picked.has(r.email))}
+                              onChange={(e) => setAllShown(e.target.checked)}
+                            />
+                          </th>
                           <th className="px-3 py-2">Name</th>
                           <th className="px-3 py-2">Email</th>
                           <th className="px-3 py-2">Phone</th>
                           <th className="px-3 py-2">DRE</th>
                           <th className="px-3 py-2">Brokerage</th>
+                          <th className="px-3 py-2"></th>
                         </tr>
                       </thead>
                       <tbody>
-                        {parsed.rows.map((r) => (
+                        {shown.map((r) => (
                           <tr
                             key={r.email}
                             className={`border-t border-border ${sentEmails.has(r.email) ? "text-muted" : "text-ink-900"}`}
                           >
+                            <td className="px-3 py-1.5">
+                              <input
+                                type="checkbox"
+                                className="h-3.5 w-3.5 accent-crush-500"
+                                aria-label={`Select ${r.email}`}
+                                checked={picked.has(r.email)}
+                                disabled={sentEmails.has(r.email)}
+                                onChange={() => toggle(r.email)}
+                              />
+                            </td>
                             <td className="px-3 py-1.5">
                               {[r.first_name, r.last_name].filter(Boolean).join(" ") || (
                                 <span className="text-crush-600">no name</span>
@@ -225,6 +322,9 @@ function Inner() {
                             <td className="px-3 py-1.5">{r.phone || "—"}</td>
                             <td className="px-3 py-1.5">{r.dre_license || "—"}</td>
                             <td className="px-3 py-1.5">{r.brokerage || "—"}</td>
+                            <td className="px-3 py-1.5 text-[11px] uppercase tracking-wide text-muted">
+                              {sentEmails.has(r.email) ? "attempted" : ""}
+                            </td>
                           </tr>
                         ))}
                       </tbody>
@@ -254,10 +354,19 @@ function Inner() {
           {remaining.length > 0 && (
             <div className="rounded-3xl border border-crush-200 bg-crush-50 p-6">
               <h2 className="text-sm font-bold uppercase tracking-wide text-crush-700">
-                3 · Send a wave of {Math.min(WAVE, remaining.length)}
+                3 · Send to {Math.min(WAVE, remaining.length)} of {remaining.length} selected
               </h2>
               <p className="mt-2 text-sm text-ink-800">
-                {batches.length} wave{batches.length === 1 ? "" : "s"} to go.
+                {remaining.length > WAVE ? (
+                  <>
+                    {remaining.length} selected, sent {WAVE} at a time —{" "}
+                    <strong>{batches.length} presses</strong> to get through them. A domain that
+                    normally sends a few flyers a day looks like a different sender if it emits 150
+                    at once, and the pause is also when you read the outcomes.
+                  </>
+                ) : (
+                  <>All {remaining.length} go out in one press.</>
+                )}
               </p>
               <div className="mt-3 rounded-xl border border-crush-200 bg-white p-4 text-sm text-ink-800">
                 <p className="font-semibold">What each agent receives</p>
@@ -326,7 +435,12 @@ function Inner() {
                     onClick={() => send(false)}
                     className="rounded-full bg-crush-500 px-5 py-2.5 text-sm font-semibold text-white disabled:opacity-60"
                   >
-                    {busy ? "Sending…" : `Yes — invite these ${Math.min(WAVE, remaining.length)}`}
+                    {busy
+                      ? "Sending…"
+                      : `Yes — invite ${Math.min(WAVE, remaining.length)}: ${remaining
+                          .slice(0, 3)
+                          .map((r) => r.first_name || r.email)
+                          .join(", ")}${remaining.length > 3 ? ` +${Math.min(WAVE, remaining.length) - 3} more` : ""}`}
                   </button>
                 ) : (
                   <button
@@ -335,7 +449,9 @@ function Inner() {
                     onClick={() => setConfirm(true)}
                     className="rounded-full bg-crush-500 px-5 py-2.5 text-sm font-semibold text-white disabled:opacity-60"
                   >
-                    Invite this wave…
+                    {remaining.length <= WAVE
+                    ? `Invite ${remaining.length} selected…`
+                    : `Invite the next ${WAVE}…`}
                   </button>
                 )}
                 {confirm && (
@@ -348,6 +464,13 @@ function Inner() {
                   </button>
                 )}
               </div>
+            </div>
+          )}
+
+          {parsed.rows.length > 0 && remaining.length === 0 && unsent.length > 0 && (
+            <div className="rounded-3xl border border-border bg-surface-2 p-6 text-sm text-ink-800">
+              Nothing is selected. Tick the agents you want above — or use{" "}
+              <strong>Select all</strong> — and the send panel appears.
             </div>
           )}
 
