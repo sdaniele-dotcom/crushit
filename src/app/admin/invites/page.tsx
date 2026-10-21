@@ -392,7 +392,17 @@ function Inner() {
                     A <strong>Set my password</strong> button —{" "}
                     <strong>no password is created or emailed</strong>, they choose their own
                   </li>
-                  <li>Their name, phone, DRE and brokerage already in the account</li>
+                  {/*
+                    Says WHATEVER YOUR FILE HAD, not "their DRE is in it". The
+                    email used to promise the profile was already filled in, and
+                    a 150-agent office export generally carries a name and an
+                    email — so the agent opened an empty profile and found out
+                    the email had been wrong about them.
+                  */}
+                  <li>
+                    Whatever your file carried — name, phone, DRE — prefilled, and an ask to
+                    complete the rest so everything comes out co-branded to them
+                  </li>
                   <li>What the suite includes, and an unsubscribe link</li>
                 </ul>
               </div>
