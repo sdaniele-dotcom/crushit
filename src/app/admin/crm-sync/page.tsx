@@ -8,7 +8,13 @@ import { site } from "@/lib/site";
 import { toast } from "@/lib/toast";
 
 /**
- * Push the agents who already have Crush accounts into Lofty as leads.
+ * Push every realtor we have ever contacted into Lofty as a lead.
+ *
+ * NOT JUST ACCOUNT HOLDERS. The first version of this queued `profiles`, which
+ * is the agents who signed up and nobody else — and most of the realtors the
+ * CRM exists for have no account, because the flyer goes out before anyone
+ * signs up. Migration 0069 moved the queue to realtor_crm and seeded it from
+ * the flyers, the logged calls and the accounts, so this now covers everyone.
  *
  * WHY A PAGE AND NOT A SCRIPT. The backfill endpoint needs an admin's Supabase
  * token, which only exists inside a logged-in browser session. There is no way
@@ -16,7 +22,7 @@ import { toast } from "@/lib/toast";
  * standing rule here is that nobody pastes credentials anywhere. So the button
  * lives where the token already is.
  *
- * IT WALKS FORWARD. The backend reads only profiles with no lofty_lead_id, so
+ * IT WALKS FORWARD. The backend reads only contacts with no lofty_lead_id, so
  * each real batch removes its own rows from the next query. Press until
  * "still without a lead" reaches zero. Pressing twice over the same people
  * costs lookups and creates nothing — upsertAgentLead finds the existing lead
@@ -29,7 +35,13 @@ import { toast } from "@/lib/toast";
  */
 
 type Outcome = "created_or_found" | "skipped_has_lead" | "no_email" | "failed";
-type Result = { email: string; outcome: Outcome; leadId?: number; detail?: string };
+type Result = {
+  email: string;
+  name?: string | null;
+  outcome: Outcome;
+  leadId?: number;
+  detail?: string;
+};
 
 const LABEL: Record<Outcome, string> = {
   // Named for what a dry run means, not for what a real run means — the
@@ -116,7 +128,7 @@ function Inner() {
       <PageHero
         eyebrow="Admin"
         title="Sync agents to Lofty"
-        subtitle="Create a Lofty lead for every agent who already has a Crush account. Runs 25 at a time."
+        subtitle="Create a Lofty lead for every realtor in the system — flyer recipients included, not just the ones with accounts. Runs 25 at a time."
       />
       <Container className="py-10">
         <div className="mx-auto max-w-4xl space-y-6">
@@ -124,8 +136,13 @@ function Inner() {
             <h2 className="text-base font-semibold text-ink-900">What this does</h2>
             <ul className="mt-3 space-y-2 text-sm text-ink-600">
               <li>
-                • Each agent becomes a lead of type <strong>Agent</strong> in the Lofty
-                account on <strong>amraj@crushmortgage.com</strong>, owned by that account.
+                • <strong>Everyone we have contacted</strong> — every agent a listing
+                flyer was built for, everyone with a logged call, text or note, and every
+                account holder. Having a Crush account is not required.
+              </li>
+              <li>
+                • Each becomes a lead of type <strong>Agent</strong> in the Lofty account
+                on <strong>amraj@crushmortgage.com</strong>, owned by that account.
               </li>
               <li>
                 • Every lead is tagged <strong>Crush Realtor Suite</strong>, plus{" "}
@@ -133,7 +150,13 @@ function Inner() {
                 realtor — filter on that tag to get one view per officer.
               </li>
               <li>
-                • Agents already linked to a lead are skipped, so running this twice is
+                • Anyone who unsubscribed still goes in, carrying a visible{" "}
+                <strong>Do not email</strong> tag. Leaving them out would make the CRM
+                look complete while hiding them; leaving them unmarked would let someone
+                email them from Lofty, which Lofty has no other way to know.
+              </li>
+              <li>
+                • Contacts already linked to a lead are skipped, so running this twice is
                 safe and creates no duplicates.
               </li>
               <li>
@@ -207,13 +230,22 @@ function Inner() {
                     <tr>
                       <th className="pb-2 pr-4">Agent</th>
                       <th className="pb-2 pr-4">Outcome</th>
-                      <th className="pb-2">Detail</th>
+                      <th className="pb-2">Tags / detail</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-border">
                     {results.map((r, i) => (
                       <tr key={`${r.email}-${i}`}>
-                        <td className="py-2 pr-4 text-ink-900">{r.email}</td>
+                        <td className="py-2 pr-4 text-ink-900">
+                          {r.name ? (
+                            <>
+                              <span className="font-medium">{r.name}</span>
+                              <span className="block text-xs text-ink-500">{r.email}</span>
+                            </>
+                          ) : (
+                            r.email
+                          )}
+                        </td>
                         <td className="py-2 pr-4">
                           <span
                             className={
