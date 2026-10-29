@@ -43,6 +43,13 @@ type Result = {
   detail?: string;
 };
 
+/*
+  The tag a realtor nobody has claimed carries. Must match TEAM_COBRAND_NAME in
+  the backend's lib/lofty/crm.ts — it is only used here to annotate the tally,
+  so a drift makes the note disappear rather than mislabel anything.
+*/
+const TEAM_COBRAND = "Crush Mortgage Team";
+
 const LABEL: Record<Outcome, string> = {
   // Named for what a dry run means, not for what a real run means — the
   // invites page shipped with one label for both and a dry run read as a send.
@@ -57,6 +64,7 @@ function Inner() {
   const [busy, setBusy] = useState(false);
   const [lastWasDry, setLastWasDry] = useState(true);
   const [remaining, setRemaining] = useState<number | null>(null);
+  const [byOfficer, setByOfficer] = useState<Record<string, number>>({});
   const [confirm, setConfirm] = useState(false);
   const [ranReal, setRanReal] = useState(false);
 
@@ -82,6 +90,7 @@ function Inner() {
         error?: string;
         results?: Result[];
         withoutLeadBefore?: number | null;
+        byOfficer?: Record<string, number>;
       };
       if (!res.ok || !d.ok) {
         toast({ emoji: "⚠️", title: "Couldn't run", body: d.error || "Please try again." });
@@ -91,6 +100,12 @@ function Inner() {
       // A dry run replaces the table; a real batch appends, because the real
       // batches are a sequence and the operator is watching a total build up.
       setResults((prev) => (dryRun ? got : [...prev, ...got]));
+      setByOfficer((prev) => {
+        if (dryRun) return d.byOfficer ?? {};
+        const next = { ...prev };
+        for (const [k, n] of Object.entries(d.byOfficer ?? {})) next[k] = (next[k] ?? 0) + n;
+        return next;
+      });
       setLastWasDry(dryRun);
       if (!dryRun) setRanReal(true);
       // Reported BEFORE this batch ran, so subtract what a real batch just took.
@@ -148,6 +163,13 @@ function Inner() {
                 • Every lead is tagged <strong>Crush Realtor Suite</strong>, plus{" "}
                 <strong>LO: &lt;name&gt;</strong> for the loan officer who owns that
                 realtor — filter on that tag to get one view per officer.
+              </li>
+              <li>
+                • Realtors nobody has claimed are tagged{" "}
+                <strong>LO: Crush Mortgage Team</strong>, which is what their flyer
+                actually said. Most of the history is scanned listings, and those
+                co-brand with the team rather than a person — so this is the real split,
+                not missing data. It is also the list worth dividing up.
               </li>
               <li>
                 • Anyone who unsubscribed still goes in, carrying a visible{" "}
@@ -224,6 +246,28 @@ function Inner() {
                   .map(([k, n]) => `${n} ${LABEL[k as Outcome] ?? k}`)
                   .join(" · ")}
               </p>
+              {Object.keys(byOfficer).length > 0 && (
+                <div className="mt-4 rounded-xl bg-surface-2 px-4 py-3">
+                  <h3 className="text-xs font-semibold uppercase tracking-wide text-ink-500">
+                    Which tab each one lands in
+                  </h3>
+                  <ul className="mt-2 space-y-1 text-sm text-ink-700">
+                    {Object.entries(byOfficer)
+                      .sort((a, b) => b[1] - a[1])
+                      .map(([name, n]) => (
+                        <li key={name}>
+                          <span className="font-mono text-xs">LO: {name}</span> — {n}
+                          {name === TEAM_COBRAND && (
+                            <span className="text-ink-500">
+                              {" "}
+                              (contacted under the team co-brand, no individual officer)
+                            </span>
+                          )}
+                        </li>
+                      ))}
+                  </ul>
+                </div>
+              )}
               <div className="mt-4 overflow-x-auto">
                 <table className="w-full text-left text-sm">
                   <thead className="text-xs uppercase tracking-wide text-ink-500">
