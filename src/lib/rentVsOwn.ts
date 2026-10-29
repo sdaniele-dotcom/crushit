@@ -35,6 +35,15 @@ export type RentVsOwnYear = {
   loanBalance: number;
   equity: number;
   ownAdvantage: number; // cumRentSurplus + equity
+  /**
+   * Every rent cheque written up to and including this year.
+   *
+   * The same money as the rest of the row, read the other way round: rent paid
+   * is gone, and this is the running total of it. The printed table leads with
+   * this rather than with owning's advantage, because a number you are losing
+   * lands differently from the same comparison phrased as a gain.
+   */
+  cumRentPaid: number;
 };
 
 export type RentVsOwnResult = {
@@ -139,6 +148,7 @@ export function rentVsOwn(input: RentVsOwnInputs): RentVsOwnResult {
       loanBalance,
       equity,
       ownAdvantage: cumRentSurplus + equity,
+      cumRentPaid: totalRentPaid,
     });
   }
 
@@ -179,7 +189,16 @@ export const RENT_VS_OWN_DEFAULTS: RentVsOwnInputs = {
   termYears: 30,
   currentRent: 4000,
   appreciationPct: 5,
-  rentIncreasePct: 5,
+  /*
+    3%, not 5%.
+
+    5% was the spreadsheet's example figure and it flattered the comparison:
+    rent growth is the single biggest lever on how far ahead owning looks, so
+    an optimistic default inflates every number on the page without anybody
+    choosing it. 3% is nearer long-run California rent growth, and a user who
+    wants a more aggressive assumption can still move the slider.
+  */
+  rentIncreasePct: 3,
   propertyTaxPct: 1.25,
   insurancePct: 0.199,
   pmiPct: 0.2,

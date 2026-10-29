@@ -77,7 +77,7 @@ export function RentVsOwnCalculator() {
     const rowsHtml = r.rows
       .map(
         (row) =>
-          `<tr><td>${row.year}</td><td class="r">${money0(row.rentMonthly)}</td><td class="r">${money0(row.netMortgageMonthly)}</td><td class="r">${money0(row.homeValue)}</td><td class="r">${money0(row.loanBalance)}</td><td class="r">${money0(row.equity)}</td><td class="r strong">${money0(row.ownAdvantage)}</td></tr>`,
+          `<tr><td>${row.year}</td><td class="r">${money0(row.rentMonthly)}</td><td class="r">${money0(row.netMortgageMonthly)}</td><td class="r">${money0(row.homeValue)}</td><td class="r">${money0(row.loanBalance)}</td><td class="r">${money0(row.equity)}</td><td class="r strong lost">${money0(row.cumRentPaid)}</td></tr>`,
       )
       .join("");
     const html = `<!doctype html><html><head><meta charset="utf-8"/>
@@ -93,7 +93,16 @@ export function RentVsOwnCalculator() {
       table{width:100%;border-collapse:collapse;margin-top:4px}th,td{border:1px solid #d8d8d8;padding:6px 8px;font-size:11.5px;text-align:left}
       td.r,th.r{text-align:right}.strong{font-weight:700}th{background:#111;color:#fff;text-transform:uppercase;font-size:10px}
       tr:nth-child(even) td{background:#fafafa}.foot{margin-top:18px;font-size:10.5px;color:#777;border-top:1px solid #eee;padding-top:12px;line-height:1.5}
-      @media print{body{padding:24px}}
+      /* Rent paid is money gone. It reads in red everywhere it appears. */
+      td.lost{color:#dc2626}
+      /*
+        PORTRAIT, STATED RATHER THAN ASSUMED. Without an @page rule the
+        orientation is whatever the browser's print dialog last remembered,
+        which is how this ended up coming out landscape. Naming it means the
+        sheet is the same shape on every machine.
+      */
+      @page{size:Letter portrait;margin:0.5in}
+      @media print{body{padding:0}}
     </style></head><body>
       <div class="top"><div><h1>Rent vs. Own</h1><p class="sub">${inp.horizonYears}-year comparison · ${money0(inp.purchasePrice)} home · prepared ${new Date().toLocaleDateString("en-US")}</p></div>
       <div class="brand"><img src="${crushLogoPrimaryDataUri}" alt="Crush Mortgage"/><div class="c"><strong>${site.phone}</strong><br/>NMLS #${site.companyNmls} · ${site.website.replace(/^https?:\/\//, "")}</div></div></div>
@@ -116,7 +125,8 @@ export function RentVsOwnCalculator() {
         <tr><td>Today's rent</td><td class="r">${money0(inp.currentRent)}</td></tr>
       </table>
       <h2>Year by year</h2>
-      <table><thead><tr><th>Year</th><th class="r">Rent/mo</th><th class="r">Net house pmt/mo</th><th class="r">Home value</th><th class="r">Loan balance</th><th class="r">Equity</th><th class="r">Owning advantage</th></tr></thead><tbody>${rowsHtml}</tbody></table>
+      <table><thead><tr><th>Year</th><th class="r">Rent/mo</th><th class="r">Net house pmt/mo</th><th class="r">Home value</th><th class="r">Loan balance</th><th class="r">Equity</th><th class="r">Lost to rent</th></tr></thead><tbody>${rowsHtml}</tbody></table>
+      <p style="margin:6px 0 0;font-size:10.5px;color:#777">&ldquo;Lost to rent&rdquo; is every rent cheque written through that year — money paid out with no equity behind it. The Equity column beside it is what the same years build when you own.</p>
       <p class="foot">Estimates for educational purposes only — not a commitment to lend, a rate quote, or tax advice. Assumes ${inp.appreciationPct}% annual home appreciation, ${inp.rentIncreasePct}% annual rent increases, a ${inp.incomeTaxPct}% tax rate for the mortgage-interest/property-tax deduction, and that you itemize. Actual results vary. Consult a tax professional. Ready to run your real numbers? Contact ${site.company} at ${site.phone}. Equal Housing Opportunity.</p>
     </body></html>`;
     const w = window.open("", "_blank", "width=900,height=1100");
@@ -277,7 +287,9 @@ export function RentVsOwnCalculator() {
                 <th className="px-3 py-2 text-right font-semibold">Net pmt/mo</th>
                 <th className="px-3 py-2 text-right font-semibold">Home value</th>
                 <th className="px-3 py-2 text-right font-semibold">Equity</th>
-                <th className="px-3 py-2 text-right font-semibold">Own advantage</th>
+                {/* Matches the printed sheet. A printout that disagrees with
+                    the screen it came from is the one thing a client notices. */}
+                <th className="px-3 py-2 text-right font-semibold">Lost to rent</th>
               </tr>
             </thead>
             <tbody>
@@ -288,7 +300,7 @@ export function RentVsOwnCalculator() {
                   <td className="px-3 py-2 text-right text-ink-700">{money0(row.netMortgageMonthly)}</td>
                   <td className="px-3 py-2 text-right text-ink-700">{money0(row.homeValue)}</td>
                   <td className="px-3 py-2 text-right text-ink-700">{money0(row.equity)}</td>
-                  <td className="px-3 py-2 text-right font-semibold text-crush-700">{money0(row.ownAdvantage)}</td>
+                  <td className="px-3 py-2 text-right font-semibold text-red-600">{money0(row.cumRentPaid)}</td>
                 </tr>
               ))}
             </tbody>
