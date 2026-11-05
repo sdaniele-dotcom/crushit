@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { Container } from "@/components/ui";
 import { Webinars } from "@/components/Webinars";
+import { Guides } from "@/components/Guides";
 import { site } from "@/lib/site";
 
 /**
@@ -129,8 +130,34 @@ export default function Home() {
         </Container>
       </section>
 
-      {/* ── What you'll actually learn ────────────────────────────────── */}
+      {/* ── Guides: the other reason to leave an email ────────────────── */}
       <section className="bg-surface py-20 sm:py-24">
+        <Container>
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <div>
+              <p className="text-xs font-bold uppercase tracking-[0.18em] text-crush-600">
+                Read at your own pace
+              </p>
+              <h2 className="mt-2 text-3xl font-extrabold tracking-tight text-ink-900 sm:text-4xl">
+                Free buyer guides
+              </h2>
+              <p className="mt-3 max-w-2xl text-muted">
+                How a first home becomes an investment, what $30,000 can actually do, and the
+                numbers behind both.
+              </p>
+            </div>
+            <Link href="/guides-library" className="text-sm font-semibold text-crush-600 hover:text-crush-700">
+              See all guides →
+            </Link>
+          </div>
+          <div className="mt-8">
+            <Guides limit={3} />
+          </div>
+        </Container>
+      </section>
+
+      {/* ── What you'll actually learn ────────────────────────────────── */}
+      <section className="py-20 sm:py-24">
         <Container>
           <h2 className="text-3xl font-extrabold tracking-tight text-ink-900 sm:text-4xl">
             What you&apos;ll walk away knowing

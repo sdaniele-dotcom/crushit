@@ -55,6 +55,7 @@ function AdminInner() {
           <Link href="/admin/promotions" className="rounded-full border border-border bg-white px-6 py-3 text-sm font-semibold text-ink-900 hover:bg-surface-2">Listing promotions</Link>
           <Link href="/admin/invites" className="rounded-full border border-border bg-white px-6 py-3 text-sm font-semibold text-ink-900 hover:bg-surface-2">Invite agents</Link>
           <Link href="/admin/webinars" className="rounded-full border border-border bg-white px-6 py-3 text-sm font-semibold text-ink-900 hover:bg-surface-2">Webinars</Link>
+          <Link href="/admin/guides" className="rounded-full border border-border bg-white px-6 py-3 text-sm font-semibold text-ink-900 hover:bg-surface-2">Buyer guides</Link>
           <Link href="/admin/crm-sync" className="rounded-full border border-border bg-white px-6 py-3 text-sm font-semibold text-ink-900 hover:bg-surface-2">Sync agents to Lofty</Link>
           <Link href="/admin/broadcast" className="rounded-full border border-border bg-white px-6 py-3 text-sm font-semibold text-ink-900 hover:bg-surface-2">Agent newsletter</Link>
           <Link href="/admin/chat-transcripts" className="rounded-full border border-border bg-white px-6 py-3 text-sm font-semibold text-ink-900 hover:bg-surface-2">Chat transcripts</Link>
