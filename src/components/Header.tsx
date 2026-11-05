@@ -90,17 +90,30 @@ export function Header() {
                 </div>
               </div>
             </>
-          ) : configured ? (
-            <>
-              <Link href="/login" className="ml-2 rounded-full px-4 py-2 text-sm font-medium text-slate-200 hover:text-white">Log in</Link>
-              <Link href="/signup" className="inline-flex items-center rounded-full bg-crush-500 px-5 py-2 text-sm font-semibold text-white shadow-lg shadow-crush-500/20 transition-colors hover:bg-crush-600">Create Free Account</Link>
-            </>
           ) : (
+            /*
+              LOGGED OUT IS A CONSUMER, so this is the consumer's nav and the
+              consumer's call to action.
+
+              This used to branch on `configured`: with Supabase present — which
+              is production — it dropped the navigation entirely and showed
+              "Log in" beside a "Create Free Account" button. That button is the
+              AGENT signup, so the most prominent control on the buyer-facing
+              front door recruited realtors, and the buyer's nav only ever
+              appeared in environments where Supabase was unreachable. Which is
+              why it looked right locally and wrong in production.
+
+              Agents are not stranded: "Log in" is still here, and the hero
+              carries an explicit "Are you a realtor?" line.
+            */
             <>
               {navItems.map((item) => (
-                <Link key={item.href} href={item.href} className="rounded-full px-4 py-2 text-sm font-medium text-slate-300 hover:text-white">{item.label}</Link>
+                <Link key={item.href} href={item.href} className="rounded-full px-3 py-2 text-sm font-medium text-slate-300 hover:text-white">{item.label}</Link>
               ))}
-              <a href={site.applyUrl} target="_blank" rel="noopener noreferrer" className="ml-2 inline-flex items-center rounded-full bg-crush-500 px-5 py-2 text-sm font-semibold text-white shadow-lg shadow-crush-500/20 transition-colors hover:bg-crush-600">Get Pre-Approved</a>
+              {configured && (
+                <Link href="/login" className="ml-1 rounded-full px-3 py-2 text-sm font-medium text-slate-400 hover:text-white">Log in</Link>
+              )}
+              <a href={site.applyUrl} target="_blank" rel="noopener noreferrer" className="ml-1 inline-flex items-center rounded-full bg-crush-500 px-5 py-2 text-sm font-semibold text-white shadow-lg shadow-crush-500/20 transition-colors hover:bg-crush-600">Get Pre-Approved</a>
             </>
           )}
         </nav>
@@ -134,17 +147,19 @@ export function Header() {
                   <button type="button" onClick={() => { setOpen(false); signOut(); }} className="block w-full rounded-lg px-3 py-2.5 text-left text-base font-medium text-slate-300">Log out (⭐ {profile?.current_stars ?? 0})</button>
                 </div>
               </>
-            ) : configured ? (
-              <>
-                <Link href="/login" onClick={() => setOpen(false)} className="mt-2 block rounded-lg px-3 py-2.5 text-base font-medium text-slate-200 hover:bg-white/5">Log in</Link>
-                <Link href="/signup" onClick={() => setOpen(false)} className="mt-1 block rounded-full bg-crush-500 px-4 py-2.5 text-center text-sm font-semibold text-white">Create Free Account</Link>
-              </>
             ) : (
+              // Same as the desktop nav above, and it had the same bug: in
+              // production this menu held nothing but the agent signup.
               <>
                 {navItems.map((item) => (
                   <Link key={item.href} href={item.href} onClick={() => setOpen(false)} className="block rounded-lg px-3 py-2.5 text-base font-medium text-slate-200 hover:bg-white/5">{item.label}</Link>
                 ))}
                 <a href={site.applyUrl} target="_blank" rel="noopener noreferrer" onClick={() => setOpen(false)} className="mt-2 block rounded-full bg-crush-500 px-4 py-2.5 text-center text-sm font-semibold text-white">Get Pre-Approved</a>
+                {configured && (
+                  <Link href="/login" onClick={() => setOpen(false)} className="mt-3 block border-t border-white/10 px-3 pt-3 text-center text-sm text-slate-400 hover:text-white">
+                    Are you a realtor? <span className="font-semibold text-white underline">Log in</span>
+                  </Link>
+                )}
               </>
             )}
           </div>
