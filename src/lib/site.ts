@@ -87,11 +87,21 @@ export const site = {
 
 export type NavItem = { label: string; href: string };
 
+/**
+ * The LOGGED-OUT nav, which a consumer sees. Signed-in agents get the grouped
+ * menus in Header.tsx instead.
+ *
+ * This is a buyer's list, not an agent's. "Leaderboard" and "Resources" used
+ * to sit here: the first is the agent rewards board and the second is the
+ * co-branded collateral an agent hands to their own client. Both are
+ * meaningless to somebody who arrived wondering what a house costs, and one of
+ * them advertises that the site is really for somebody else.
+ */
 export const navItems: NavItem[] = [
+  { label: "Loan Programs", href: "/loan-programs" },
   { label: "Calculators", href: "/calculators" },
   { label: "Rent vs Own", href: "/rent-vs-own" },
-  { label: "Loan Programs", href: "/loan-programs" },
-  { label: "Resources", href: "/resources" },
+  { label: "Webinars", href: "/webinars" },
+  { label: "Guides", href: "/guides-library" },
   { label: "About", href: "/about" },
-  { label: "Leaderboard", href: "/leaderboard" },
 ];
