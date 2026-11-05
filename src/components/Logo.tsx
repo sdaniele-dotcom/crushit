@@ -1,28 +1,27 @@
 import Link from "next/link";
 import Image from "next/image";
-import logo from "../../public/crush-mortgage-logo.png";
+import wordmark from "../../public/brand/whats-a-payment-wordmark.png";
 
 /**
- * Official Crush Mortgage logo (white/dark-background version) + a small
- * "Agent Suite" tag. Used on dark surfaces (header + footer).
+ * The What's a Payment wordmark.
  *
- * The logo is imported statically so Next.js emits it with the correct
- * (base-path-aware) URL when the site is exported to a subpath like /crushit.
+ * ONE ASSET, INVERTED IN CSS. The artwork is black on transparent; on the dark
+ * header it gets `brightness-0 invert`, which is the same trick
+ * SocialInfographics already uses for the Crush logo. A second white PNG would
+ * be a second file to keep in step with the first, and they drift.
+ *
+ * Imported statically so Next emits a base-path-aware URL when the site is
+ * exported to a subpath.
  */
-export function Logo() {
+export function Logo({ onDark = true }: { onDark?: boolean }) {
   return (
-    <Link href="/" className="group inline-flex items-center gap-3">
+    <Link href="/" className="group inline-flex items-center" aria-label="What's a Payment — home">
       <Image
-        src={logo}
-        alt="Crush Mortgage"
+        src={wordmark}
+        alt="What's a Payment"
         priority
-        className="h-9 w-auto"
+        className={`h-7 w-auto sm:h-8 ${onDark ? "brightness-0 invert" : ""}`}
       />
-      <span className="hidden border-l border-white/20 pl-3 text-[10px] font-semibold uppercase leading-tight tracking-[0.18em] text-white/60 sm:block">
-        Agent
-        <br />
-        Suite
-      </span>
     </Link>
   );
 }
