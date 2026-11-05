@@ -100,8 +100,9 @@ export type NavItem = { label: string; href: string };
 export const navItems: NavItem[] = [
   { label: "Loan Programs", href: "/loan-programs" },
   { label: "Calculators", href: "/calculators" },
-  { label: "Rent vs Own", href: "/rent-vs-own" },
   { label: "Webinars", href: "/webinars" },
   { label: "Guides", href: "/guides-library" },
+  { label: "FAQ", href: "/faq" },
   { label: "About", href: "/about" },
+  { label: "Contact", href: "/contact" },
 ];

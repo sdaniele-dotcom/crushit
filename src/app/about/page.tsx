@@ -4,11 +4,13 @@ import { Container, PageHero, Card } from "@/components/ui";
 import { ContactForm } from "@/components/ContactForm";
 import { team } from "@/lib/data";
 import { site } from "@/lib/site";
+import { AgentOnly } from "@/components/auth/Audience";
+import { TrustStrip } from "@/components/TrustStrip";
 
 export const metadata: Metadata = {
   title: "About",
   description:
-    "About the Crush It Agent Suite and Crush Mortgage — who we are, meet the team, and how to reach us.",
+    "The mortgage team behind What's a Payment — who we are, who you'll actually talk to, and how to reach us.",
 };
 
 function initials(name: string) {
@@ -27,22 +29,28 @@ export default function AboutPage() {
         eyebrow="About"
         title={
           <>
-            Built for agents, powered by{" "}
-            <span className="text-gradient">{site.company}</span>
+            The people behind{" "}
+            <span className="text-gradient">the numbers</span>
           </>
         }
-        subtitle={`${site.brand} is the Agent Suite by ${site.company} — one place to run your marketing: co-branded flyers, open house tools, and buyer & seller guides that put your name front and center.`}
+        subtitle={`${site.brand} is the mortgage team at ${site.company} in Long Beach. We show people what a house actually costs each month — before they fall in love with one.`}
       />
 
       <Container className="py-14">
         {/* Intro */}
         <div className="max-w-3xl">
           <p className="text-lg text-muted">
-            We&apos;re a mortgage team that believes the best way to help agents win is to
-            make them look great in front of their clients — with fast pre-approvals,
-            on-time closings, and marketing that&apos;s ready to go. Set up your profile once
-            and every tool fills in your branding automatically, so you spend less time on
-            busywork and more time closing deals.
+            Most people meet a lender at the worst possible moment — after they have
+            found a house, fallen for it, and need a number by Friday. We would rather
+            meet you a long way before that, when the question is still
+            &ldquo;what can we actually afford?&rdquo; and the answer can still change
+            what you look at.
+          </p>
+          <p className="mt-4 text-lg text-muted">
+            So the calculators are free, the webinars are free, and nobody calls you
+            because you used one. When you are ready, there is a licensed loan officer
+            here who will run your real numbers and tell you plainly what they mean —
+            including when the honest answer is &ldquo;wait six months&rdquo;.
           </p>
           <p className="mt-4 text-lg text-muted">
             {site.company} · Company NMLS #{site.companyNmls} · {site.address}
@@ -53,8 +61,8 @@ export default function AboutPage() {
         <section id="team" className="scroll-mt-24 pt-16">
           <h2 className="text-2xl font-bold text-ink-900 sm:text-3xl">Meet the team</h2>
           <p className="mt-2 max-w-2xl text-muted">
-            Real people who pick up the phone, communicate every step, and treat your
-            clients like their own.
+            Real people who pick up the phone, explain every step, and tell you the
+            inconvenient thing when it is the true one.
           </p>
 
           <div className="mt-8 grid gap-6 sm:grid-cols-2">
@@ -97,8 +105,8 @@ export default function AboutPage() {
         <section id="contact" className="scroll-mt-24 pt-16">
           <h2 className="text-2xl font-bold text-ink-900 sm:text-3xl">Contact us</h2>
           <p className="mt-2 max-w-2xl text-muted">
-            Whether you&apos;re an agent looking to team up or a buyer ready to move, we&apos;ll
-            get back to you fast — often the same day.
+            Ask us anything about payments, programs or what you can afford. We get
+            back fast — often the same day.
           </p>
 
           <div className="mt-8 grid gap-10 lg:grid-cols-[1.3fr_1fr]">
@@ -127,8 +135,8 @@ export default function AboutPage() {
               <Card>
                 <h3 className="font-bold text-ink-900">Prefer to talk now?</h3>
                 <p className="mt-2 text-sm text-muted">
-                  Call or text {site.loanOfficer} directly. Evenings and weekends welcome —
-                  we know deals don&apos;t wait for business hours.
+                  Call or text {site.loanOfficer} directly. Evenings and weekends are
+                  fine — house hunting doesn&apos;t keep business hours.
                 </p>
                 <div className="mt-4 flex flex-wrap gap-2">
                   <a href={site.applyUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center justify-center rounded-full bg-crush-500 px-5 py-2.5 text-sm font-semibold text-white hover:bg-crush-600">
@@ -140,16 +148,21 @@ export default function AboutPage() {
                 </div>
               </Card>
 
-              <Card className="bg-surface">
-                <h3 className="font-bold text-ink-900">For agents</h3>
-                <p className="mt-2 text-sm text-muted">
-                  Ready to co-market? Mention you&apos;re an agent in the form and we&apos;ll send
-                  over the partnership kit and co-branding agreement.
-                </p>
-              </Card>
+              {/* Agent-only: a buyer has no use for a co-branding kit. */}
+              <AgentOnly>
+                <Card className="bg-surface">
+                  <h3 className="font-bold text-ink-900">For agents</h3>
+                  <p className="mt-2 text-sm text-muted">
+                    Ready to co-market? Mention you&apos;re an agent in the form and we&apos;ll send
+                    over the partnership kit and co-branding agreement.
+                  </p>
+                </Card>
+              </AgentOnly>
             </div>
           </div>
         </section>
+
+        <TrustStrip className="mx-auto mt-14 max-w-3xl text-center" />
       </Container>
     </>
   );

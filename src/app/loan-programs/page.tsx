@@ -4,6 +4,7 @@ import { Container, PageHero, Button, Eyebrow } from "@/components/ui";
 import { LoanFinder } from "@/components/LoanFinder";
 import { ProgramFlyerDownload } from "@/components/ProgramFlyerDownload";
 import { site } from "@/lib/site";
+import { AgentOnly } from "@/components/auth/Audience";
 import { otherPrograms } from "@/lib/data";
 // The cards render from the flyer list rather than from data.ts directly, so
 // the page and the printable can never describe a program differently.
@@ -12,21 +13,21 @@ import { coreFlyers, specialtyFlyers } from "@/lib/programFlyers";
 export const metadata: Metadata = {
   title: "Loan Programs",
   description:
-    "Plain-English guides to Conventional, FHA, VA, USDA, Jumbo, and DSCR loans so you can match every buyer to the right program.",
+    "Conventional, FHA, VA, USDA, Jumbo and DSCR loans explained in plain English — what each needs down, what credit it takes, and who each one suits.",
 };
 
 export default function LoanProgramsPage() {
   return (
     <>
       <PageHero
-        eyebrow="Loan program guides"
+        eyebrow="Loan programs"
         title={
           <>
-            Match every buyer to the{" "}
-            <span className="text-gradient">right loan</span>
+            Find the loan that fits{" "}
+            <span className="text-gradient">your situation</span>
           </>
         }
-        subtitle="Six programs, explained in plain English. Use these to answer buyer questions with confidence — no jargon, no guesswork."
+        subtitle="Six programs, in plain English. What each one needs down, what credit it takes, and who it actually suits — so you can see where you fit before you talk to anybody."
       />
 
       <Container className="py-14">
@@ -41,19 +42,27 @@ export default function LoanProgramsPage() {
           your headshot on it and one without is whether you were signed in —
           which is not something to discover after printing seventeen of them.
         */}
-        <div className="mb-10 flex flex-col items-start gap-3 rounded-2xl border border-crush-200 bg-crush-50 p-5 sm:flex-row sm:items-center">
-          <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-white text-2xl">📄</span>
-          <div>
-            <h2 className="font-bold text-ink-900">Every exclusive program has a co-branded flyer</h2>
-            <p className="mt-0.5 text-sm text-muted">
-              Hit <strong>Download</strong> on any program in the Specialty section and you get a one-page
-              handout with <strong>your</strong> name, photo, phone and DRE on it — Crush Mortgage is the
-              lender in the footer, you&apos;re the one your buyer calls. Fill in your{" "}
-              <Link href="/profile" className="font-semibold text-crush-600">profile</Link> first so it comes
-              out branded rather than blank.
-            </p>
+        {/*
+          AGENT-ONLY. This explains the co-branded flyer download, an agent
+          affordance on a page a BUYER now reaches from the public nav.
+          Telling a first-time buyer to fill in their DRE number would be
+          baffling, so it renders nothing until somebody is signed in.
+        */}
+        <AgentOnly>
+          <div className="mb-10 flex flex-col items-start gap-3 rounded-2xl border border-crush-200 bg-crush-50 p-5 sm:flex-row sm:items-center">
+            <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-white text-2xl">📄</span>
+            <div>
+              <h2 className="font-bold text-ink-900">Every exclusive program has a co-branded flyer</h2>
+              <p className="mt-0.5 text-sm text-muted">
+                Hit <strong>Download</strong> on any program in the Specialty section and you get a one-page
+                handout with <strong>your</strong> name, photo, phone and DRE on it — Crush Mortgage is the
+                lender in the footer, you&apos;re the one your buyer calls. Fill in your{" "}
+                <Link href="/profile" className="font-semibold text-crush-600">profile</Link> first so it comes
+                out branded rather than blank.
+              </p>
+            </div>
           </div>
-        </div>
+        </AgentOnly>
 
         {/* Quick-compare table */}
         <div className="overflow-x-auto rounded-2xl border border-border">
@@ -116,7 +125,7 @@ export default function LoanProgramsPage() {
           </p>
 
           <div className="mt-6">
-            <Button href="/about/#contact">Get your custom rate quote</Button>
+            <Button href="/contact">Get your custom rate quote</Button>
           </div>
         </div>
 
@@ -198,9 +207,10 @@ export default function LoanProgramsPage() {
             Programs most lenders don&apos;t offer
           </h2>
           <p className="mt-3 max-w-2xl text-muted">
-            Niche solutions for self-employed borrowers, investors, ITIN buyers,
-            and anyone who doesn&apos;t fit the traditional mold. These are what
-            make you the agent with answers — and they&apos;re our specialty.
+            If you are self-employed, an investor, an ITIN borrower, or simply
+            do not fit the traditional mould, a &ldquo;no&rdquo; from one lender
+            is not the end of it. These programs exist for exactly that, and
+            they are our specialty.
           </p>
 
           <div className="mt-8 grid gap-6 md:grid-cols-2 lg:grid-cols-3">
@@ -261,7 +271,7 @@ export default function LoanProgramsPage() {
         <div className="mt-16">
           <Eyebrow>More programs we offer</Eyebrow>
           <h2 className="mt-4 text-3xl font-bold tracking-tight text-ink-900">
-            Even more ways to get your buyer approved
+            More ways to get approved
           </h2>
           <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {otherPrograms.map((p) => (
@@ -275,7 +285,7 @@ export default function LoanProgramsPage() {
             ))}
           </div>
           <p className="mt-6 text-sm text-muted">
-            Don&apos;t see the fit? We have access to dozens more niche and
+            Don&apos;t see your situation? There are dozens more niche and
             down-payment-assistance programs —{" "}
             <Link
               href="/about/#contact"
@@ -290,14 +300,14 @@ export default function LoanProgramsPage() {
         <div className="mt-14 rounded-3xl bg-ink-900 p-8 text-center sm:p-12">
           <Eyebrow>Not sure which fits?</Eyebrow>
           <h2 className="mt-4 text-2xl font-bold text-white sm:text-3xl">
-            We&apos;ll help your buyer find the perfect program
+            We&apos;ll help you find the one that fits
           </h2>
           <p className="mx-auto mt-3 max-w-xl text-slate-300">
-            Send them our way for a quick, no-pressure conversation and a
-            same-day pre-approval.
+            A quick, no-pressure conversation — and a same-day pre-approval if
+            you want one. There is nothing to sign to ask.
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-3">
-            <Button href={site.applyUrl}>Get your buyer pre-approved</Button>
+            <Button href={site.applyUrl}>Get pre-approved</Button>
             <Button href="/calculators" variant="secondary">
               Estimate a payment
             </Button>

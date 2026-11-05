@@ -6,6 +6,7 @@ import { Guides } from "@/components/Guides";
 import { TrustStrip, TrustStripCompact } from "@/components/TrustStrip";
 import { site } from "@/lib/site";
 import { loanPrograms } from "@/lib/data";
+import { topFaqs } from "@/lib/faqs";
 import headshot from "../../public/team/shannon-daniele.jpg";
 
 /**
@@ -41,32 +42,6 @@ const STEPS = [
   { n: "4", title: "Get pre-approved", body: "When you're ready — and not before. Plenty of people stop at step two, and that's fine." },
 ];
 
-const FAQS = [
-  {
-    q: "How much do I actually need for a down payment?",
-    a: "Less than most people think. Conventional loans start at 3% down for first-time buyers, FHA at 3.5%, and VA at zero for those who qualify. On top of that, California has down-payment assistance programs that many buyers never hear about. The bigger number to plan for is usually closing costs, which run roughly 2–5% of the price.",
-  },
-  {
-    q: "What credit score do I need?",
-    a: "FHA can work from 580, and conventional generally from 620. A higher score does not just change whether you qualify — it changes your rate and your mortgage insurance, which is why it is worth knowing where you stand before you shop rather than after.",
-  },
-  {
-    q: "What's actually in a monthly payment?",
-    a: "Principal and interest, property taxes, homeowners insurance, mortgage insurance if you put less than 20% down, and HOA dues if the property has them. A quote that shows only principal and interest is not wrong, it is just incomplete — and the gap is often several hundred dollars.",
-  },
-  {
-    q: "Does getting pre-approved hurt my credit?",
-    a: "A pre-approval involves a credit pull, which can move a score by a few points. Mortgage inquiries made within a short shopping window are generally counted as one inquiry, so comparing lenders does not multiply the effect.",
-  },
-  {
-    q: "Is it really cheaper to buy than to rent?",
-    a: "Sometimes, and not always — it depends on your rent, the price, the rate and how long you stay. That is a question with an arithmetic answer rather than a slogan, which is why the rent-vs-own calculator on this site shows the year-by-year numbers instead of a verdict.",
-  },
-  {
-    q: "What does any of this cost me?",
-    a: "Nothing to ask. The calculators, the webinars and the guides are free, and a conversation about your numbers is free. You are not charged anything unless you close a loan.",
-  },
-];
 
 export default function Home() {
   const featured = FEATURED.map((s) => loanPrograms.find((p) => p.slug === s)).filter(
@@ -124,7 +99,7 @@ export default function Home() {
               <Image
                 src={headshot}
                 alt={site.loanOfficer}
-                className="h-44 w-full rounded-xl object-cover object-top"
+                className="aspect-square w-full rounded-xl object-cover"
                 priority
               />
               <p className="mt-4 text-lg font-bold">{site.loanOfficer}</p>
@@ -334,14 +309,19 @@ export default function Home() {
         </Container>
       </section>
 
-      {/* ── FAQ ──────────────────────────────────────────────────────── */}
+      {/* ── FAQ: a taste, not the whole page ────────────────────────── */}
       <section className="py-16 sm:py-20">
         <Container>
-          <h2 className="text-3xl font-extrabold tracking-tight text-ink-900 sm:text-4xl">
-            Questions people actually ask
-          </h2>
+          <div className="flex flex-wrap items-end justify-between gap-4">
+            <h2 className="text-3xl font-extrabold tracking-tight text-ink-900 sm:text-4xl">
+              Questions people actually ask
+            </h2>
+            <Link href="/faq" className="text-sm font-semibold text-crush-600 hover:text-crush-700">
+              All questions →
+            </Link>
+          </div>
           <div className="mt-10 grid gap-x-10 gap-y-8 md:grid-cols-2">
-            {FAQS.map((f) => (
+            {topFaqs.slice(0, 4).map((f) => (
               <div key={f.q}>
                 <h3 className="text-base font-bold text-ink-900">{f.q}</h3>
                 <p className="mt-2 text-sm leading-relaxed text-muted">{f.a}</p>

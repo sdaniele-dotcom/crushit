@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { AgentOnly } from "@/components/auth/Audience";
 import { Container, PageHero, Button, Card, Eyebrow } from "@/components/ui";
 import { DownPaymentTool } from "@/components/DownPaymentTool";
 import { site } from "@/lib/site";
@@ -14,7 +15,7 @@ import {
 export const metadata: Metadata = {
   title: "Down Payment Assistance",
   description:
-    "Check a California address against thousands of down payment assistance programs — grants, forgivable seconds, deferred loans and MCCs from cities, counties, the state and employers. Plus how agents actually use it on listings and buyers.",
+    "Check a California address against thousands of down payment assistance programs — grants, forgivable seconds, deferred loans and MCCs from cities, counties, the state and employers.",
 };
 
 export default function DownPaymentAssistancePage() {
@@ -27,13 +28,13 @@ export default function DownPaymentAssistancePage() {
             Down payment <span className="text-gradient">assistance</span>
           </>
         }
-        subtitle="Thousands of California programs, and most buyers have never heard of one of them. Run an address and a household income and see what matches — then use it on your listings, not just your buyers."
+        subtitle="Thousands of California programs, and most buyers have never heard of a single one. Put in an address and a household income and see what you match."
       />
 
       <Container className="py-14">
         {/*
-          The tool goes first. Everything below it is context for the answer,
-          and an agent who came here from an email already knows why they came.
+          The tool goes first. Everything below it is context for the answer —
+          somebody who came here from a search already knows what they want.
         */}
         <DownPaymentTool title="Check an address for assistance programs" />
 
@@ -51,32 +52,38 @@ export default function DownPaymentAssistancePage() {
           </ul>
         </Card>
 
-        {/* ── The agent angle, before the buyer education ───────────────── */}
-        <div className="mt-14">
-          <Eyebrow>How agents use this</Eyebrow>
-        </div>
-        <p className="mt-3 max-w-2xl text-ink-800">
-          Most agents treat assistance as something you check once a buyer is
-          stuck. The bigger use is the listing side — because eligibility is
-          frequently tied to the address rather than the person.
-        </p>
-        <div className="mt-5 grid gap-4 sm:grid-cols-2">
-          {PLAYS.map((p) => (
-            <Card key={p.title}>
-              <p className="text-sm font-bold text-ink-900">{p.title}</p>
-              <p className="mt-1.5 text-sm text-muted">{p.body}</p>
-            </Card>
-          ))}
-        </div>
+        {/*
+          AGENT-ONLY. Listing-side strategy, on a page a BUYER now reaches
+          from the public nav. Good material, addressed to somebody else — so
+          it waits for a login rather than being watered down for both.
+        */}
+        <AgentOnly>
+          <div className="mt-14">
+            <Eyebrow>How agents use this</Eyebrow>
+          </div>
+          <p className="mt-3 max-w-2xl text-ink-800">
+            Most agents treat assistance as something you check once a buyer is
+            stuck. The bigger use is the listing side — because eligibility is
+            frequently tied to the address rather than the person.
+          </p>
+          <div className="mt-5 grid gap-4 sm:grid-cols-2">
+            {PLAYS.map((p) => (
+              <Card key={p.title}>
+                <p className="text-sm font-bold text-ink-900">{p.title}</p>
+                <p className="mt-1.5 text-sm text-muted">{p.body}</p>
+              </Card>
+            ))}
+          </div>
+        </AgentOnly>
 
         {/* ── What the money actually is ────────────────────────────────── */}
         <div className="mt-14">
           <Eyebrow>What assistance actually looks like</Eyebrow>
         </div>
         <p className="mt-3 max-w-2xl text-ink-800">
-          Buyers hear &ldquo;assistance&rdquo; and picture free money. Some of it
-          is. Most of it is a second lien with terms worth understanding before
-          anyone writes an offer.
+          Most people hear &ldquo;assistance&rdquo; and picture free money. Some
+          of it is. Most of it is a second lien with terms worth understanding
+          before anyone writes an offer.
         </p>
         <div className="mt-5 grid gap-4 sm:grid-cols-2">
           {KINDS.map((k) => (
@@ -132,7 +139,7 @@ export default function DownPaymentAssistancePage() {
             Found a program? Let&apos;s confirm it.
           </h2>
           <p className="mx-auto mt-3 max-w-xl text-muted">
-            Send your buyer through a pre-approval and we&apos;ll check the
+            Start a pre-approval and we&apos;ll check the
             assistance against a real first mortgage — what it can be layered
             with, what it adds to the timeline, and what the monthly number
             actually becomes.

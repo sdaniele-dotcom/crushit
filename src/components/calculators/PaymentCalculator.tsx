@@ -207,9 +207,14 @@ export function PaymentCalculator() {
           </svg>
           Save as PDF (Crush-branded)
         </button>
+        {/*
+          "hand to your client" was agent voice. This calculator is now the
+          consumer site's main tool, and a buyer saving their own payment
+          breakdown is the common case — an agent printing one for a client
+          reads this the same way.
+        */}
         <p className="-mt-2 text-center text-xs text-muted">
-          Opens a print-ready, co-branded summary you can save as a PDF or hand
-          to your client.
+          Opens a print-ready summary you can save as a PDF, print, or send on.
         </p>
       </div>
     </div>

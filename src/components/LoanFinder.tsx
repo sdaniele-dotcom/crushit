@@ -107,7 +107,12 @@ export function LoanFinder() {
     <div className="rounded-3xl border border-crush-200 bg-gradient-to-br from-crush-50 to-white p-6 sm:p-8">
       <div className="flex flex-wrap items-center justify-between gap-3">
         <div>
-          <h2 className="text-2xl font-bold text-ink-900">Find a loan for my buyer</h2>
+          {/*
+            "…for my buyer" was agent voice, on a widget that now sits on a page
+            a BUYER reaches from the public nav. An agent running it for a client
+            reads this the same way.
+          */}
+          <h2 className="text-2xl font-bold text-ink-900">Find the loan that fits</h2>
           <p className="mt-1 text-sm text-muted">Answer a few questions — we&apos;ll suggest programs worth exploring. This is informational, not a qualification decision.</p>
         </div>
         <button type="button" onClick={() => setOpen((o) => !o)} className="rounded-full bg-crush-500 px-5 py-2.5 text-sm font-semibold text-white hover:bg-crush-600">

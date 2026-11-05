@@ -18,11 +18,11 @@ export default function CalculatorsPage() {
         eyebrow="Interactive tools"
         title={
           <>
-            Run the numbers <span className="text-gradient">live</span> with your
-            clients
+            Run the numbers <span className="text-gradient">before</span> you
+            fall in love
           </>
         }
-        subtitle="Four calculators that turn 'I'm not sure I can afford it' into a confident next step. Adjust any input and watch the results update instantly."
+        subtitle="Four calculators that turn &ldquo;I'm not sure I can afford it&rdquo; into a number you can trust. Change any input and watch it update instantly. Free, and nothing is saved or sent anywhere."
       />
 
       <Container className="py-14">
@@ -59,7 +59,7 @@ export default function CalculatorsPage() {
             >
               the down payment assistance section
             </Link>
-            , including why you should run your own listings through it.
+             — there is more help available than most buyers ever hear about.
           </p>
         </section>
 
@@ -68,8 +68,8 @@ export default function CalculatorsPage() {
             Ready to turn an estimate into a real pre-approval?
           </h2>
           <p className="mx-auto mt-3 max-w-xl text-muted">
-            Send your buyer to a fast, no-obligation pre-approval and give their
-            offer real strength.
+            A pre-approval takes about fifteen minutes, costs nothing, and makes
+            an offer something a seller takes seriously.
           </p>
           <div className="mt-6 flex flex-wrap justify-center gap-3">
             <Button href={site.applyUrl}>Start a pre-approval</Button>
