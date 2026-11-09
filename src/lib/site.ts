@@ -1,36 +1,23 @@
 /**
- * What's a Payment
+ * CRUSH IT — Agent Suite
  * Central configuration.
  *
- * ─────────────────────────────────────────────────────────────────────────
- * TWO NAMES, AND THEY ARE NOT INTERCHANGEABLE.
- *
- *   `brand`    What's a Payment — the marketing name. Headlines, nav, SEO,
- *              webinars, anything selling the thing.
- *   `company`  Crush Mortgage — the LICENSED ENTITY, NMLS #169136.
- *
- * A mortgage advertisement has to identify the licensee. Every disclosure
- * line, flyer footer, PDF and "a loan officer will call you" sentence names
- * `company` for that reason, not out of habit — swapping those to the brand
- * would advertise credit under a name that is not registered with NMLS or the
- * CA DFPI. If "What's a Payment" is ever filed as a DBA, change `company`
- * here and it propagates; until then the split is deliberate.
- *
- * So: reach for `site.brand` when naming the product, `site.company` when
- * saying who is lending.
- * ─────────────────────────────────────────────────────────────────────────
+ * Pre-filled with Crush Mortgage details pulled from crushmortgage.com.
+ * ▶ Double-check the values marked `// TODO` and swap in anything more
+ *   specific (e.g. your individual MLO NMLS or real social URLs).
+ *   Everything on the site reads from this one file.
  */
 
 export const site = {
-  brand: "What's a Payment",
-  tagline: "Know your number before you fall in love with a house",
-  seoTitle: "What's a Payment — see the real monthly cost of any home",
+  brand: "CRUSH IT",
+  tagline: "The Agent Suite by Crush Mortgage",
+  // Home-page title used for search results and social cards. Leads with
+  // the domain name so the page matches searches for Crush Your Market.
+  seoTitle: "Crush Your Market — CRUSH IT Agent Suite by Crush Mortgage",
   shortDescription:
-    "Free webinars, honest numbers, and the real monthly payment on any home — "
-    + "taxes, insurance and all. From the mortgage team at Crush Mortgage.",
+    "Crush Your Market is the CRUSH IT agent suite from Crush Mortgage: mortgage calculators, loan-program matching, open house kits, and co-branded marketing.",
 
   // ─── Company / loan-officer details ───────────────────────────────
-  /** THE LICENSED ENTITY. Required on every mortgage advertisement. */
   company: "Crush Mortgage",
   loanOfficer: "Shannon Daniele",
   title: "Loan Officer",
@@ -87,21 +74,11 @@ export const site = {
 
 export type NavItem = { label: string; href: string };
 
-/**
- * The LOGGED-OUT nav, which a consumer sees. Signed-in agents get the grouped
- * menus in Header.tsx instead.
- *
- * This is a buyer's list, not an agent's. "Leaderboard" and "Resources" used
- * to sit here: the first is the agent rewards board and the second is the
- * co-branded collateral an agent hands to their own client. Both are
- * meaningless to somebody who arrived wondering what a house costs, and one of
- * them advertises that the site is really for somebody else.
- */
 export const navItems: NavItem[] = [
-  { label: "Loan Programs", href: "/loan-programs" },
   { label: "Calculators", href: "/calculators" },
   { label: "Rent vs Own", href: "/rent-vs-own" },
-  { label: "Webinars", href: "/webinars" },
-  { label: "Guides", href: "/guides-library" },
+  { label: "Loan Programs", href: "/loan-programs" },
+  { label: "Resources", href: "/resources" },
   { label: "About", href: "/about" },
+  { label: "Leaderboard", href: "/leaderboard" },
 ];

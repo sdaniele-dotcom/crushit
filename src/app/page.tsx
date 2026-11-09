@@ -1,394 +1,284 @@
 import Link from "next/link";
-import Image from "next/image";
 import { Container } from "@/components/ui";
-import { Webinars } from "@/components/Webinars";
-import { Guides } from "@/components/Guides";
-import { TrustStrip, TrustStripCompact } from "@/components/TrustStrip";
 import { site } from "@/lib/site";
-import { loanPrograms } from "@/lib/data";
-import headshot from "../../public/team/shannon-daniele.jpg";
 
 /**
- * The public front door, built to read like a mortgage company's site rather
- * than a SaaS landing page.
- *
- * WHAT CHANGED AND WHY. The previous version led with webinars and guides,
- * which are lead magnets — things you offer someone who already trusts you.
- * A visitor who has never heard of us arrives asking three questions in this
- * order: who are you, can you actually lend to someone like me, and what will
- * it cost. The page now answers them in that order, and the magnets sit where
- * they earn their keep, after the answer.
- *
- * A NAMED PERSON WITH A FACE, because mortgage is a trust purchase and
- * "Our team of experts" is what a page says when it has nobody to name. The
- * licence numbers under the headshot are doing the same job.
- *
- * NO TESTIMONIALS SECTION. There is one in every competitor's layout and it
- * would be trivial to mock up — which is exactly why it is not here. Real
- * quotes from real clients, or nothing.
- *
- * The AppFrame gate redirects signed-in users to their dashboard, so this is
- * only ever seen logged out.
+ * Public marketing homepage (logged-out only). The AppFrame gate redirects
+ * signed-in users straight to their dashboard, and sends anyone hitting a tool
+ * route to /login — so this is the full "front door" of the product.
  */
 
-/** Answering "can you lend to someone like me" with the real programs. */
-const FEATURED = ["conventional", "fha", "va"];
-
-const STEPS = [
-  { n: "1", title: "Tell us the house", body: "A price, or an address you saw on Zillow at midnight. That's enough to start." },
-  { n: "2", title: "See the real number", body: "Principal, interest, taxes, insurance, mortgage insurance, HOA — the whole payment, not the teaser." },
-  { n: "3", title: "Find the right program", body: "Conventional, FHA, VA, and the down-payment help most buyers never hear about." },
-  { n: "4", title: "Get pre-approved", body: "When you're ready — and not before. Plenty of people stop at step two, and that's fine." },
+const FEATURES = [
+  {
+    eyebrow: "Co-branded flyers",
+    title: "Professional listing & financing flyers in seconds",
+    body: "Drop in an address and out comes a co-branded flyer with real financing scenarios, a shareable page, and a print-ready PDF with a QR code — your photo and logo already on it.",
+    points: ["Auto-filled from your profile", "Estimated monthly payments", "Print or share instantly"],
+    emoji: "🎨",
+  },
+  {
+    eyebrow: "Open house tools",
+    title: "Everything you need to run a standout open house",
+    body: "Branded sign-in sheets, neighbor invites, follow-up templates, and financing one-sheets — a full kit that makes you look organized and buttoned-up.",
+    points: ["Sign-in sheets & QR check-in", "Neighbor invitations", "Ready-to-send follow-ups"],
+    emoji: "🏡",
+  },
+  {
+    eyebrow: "Buyer & seller guides",
+    title: "Client guides that come out branded to you",
+    body: "Hand buyers and sellers a polished, co-branded guide that positions you as the expert — no design work, just add your info once.",
+    points: ["First-time buyer guide", "Home seller guide", "Saved as a shareable PDF"],
+    emoji: "📘",
+  },
+  {
+    eyebrow: "Crush Stars",
+    title: "Earn rewards every time you market",
+    body: "Every flyer, guide, and tool you use earns Crush Stars ⭐ — climb from Starter to Crush Club, unlock achievements, and see where you rank.",
+    points: ["Points for real activity", "Levels & achievement badges", "Agent leaderboard"],
+    emoji: "⭐",
+  },
 ];
 
-const FAQS = [
-  {
-    q: "How much do I actually need for a down payment?",
-    a: "Less than most people think. Conventional loans start at 3% down for first-time buyers, FHA at 3.5%, and VA at zero for those who qualify. On top of that, California has down-payment assistance programs that many buyers never hear about. The bigger number to plan for is usually closing costs, which run roughly 2–5% of the price.",
-  },
-  {
-    q: "What credit score do I need?",
-    a: "FHA can work from 580, and conventional generally from 620. A higher score does not just change whether you qualify — it changes your rate and your mortgage insurance, which is why it is worth knowing where you stand before you shop rather than after.",
-  },
-  {
-    q: "What's actually in a monthly payment?",
-    a: "Principal and interest, property taxes, homeowners insurance, mortgage insurance if you put less than 20% down, and HOA dues if the property has them. A quote that shows only principal and interest is not wrong, it is just incomplete — and the gap is often several hundred dollars.",
-  },
-  {
-    q: "Does getting pre-approved hurt my credit?",
-    a: "A pre-approval involves a credit pull, which can move a score by a few points. Mortgage inquiries made within a short shopping window are generally counted as one inquiry, so comparing lenders does not multiply the effect.",
-  },
-  {
-    q: "Is it really cheaper to buy than to rent?",
-    a: "Sometimes, and not always — it depends on your rent, the price, the rate and how long you stay. That is a question with an arithmetic answer rather than a slogan, which is why the rent-vs-own calculator on this site shows the year-by-year numbers instead of a verdict.",
-  },
-  {
-    q: "What does any of this cost me?",
-    a: "Nothing to ask. The calculators, the webinars and the guides are free, and a conversation about your numbers is free. You are not charged anything unless you close a loan.",
-  },
+const STEPS = [
+  { n: "1", title: "Create your free account", body: "Sign up in under a minute — no credit card, free for partner agents." },
+  { n: "2", title: "Set up your profile once", body: "Add your name, photo, brokerage, and DRE. It's saved and reused everywhere." },
+  { n: "3", title: "Generate branded marketing", body: "Flyers, guides, and open-house tools come out co-branded to you, ready to send." },
 ];
 
 export default function Home() {
-  const featured = FEATURED.map((s) => loanPrograms.find((p) => p.slug === s)).filter(
-    (p): p is NonNullable<typeof p> => Boolean(p),
-  );
-
   return (
     <>
-      {/* ── Hero: who we are, what we do, a face ─────────────────────── */}
+      {/* ───────── Hero ───────── */}
       <section className="relative overflow-hidden bg-ink-900 text-white">
         <div className="absolute inset-0 hero-grid opacity-70" aria-hidden />
         <div className="absolute -top-32 -right-24 h-96 w-96 rounded-full bg-crush-500/25 blur-3xl" aria-hidden />
+        <div className="absolute top-40 -left-24 h-72 w-72 rounded-full bg-sky-500/10 blur-3xl" aria-hidden />
 
-        <Container className="relative grid items-center gap-12 py-16 lg:grid-cols-[1.15fr_0.85fr] lg:py-24">
+        <Container className="relative grid items-center gap-12 py-20 lg:grid-cols-2 lg:py-28">
           <div>
             <p className="text-sm font-semibold uppercase tracking-[0.2em] text-crush-400">
-              Mortgage lending · Long Beach, California
+              {site.brand} · by {site.company}
             </p>
-            <h1 className="mt-5 text-4xl font-extrabold leading-[1.06] tracking-tight sm:text-5xl">
-              Know what the month costs{" "}
-              <span className="text-gradient">before you fall in love with a house.</span>
+            <h1 className="mt-5 text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl">
+              Crush your market. <span className="text-gradient">One dashboard.</span>
             </h1>
             <p className="mt-6 max-w-xl text-lg text-slate-300">
-              Everybody quotes you a price. Almost nobody shows you the payment — taxes,
-              insurance and all. We do that first, for free, whether or not you ever borrow
-              a dollar from us.
+              Market listings. Run buyer numbers. Create content. Prep open houses. Find loan
+              programs. Earn rewards — all in one place, co-branded to you. Free for partner agents.
             </p>
             <div className="mt-8 flex flex-wrap gap-4">
-              <Link
-                href="/calculators"
-                className="inline-flex items-center rounded-full bg-crush-500 px-7 py-3.5 text-base font-semibold text-white shadow-lg shadow-crush-500/25 transition-colors hover:bg-crush-600"
-              >
-                See my payment
+              <Link href="/signup" className="inline-flex items-center rounded-full bg-crush-500 px-7 py-3.5 text-base font-semibold text-white shadow-lg shadow-crush-500/25 transition-colors hover:bg-crush-600">
+                Create Free Agent Account
               </Link>
-              <Link
-                href={site.applyUrl}
-                className="inline-flex items-center rounded-full border border-white/20 px-7 py-3.5 text-base font-semibold text-white transition-colors hover:bg-white/10"
-              >
-                Get pre-approved
+              <Link href="#features" className="inline-flex items-center rounded-full border border-white/20 px-7 py-3.5 text-base font-semibold text-white transition-colors hover:bg-white/10">
+                Explore Agent Tools
               </Link>
             </div>
-            <ul className="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-sm text-slate-300">
-              {["Free, no credit check to start", "Conventional · FHA · VA · Jumbo", "Down-payment help included"].map((t) => (
-                <li key={t} className="flex items-center gap-2">
-                  <span className="h-1.5 w-1.5 rounded-full bg-crush-400" aria-hidden />
-                  {t}
-                </li>
-              ))}
-            </ul>
+            <p className="mt-5 text-sm text-slate-400">
+              No credit card · Free for partner agents · Works on any device
+            </p>
           </div>
 
-          {/* A named person, because mortgage is a trust purchase. */}
-          <div className="justify-self-center lg:justify-self-end">
-            <div className="w-full max-w-xs rounded-2xl border border-white/10 bg-white/5 p-5 backdrop-blur">
-              <Image
-                src={headshot}
-                alt={site.loanOfficer}
-                className="h-44 w-full rounded-xl object-cover object-top"
-                priority
-              />
-              <p className="mt-4 text-lg font-bold">{site.loanOfficer}</p>
-              <p className="text-sm text-slate-300">{site.title} · {site.company}</p>
-              <p className="mt-2 text-xs text-slate-400">
-                NMLS #{site.nmls} · Company NMLS #{site.companyNmls}
-              </p>
-              <a
-                href={`tel:${site.phone.replace(/\D/g, "")}`}
-                className="mt-4 block rounded-full bg-white/10 py-2.5 text-center text-sm font-semibold hover:bg-white/20"
-              >
-                {site.phone}
-              </a>
+          {/* App preview mock */}
+          <div className="relative">
+            <div className="rounded-2xl border border-white/10 bg-white/5 p-3 shadow-2xl backdrop-blur">
+              <div className="flex items-center gap-1.5 px-2 py-1.5">
+                <span className="h-3 w-3 rounded-full bg-crush-500/70" />
+                <span className="h-3 w-3 rounded-full bg-amber-400/70" />
+                <span className="h-3 w-3 rounded-full bg-emerald-400/70" />
+              </div>
+              <div className="rounded-xl bg-white p-5 text-ink-900">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <p className="text-xs font-semibold uppercase tracking-wide text-muted">Good morning</p>
+                    <p className="text-lg font-bold">Welcome back 👋</p>
+                  </div>
+                  <span className="rounded-full bg-crush-50 px-3 py-1.5 text-sm font-bold text-crush-600">⭐ 128</span>
+                </div>
+                <div className="mt-4">
+                  <div className="flex justify-between text-xs font-medium text-muted">
+                    <span>Pro</span><span>Elite · 250</span>
+                  </div>
+                  <div className="mt-1.5 h-2 w-full overflow-hidden rounded-full bg-surface-2">
+                    <div className="h-full w-[52%] rounded-full bg-crush-500" />
+                  </div>
+                </div>
+                <div className="mt-5 grid grid-cols-2 gap-3">
+                  {[["🎨", "Flyer created", "+5 ⭐"], ["🏡", "Open house kit", "+10 ⭐"], ["📘", "Buyer guide", "+5 ⭐"], ["🧮", "Calculator", "+2 ⭐"]].map(([i, t, s]) => (
+                    <div key={t} className="flex items-center gap-3 rounded-xl border border-border bg-surface p-3">
+                      <span className="text-lg" aria-hidden>{i}</span>
+                      <div className="min-w-0">
+                        <p className="truncate text-sm font-semibold">{t}</p>
+                        <p className="text-xs font-bold text-crush-600">{s}</p>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
             </div>
           </div>
         </Container>
 
-        {/* The realtor door. Unmistakable, and not competing with the hero. */}
+        {/* Trust bar */}
         <div className="relative border-t border-white/10">
-          <Container className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 py-4 text-center">
-            <span className="text-sm text-slate-400">Are you a realtor?</span>
-            <Link
-              href="/login"
-              className="text-sm font-semibold text-white underline decoration-crush-400 decoration-2 underline-offset-4 hover:text-crush-300"
-            >
-              Log in here
-            </Link>
-            <span className="text-sm text-slate-500">
-              · or <Link href="/signup" className="underline hover:text-slate-300">request access</Link> to the partner suite
-            </span>
+          <Container className="grid grid-cols-2 gap-6 py-8 sm:grid-cols-4">
+            {[["Free", "for partner agents"], ["1 profile", "reused everywhere"], ["Print & share", "ready in seconds"], ["Any device", "desktop or mobile"]].map(([a, b]) => (
+              <div key={a} className="text-center">
+                <p className="text-lg font-extrabold text-white">{a}</p>
+                <p className="text-sm text-slate-400">{b}</p>
+              </div>
+            ))}
           </Container>
         </div>
       </section>
 
-      {/* ── The problem ──────────────────────────────────────────────── */}
-      <section className="py-16 sm:py-20">
+      {/* ───────── Features ───────── */}
+      <section id="features" className="scroll-mt-16 py-20 sm:py-24">
         <Container>
-          <div className="max-w-3xl">
-            <h2 className="text-3xl font-extrabold tracking-tight text-ink-900 sm:text-4xl">
-              Buying a house shouldn&apos;t start with a guess.
+          <div className="mx-auto max-w-2xl text-center">
+            <p className="text-sm font-semibold uppercase tracking-wider text-crush-600">The suite</p>
+            <h2 className="mt-3 text-3xl font-bold tracking-tight text-ink-900 sm:text-4xl">
+              Everything you need to market like a pro
             </h2>
-            <div className="mt-5 space-y-4 text-lg leading-relaxed text-muted">
-              <p>
-                You find a house you like. The listing says $750,000. Somewhere online a
-                calculator says your payment is $4,100 — and it has quietly left out the
-                property taxes, the insurance and the mortgage insurance. The real number is
-                closer to $5,400, and nobody tells you until you are already attached.
-              </p>
-              <p>
-                Then there is the part nobody mentions at all: that there are programs for
-                3% down, for 3.5% down, for nothing down, and assistance money sitting
-                unclaimed because the people it was written for never heard of it.
-              </p>
-              <p className="font-semibold text-ink-900">That&apos;s the gap we exist to close.</p>
-            </div>
-          </div>
-        </Container>
-      </section>
-
-      {/* ── How it works ─────────────────────────────────────────────── */}
-      <section className="bg-surface py-16 sm:py-20">
-        <Container>
-          <h2 className="text-3xl font-extrabold tracking-tight text-ink-900 sm:text-4xl">
-            How this actually goes
-          </h2>
-          <div className="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {STEPS.map((s) => (
-              <div key={s.n} className="rounded-2xl border border-border bg-white p-6">
-                <span className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-crush-500 text-sm font-bold text-white">
-                  {s.n}
-                </span>
-                <h3 className="mt-4 text-base font-bold text-ink-900">{s.title}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted">{s.body}</p>
-              </div>
-            ))}
-          </div>
-        </Container>
-      </section>
-
-      {/* ── Loan options: "can you lend to someone like me" ──────────── */}
-      <section className="py-16 sm:py-20">
-        <Container>
-          <div className="flex flex-wrap items-end justify-between gap-4">
-            <div>
-              <h2 className="text-3xl font-extrabold tracking-tight text-ink-900 sm:text-4xl">
-                A loan for your situation
-              </h2>
-              <p className="mt-3 max-w-2xl text-muted">
-                Not everybody fits the same box — and most people fit more boxes than they
-                think.
-              </p>
-            </div>
-            <Link href="/loan-programs" className="text-sm font-semibold text-crush-600 hover:text-crush-700">
-              See all programs →
-            </Link>
+            <p className="mt-4 text-lg text-muted">
+              Powerful tools that make you the most valuable agent at every closing table — all
+              co-branded to you and {site.company}.
+            </p>
           </div>
 
-          <div className="mt-8 grid gap-5 md:grid-cols-3">
-            {featured.map((p) => (
-              <div key={p.slug} className="flex flex-col rounded-2xl border border-border bg-white p-6">
-                <h3 className="text-xl font-bold text-ink-900">{p.name}</h3>
-                <p className="mt-1 text-sm font-medium text-crush-600">{p.tagline}</p>
-                <p className="mt-3 text-sm text-muted">
-                  <span className="font-semibold text-ink-900">Best for:</span> {p.bestFor}
-                </p>
-                <div className="mt-4 flex gap-6 border-y border-border py-3 text-sm">
-                  <div>
-                    <p className="text-xs uppercase tracking-wide text-muted">Min down</p>
-                    <p className="font-bold text-ink-900">{p.minDown}</p>
-                  </div>
-                  <div>
-                    <p className="text-xs uppercase tracking-wide text-muted">Min credit</p>
-                    <p className="font-bold text-ink-900">{p.minCredit}</p>
+          <div className="mt-16 space-y-16">
+            {FEATURES.map((f, i) => (
+              <div key={f.title} className="grid items-center gap-8 lg:grid-cols-2">
+                <div className={i % 2 === 1 ? "lg:order-2" : ""}>
+                  <p className="text-sm font-semibold uppercase tracking-wider text-crush-600">{f.eyebrow}</p>
+                  <h3 className="mt-2 text-2xl font-bold text-ink-900 sm:text-3xl">{f.title}</h3>
+                  <p className="mt-4 text-lg text-muted">{f.body}</p>
+                  <ul className="mt-6 space-y-2.5">
+                    {f.points.map((p) => (
+                      <li key={p} className="flex items-start gap-2.5 text-ink-800">
+                        <Check /> {p}
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+                <div className={i % 2 === 1 ? "lg:order-1" : ""}>
+                  <div className="grid aspect-[4/3] place-items-center rounded-3xl border border-border bg-gradient-to-br from-surface to-surface-2">
+                    <span className="text-7xl sm:text-8xl" aria-hidden>{f.emoji}</span>
                   </div>
                 </div>
-                <ul className="mt-4 flex-1 space-y-1.5 text-sm text-muted">
-                  {p.highlights.slice(0, 3).map((h) => (
-                    <li key={h} className="flex gap-2">
-                      <span className="mt-1.5 h-1.5 w-1.5 shrink-0 rounded-full bg-crush-400" aria-hidden />
-                      {h}
-                    </li>
-                  ))}
-                </ul>
-                <Link
-                  href={`/loan-programs#${p.slug}`}
-                  className="mt-5 text-sm font-semibold text-crush-600 hover:underline"
-                >
-                  Learn more →
+              </div>
+            ))}
+          </div>
+        </Container>
+      </section>
+
+      {/* ───────── How it works ───────── */}
+      <section className="bg-surface py-20 sm:py-24">
+        <Container>
+          <div className="mx-auto max-w-2xl text-center">
+            <p className="text-sm font-semibold uppercase tracking-wider text-crush-600">How it works</p>
+            <h2 className="mt-3 text-3xl font-bold tracking-tight text-ink-900 sm:text-4xl">
+              Up and running in three steps
+            </h2>
+          </div>
+          <div className="mt-14 grid gap-6 md:grid-cols-3">
+            {STEPS.map((s) => (
+              <div key={s.n} className="rounded-2xl border border-border bg-white p-7">
+                <span className="grid h-11 w-11 place-items-center rounded-full bg-crush-500 text-lg font-extrabold text-white">{s.n}</span>
+                <h3 className="mt-5 text-xl font-bold text-ink-900">{s.title}</h3>
+                <p className="mt-2 text-muted">{s.body}</p>
+              </div>
+            ))}
+          </div>
+          <div className="mt-12 text-center">
+            <Link href="/signup" className="inline-flex items-center rounded-full bg-crush-500 px-7 py-3.5 text-base font-semibold text-white shadow-lg shadow-crush-500/20 transition-colors hover:bg-crush-600">
+              Get started free
+            </Link>
+          </div>
+        </Container>
+      </section>
+
+      {/* ───────── Why partner ───────── */}
+      <section className="py-20 sm:py-24">
+        <Container>
+          <div className="grid items-center gap-12 md:grid-cols-2">
+            <div>
+              <p className="text-sm font-semibold uppercase tracking-wider text-crush-600">Why agents partner with us</p>
+              <h2 className="mt-3 text-3xl font-bold tracking-tight text-ink-900 sm:text-4xl">
+                A lending partner that makes you look great
+              </h2>
+              <p className="mt-4 text-lg text-muted">
+                When your lender is fast, communicative, and equipped with the right tools, your
+                clients notice — and they refer you again and again.
+              </p>
+              <ul className="mt-8 space-y-4">
+                {[
+                  ["On-time closings", "Clear milestones and proactive updates so you never chase a status."],
+                  ["Fast pre-approvals", "Same-day pre-approvals that make your buyers' offers stand out."],
+                  ["Co-branded marketing", "Compliant flyers and social assets with your name front and center."],
+                  ["Always reachable", "A real person who picks up the phone — evenings and weekends included."],
+                ].map(([t, d]) => (
+                  <li key={t} className="flex gap-4">
+                    <span className="mt-1 grid h-6 w-6 shrink-0 place-items-center rounded-full bg-crush-500 text-white"><Check light /></span>
+                    <div>
+                      <p className="font-semibold text-ink-900">{t}</p>
+                      <p className="text-sm text-muted">{d}</p>
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+
+            <div className="rounded-3xl border border-border bg-white p-8 shadow-xl shadow-ink-900/5">
+              <blockquote className="text-lg font-medium text-ink-900">
+                &ldquo;Everything I hand a client looks polished and it&apos;s already branded to me.
+                I set it up once and now every flyer and guide takes me a couple of minutes.&rdquo;
+              </blockquote>
+              <p className="mt-5 text-sm font-semibold text-ink-900">Partner agent</p>
+              <p className="text-sm text-muted">Long Beach, CA</p>
+              <div className="mt-6 border-t border-border pt-6">
+                <p className="text-sm text-muted">Questions right now? Call{" "}
+                  <a href={`tel:${site.phone}`} className="font-semibold text-ink-900 hover:text-crush-600">{site.phone}</a>
+                </p>
+              </div>
+            </div>
+          </div>
+        </Container>
+      </section>
+
+      {/* ───────── Final CTA ───────── */}
+      <section className="pb-24">
+        <Container>
+          <div className="relative overflow-hidden rounded-3xl bg-ink-900 px-8 py-16 text-center sm:px-16">
+            <div className="absolute inset-0 hero-grid opacity-60" aria-hidden />
+            <div className="absolute -bottom-20 left-1/2 h-64 w-64 -translate-x-1/2 rounded-full bg-crush-500/25 blur-3xl" aria-hidden />
+            <div className="relative">
+              <h2 className="mx-auto max-w-2xl text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
+                Start marketing like the top agent in your market.
+              </h2>
+              <p className="mx-auto mt-4 max-w-xl text-lg text-slate-300">
+                Create your free account and generate your first co-branded flyer in minutes.
+              </p>
+              <div className="mt-8 flex flex-wrap justify-center gap-4">
+                <Link href="/signup" className="inline-flex items-center rounded-full bg-crush-500 px-7 py-3.5 text-base font-semibold text-white shadow-lg shadow-crush-500/25 transition-colors hover:bg-crush-600">
+                  Create your free account
+                </Link>
+                <Link href="/login" className="inline-flex items-center rounded-full border border-white/20 px-7 py-3.5 text-base font-semibold text-white transition-colors hover:bg-white/10">
+                  Log in
                 </Link>
               </div>
-            ))}
-          </div>
-        </Container>
-      </section>
-
-      {/* ── Tools ────────────────────────────────────────────────────── */}
-      <section className="bg-surface py-16 sm:py-20">
-        <Container>
-          <h2 className="text-3xl font-extrabold tracking-tight text-ink-900 sm:text-4xl">
-            Free tools, no email required
-          </h2>
-          <p className="mt-3 max-w-2xl text-muted">
-            Use them as much as you like. Nobody calls you unless you ask.
-          </p>
-          <div className="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
-            {[
-              { href: "/calculators", title: "Payment calculator", body: "The full monthly cost of any price." },
-              { href: "/rent-vs-own", title: "Rent vs own", body: "What renting really costs over ten years." },
-              { href: "/down-payment-assistance", title: "Down payment help", body: "Programs you may qualify for." },
-              { href: "/first-time-buyers", title: "First-time buyers", body: "Start here if this is your first." },
-            ].map((t) => (
-              <Link
-                key={t.href}
-                href={t.href}
-                className="rounded-2xl border border-border bg-white p-5 transition-colors hover:border-crush-300 hover:bg-crush-50"
-              >
-                <p className="font-bold text-ink-900">{t.title}</p>
-                <p className="mt-1 text-sm text-muted">{t.body}</p>
-              </Link>
-            ))}
-          </div>
-        </Container>
-      </section>
-
-      {/* ── Webinars ─────────────────────────────────────────────────── */}
-      <section className="py-16 sm:py-20">
-        <Container>
-          <div className="flex flex-wrap items-end justify-between gap-4">
-            <div>
-              <h2 className="text-3xl font-extrabold tracking-tight text-ink-900 sm:text-4xl">
-                Free webinars
-              </h2>
-              <p className="mt-3 max-w-2xl text-muted">
-                Thirty minutes, plain English, and a real loan officer answering whatever you
-                ask. Replays are here too.
-              </p>
             </div>
-            <Link href="/webinars" className="text-sm font-semibold text-crush-600 hover:text-crush-700">
-              See all webinars →
-            </Link>
           </div>
-          <div className="mt-8">
-            <Webinars limit={2} />
-          </div>
-        </Container>
-      </section>
-
-      {/* ── Guides ───────────────────────────────────────────────────── */}
-      <section className="bg-surface py-16 sm:py-20">
-        <Container>
-          <div className="flex flex-wrap items-end justify-between gap-4">
-            <div>
-              <h2 className="text-3xl font-extrabold tracking-tight text-ink-900 sm:text-4xl">
-                Guides worth reading
-              </h2>
-              <p className="mt-3 max-w-2xl text-muted">
-                How a first home becomes an investment, and the numbers behind it.
-              </p>
-            </div>
-            <Link href="/guides-library" className="text-sm font-semibold text-crush-600 hover:text-crush-700">
-              See all guides →
-            </Link>
-          </div>
-          <div className="mt-8">
-            <Guides limit={3} />
-          </div>
-        </Container>
-      </section>
-
-      {/* ── FAQ ──────────────────────────────────────────────────────── */}
-      <section className="py-16 sm:py-20">
-        <Container>
-          <h2 className="text-3xl font-extrabold tracking-tight text-ink-900 sm:text-4xl">
-            Questions people actually ask
-          </h2>
-          <div className="mt-10 grid gap-x-10 gap-y-8 md:grid-cols-2">
-            {FAQS.map((f) => (
-              <div key={f.q}>
-                <h3 className="text-base font-bold text-ink-900">{f.q}</h3>
-                <p className="mt-2 text-sm leading-relaxed text-muted">{f.a}</p>
-              </div>
-            ))}
-          </div>
-          <p className="mt-10 text-sm text-muted">
-            Something not answered here?{" "}
-            <Link href="/contact" className="font-semibold text-crush-600 hover:underline">
-              Ask us directly
-            </Link>{" "}
-            — it costs nothing and we answer either way.
-          </p>
-        </Container>
-      </section>
-
-      {/* ── Close ────────────────────────────────────────────────────── */}
-      <section className="pb-20">
-        <Container>
-          <div className="rounded-3xl bg-ink-900 p-8 text-center text-white sm:p-14">
-            <h2 className="text-3xl font-extrabold tracking-tight sm:text-4xl">
-              Let&apos;s find your number
-            </h2>
-            <p className="mx-auto mt-4 max-w-xl text-slate-300">
-              Run it yourself in two minutes, or call and we&apos;ll run it with you. Either
-              way it&apos;s free, and there is nothing to sign.
-            </p>
-            <div className="mt-8 flex flex-wrap justify-center gap-4">
-              <Link
-                href="/calculators"
-                className="inline-flex items-center rounded-full bg-crush-500 px-7 py-3.5 text-base font-semibold text-white hover:bg-crush-600"
-              >
-                See my payment
-              </Link>
-              <a
-                href={`tel:${site.phone.replace(/\D/g, "")}`}
-                className="inline-flex items-center rounded-full border border-white/20 px-7 py-3.5 text-base font-semibold text-white hover:bg-white/10"
-              >
-                Call {site.phone}
-              </a>
-            </div>
-            <TrustStripCompact className="mt-8" />
-          </div>
-
-          <TrustStrip className="mx-auto mt-8 max-w-3xl text-center" />
         </Container>
       </section>
     </>
+  );
+}
+
+function Check({ light = false }: { light?: boolean }) {
+  return (
+    <svg viewBox="0 0 20 20" className={`mt-0.5 h-4 w-4 shrink-0 ${light ? "text-white" : "text-crush-500"}`} fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
+      <path d="M4 10l4 4 8-9" />
+    </svg>
   );
 }

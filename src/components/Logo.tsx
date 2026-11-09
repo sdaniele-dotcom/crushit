@@ -21,11 +21,9 @@ export function Logo({ onDark = true }: { onDark?: boolean }) {
         alt="What's a Payment"
         priority
         /*
-          TALLER THAN A ONE-LINE LOGO NEEDS TO BE. This wordmark is a stacked
+          Taller than a one-line logo needs to be: this wordmark is a stacked
           two-line lockup ("what's a" over "payment"), so each line only gets
-          half the height — at the h-8 a single-line logo would use, it renders
-          too small to read. h-11 gives each line the weight of a normal 20px
-          logo.
+          half the height. At h-8 it rendered too small to read.
         */
         className={`h-10 w-auto sm:h-11 ${onDark ? "brightness-0 invert" : ""}`}
       />
