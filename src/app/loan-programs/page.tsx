@@ -26,7 +26,7 @@ export default function LoanProgramsPage() {
             <span className="text-gradient">right loan</span>
           </>
         }
-        subtitle="Six programs, explained in plain English. Use these to answer buyer questions with confidence — no jargon, no guesswork."
+        subtitle="Seven programs, explained in plain English. Use these to answer buyer questions with confidence — no jargon, no guesswork."
       />
 
       <Container className="py-14">
