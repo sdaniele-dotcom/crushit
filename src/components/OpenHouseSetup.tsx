@@ -8,7 +8,7 @@ import { recordUse } from "@/lib/rewards";
 import { toast } from "@/lib/toast";
 
 const inp = "w-full rounded-xl border border-border bg-white px-3.5 py-2.5 text-sm outline-none focus:border-crush-400 focus:ring-2 focus:ring-crush-100";
-const lbl = "text-xs font-semibold uppercase tracking-wide text-muted";
+const lbl = "text-xs font-semibold text-muted";
 
 function toLocalDate(iso: string | null): string {
   if (!iso) return "";
@@ -70,7 +70,7 @@ export function OpenHouseSetup() {
     <div className="space-y-8">
       {/* Details */}
       <div className="rounded-2xl border border-border bg-white p-5">
-        <h3 className="text-sm font-bold uppercase tracking-wide text-crush-700">Open house details</h3>
+        <h3 className="text-sm font-bold text-crush-700">Open house details</h3>
         {!listing && (
           <p className="mt-1 text-xs text-muted">Select a saved listing above to attach the date &amp; time (or just fill the pieces below manually).</p>
         )}
@@ -88,7 +88,7 @@ export function OpenHouseSetup() {
       {/* Know the nearby competition — search the MLS */}
       <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-border bg-surface p-5">
         <div>
-          <h3 className="text-sm font-bold uppercase tracking-wide text-crush-700">Know the competition</h3>
+          <h3 className="text-sm font-bold text-crush-700">Know the competition</h3>
           <p className="mt-1 text-sm text-muted">Pull up active homes for sale nearby on the MLS to talk to buyers about their options.</p>
         </div>
         <Link href="/mls-search" className="inline-flex shrink-0 items-center gap-2 rounded-full bg-crush-500 px-5 py-2.5 text-sm font-semibold text-white hover:bg-crush-600">

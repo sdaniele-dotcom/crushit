@@ -444,7 +444,7 @@ export function PropertyFlyerTool() {
           <button
             type="submit"
             disabled={status === "loading"}
-            className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-crush-500 px-7 py-4 text-base font-semibold text-white shadow-lg shadow-crush-500/20 transition-colors hover:bg-crush-600 disabled:opacity-60 sm:w-auto"
+            className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-crush-500 px-7 py-4 text-base font-semibold text-white shadow-lg transition-colors hover:bg-crush-600 disabled:opacity-60 sm:w-auto"
           >
             {status === "loading" ? "Generating flyer…" : "Generate my flyer"}
           </button>
@@ -519,7 +519,7 @@ export function PropertyFlyerTool() {
 
       {/* Result */}
       <div>
-        <p className="mb-3 text-sm font-semibold uppercase tracking-wider text-muted">
+        <p className="mb-3 text-sm font-semibold text-muted">
           Your flyer
         </p>
         <div className="rounded-2xl border border-border bg-surface p-6">
@@ -561,7 +561,7 @@ export function PropertyFlyerTool() {
               href={result.pdfUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-crush-500 px-6 py-4 text-base font-bold text-white shadow-lg shadow-crush-500/20 hover:bg-crush-600"
+              className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-crush-500 px-6 py-4 text-base font-bold text-white shadow-lg hover:bg-crush-600"
             >
               🖨️ Print Here
             </a>

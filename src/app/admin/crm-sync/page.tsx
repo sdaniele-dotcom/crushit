@@ -248,7 +248,7 @@ function Inner() {
               </p>
               {Object.keys(byOfficer).length > 0 && (
                 <div className="mt-4 rounded-xl bg-surface-2 px-4 py-3">
-                  <h3 className="text-xs font-semibold uppercase tracking-wide text-ink-500">
+                  <h3 className="text-xs font-semibold text-ink-500">
                     Which tab each one lands in
                   </h3>
                   <ul className="mt-2 space-y-1 text-sm text-ink-700">
@@ -270,7 +270,7 @@ function Inner() {
               )}
               <div className="mt-4 overflow-x-auto">
                 <table className="w-full text-left text-sm">
-                  <thead className="text-xs uppercase tracking-wide text-ink-500">
+                  <thead className="text-xs text-ink-500">
                     <tr>
                       <th className="pb-2 pr-4">Agent</th>
                       <th className="pb-2 pr-4">Outcome</th>

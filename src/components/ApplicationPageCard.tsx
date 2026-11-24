@@ -69,7 +69,7 @@ export function ApplicationPageCard() {
       <section className="mt-8 rounded-2xl border border-border bg-white p-5">
         <div className="flex flex-wrap items-start justify-between gap-4">
           <div className="min-w-0 flex-1">
-            <h2 className="text-sm font-bold uppercase tracking-wide text-crush-700">
+            <h2 className="text-sm font-bold text-crush-700">
               Your application page
             </h2>
             <p className="mt-1 text-sm text-muted">
@@ -120,7 +120,7 @@ export function ApplicationPageCard() {
 
   return (
     <section className="mt-8 rounded-2xl border border-crush-200 bg-gradient-to-br from-crush-50 to-white p-5">
-      <h2 className="text-sm font-bold uppercase tracking-wide text-crush-700">
+      <h2 className="text-sm font-bold text-crush-700">
         Your application page
       </h2>
       {requested ? (

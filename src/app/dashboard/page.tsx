@@ -1,5 +1,6 @@
 "use client";
 
+import { Star } from "@/components/icons";
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { Container } from "@/components/ui";
@@ -85,7 +86,7 @@ function DashboardInner() {
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <h1 className="text-3xl font-extrabold tracking-tight text-ink-900 sm:text-4xl">
-            Welcome back, {name} 👋
+            {name ? `${name}'s dashboard` : "Your dashboard"}
           </h1>
           <p className="mt-1 text-muted">What are you working on today?</p>
         </div>
@@ -131,7 +132,10 @@ function DashboardInner() {
       {/* Rewards summary */}
       <div className="mt-8 grid gap-4 rounded-2xl border border-crush-200 bg-gradient-to-br from-crush-50 to-white p-6 sm:grid-cols-[auto_1fr_auto] sm:items-center sm:gap-8">
         <div>
-          <p className="text-3xl font-extrabold text-crush-600">⭐ {profile?.current_stars ?? 0}</p>
+          <p className="flex items-center gap-2 text-3xl font-bold text-crush-600">
+            <Star size={26} />
+            <span className="tabular-nums">{profile?.current_stars ?? 0}</span>
+          </p>
           <p className="text-xs text-muted">Crush Points · {lifetime} lifetime</p>
         </div>
         <div>
@@ -148,7 +152,7 @@ function DashboardInner() {
           </div>
           {txs[0] && (
             <p className="mt-2 text-xs text-muted">
-              Latest: {txs[0].description || txs[0].action.replace(/_/g, " ")} ({txs[0].stars >= 0 ? "+" : ""}{txs[0].stars} ⭐)
+              Latest: {txs[0].description || txs[0].action.replace(/_/g, " ")} ({txs[0].stars >= 0 ? "+" : ""}{txs[0].stars} stars)
             </p>
           )}
         </div>
@@ -167,7 +171,7 @@ function DashboardInner() {
           {/* Recent projects */}
           <section>
             <div className="flex items-center justify-between">
-              <h2 className="text-sm font-bold uppercase tracking-wide text-crush-700">Recent projects</h2>
+              <h2 className="text-sm font-bold text-crush-700">Recent projects</h2>
             </div>
             <div className="mt-3 space-y-2.5">
               {projects.length === 0 && (
@@ -194,7 +198,7 @@ function DashboardInner() {
           {/* My listings */}
           <section>
             <div className="flex items-center justify-between">
-              <h2 className="text-sm font-bold uppercase tracking-wide text-crush-700">My listings</h2>
+              <h2 className="text-sm font-bold text-crush-700">My listings</h2>
               <Link href="/listings" className="text-xs font-semibold text-crush-600 hover:text-crush-700">View all →</Link>
             </div>
             <div className="mt-3 space-y-2.5">
@@ -225,7 +229,7 @@ function DashboardInner() {
         {/* Right: quick buyer scenario + activity */}
         <div className="space-y-8">
           <section className="rounded-2xl border border-border bg-white p-5">
-            <h2 className="text-sm font-bold uppercase tracking-wide text-crush-700">Quick buyer scenario</h2>
+            <h2 className="text-sm font-bold text-crush-700">Quick buyer scenario</h2>
             <p className="mt-1 text-xs text-muted">Enter a price and down payment to jump into the payment calculator.</p>
             <div className="mt-3 space-y-2.5">
               <label className="block text-xs font-semibold text-muted">
@@ -245,7 +249,7 @@ function DashboardInner() {
           </section>
 
           <section>
-            <h2 className="text-sm font-bold uppercase tracking-wide text-crush-700">Recent activity</h2>
+            <h2 className="text-sm font-bold text-crush-700">Recent activity</h2>
             <div className="mt-3 space-y-2">
               {txs.length === 0 && <p className="rounded-2xl border border-border bg-surface p-4 text-sm text-muted">Your Crush Points activity will appear here.</p>}
               {txs.map((t) => (
@@ -255,7 +259,7 @@ function DashboardInner() {
                     <p className="text-xs text-muted">{when(t.created_at)}</p>
                   </div>
                   <span className={`shrink-0 text-sm font-bold ${t.stars >= 0 ? "text-crush-600" : "text-muted"}`}>
-                    {t.stars >= 0 ? "+" : ""}{t.stars} ⭐
+                    {t.stars >= 0 ? "+" : ""}{t.stars} stars
                   </span>
                 </div>
               ))}

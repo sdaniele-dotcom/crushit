@@ -104,13 +104,13 @@ function Editor({ tpl, onSaved }: { tpl: EmailTemplate; onSaved: () => void }) {
       <p className="mt-0.5 text-sm text-muted">{meta.blurb}</p>
 
       <label className="mt-4 block">
-        <span className="text-xs font-semibold uppercase tracking-wide text-muted">Subject</span>
+        <span className="text-xs font-semibold text-muted">Subject</span>
         <input className={`${input} mt-1.5`} placeholder={meta.defaultSubject} value={subject} onChange={(e) => setSubject(e.target.value)} />
         <span className="mt-1 block text-xs text-muted">Blank = built-in default: <span className="font-medium">{meta.defaultSubject}</span></span>
       </label>
 
       <label className="mt-4 block">
-        <span className="text-xs font-semibold uppercase tracking-wide text-muted">Body</span>
+        <span className="text-xs font-semibold text-muted">Body</span>
         <textarea className={`${input} mt-1.5 min-h-[200px] font-mono text-[13px]`} placeholder="Leave blank to use the built-in designed layout. Type here to fully override the wording." value={body} onChange={(e) => setBody(e.target.value)} />
       </label>
       <p className="mt-2 text-xs text-muted">

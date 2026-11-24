@@ -147,7 +147,7 @@ export default function FirstTimeBuyersPage() {
             </p>
           </Card>
           <Card className="bg-ink-900 text-white">
-            <p className="text-sm font-semibold uppercase tracking-wider text-crush-400">
+            <p className="text-sm font-semibold text-crush-400">
               Fastest first step
             </p>
             <p className="mt-2 text-slate-300">
@@ -372,11 +372,6 @@ export default function FirstTimeBuyersPage() {
         {/* CTA */}
         <section className="mt-16">
           <div className="relative overflow-hidden rounded-3xl bg-ink-900 px-8 py-14 text-center sm:px-16">
-            <div className="absolute inset-0 hero-grid opacity-60" aria-hidden />
-            <div
-              className="absolute -bottom-20 left-1/2 h-64 w-64 -translate-x-1/2 rounded-full bg-crush-500/25 blur-3xl"
-              aria-hidden
-            />
             <div className="relative">
               <h2 className="mx-auto max-w-2xl text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
                 Ready to take the first step?

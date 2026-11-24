@@ -80,7 +80,7 @@ function Inner() {
               mass email to every agent should always pass through a person.
             */}
             <div className="mb-5 rounded-2xl border border-border bg-surface p-4">
-              <p className="text-xs font-semibold uppercase tracking-wide text-muted">Start from a draft</p>
+              <p className="text-xs font-semibold text-muted">Start from a draft</p>
               <div className="mt-3 flex flex-wrap gap-2">
                 {BROADCAST_PRESETS.map((p) => (
                   <button
@@ -106,11 +106,11 @@ function Inner() {
             </div>
 
             <label className="block">
-              <span className="text-xs font-semibold uppercase tracking-wide text-muted">Subject</span>
+              <span className="text-xs font-semibold text-muted">Subject</span>
               <input className={`${input} mt-1.5`} placeholder="August rate update 🎯" value={subject} onChange={(e) => setSubject(e.target.value)} maxLength={140} />
             </label>
             <label className="mt-4 block">
-              <span className="text-xs font-semibold uppercase tracking-wide text-muted">Message</span>
+              <span className="text-xs font-semibold text-muted">Message</span>
               <textarea className={`${input} mt-1.5 min-h-[220px]`} placeholder={"Hey {{first_name}},\n\nRates just moved — here's what it means for your buyers this week...\n\nBlank lines start a new paragraph."} value={message} onChange={(e) => setMessage(e.target.value)} />
             </label>
             <p className="mt-2 text-xs text-muted">
@@ -143,7 +143,7 @@ function Inner() {
 
           {/* Live preview */}
           <div>
-            <p className="text-xs font-semibold uppercase tracking-wide text-muted">Preview</p>
+            <p className="text-xs font-semibold text-muted">Preview</p>
             <div className="mt-2 overflow-hidden rounded-2xl border border-border bg-[#f5f4f2] p-4">
               <p className="mb-2 text-[11px] font-extrabold tracking-widest text-crush-600">CRUSH IT · AGENT SUITE</p>
               <div className="rounded-xl border border-border bg-white p-4">

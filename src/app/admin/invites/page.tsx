@@ -202,7 +202,7 @@ function Inner() {
       <Container className="pb-20">
         <div className="grid gap-6">
           <div className="rounded-3xl border border-border bg-white p-6">
-            <h2 className="text-sm font-bold uppercase tracking-wide text-crush-700">
+            <h2 className="text-sm font-bold text-crush-700">
               1 · Paste the roster
             </h2>
             <p className="mt-2 text-sm text-muted">
@@ -217,7 +217,7 @@ function Inner() {
               placeholder={"Agent Name,Agent Email,Agent Phone,DRE #,Brokerage\nCruz Zavala,cruz4homes@gmail.com,562-682-7005,01240727,HomeSmart Realty Group"}
             />
             <div className="mt-3">
-              <label className="text-xs font-semibold uppercase tracking-wide text-muted">
+              <label className="text-xs font-semibold text-muted">
                 …or pick a .csv file
               </label>
               <input
@@ -234,7 +234,7 @@ function Inner() {
 
           {text.trim() && (
             <div className="rounded-3xl border border-border bg-white p-6">
-              <h2 className="text-sm font-bold uppercase tracking-wide text-crush-700">
+              <h2 className="text-sm font-bold text-crush-700">
                 2 · Check what it read
               </h2>
               {parsed.headerLine === 0 ? (
@@ -335,7 +335,7 @@ function Inner() {
                             <td className="px-3 py-1.5">{r.phone || "—"}</td>
                             <td className="px-3 py-1.5">{r.dre_license || "—"}</td>
                             <td className="px-3 py-1.5">{r.brokerage || "—"}</td>
-                            <td className="px-3 py-1.5 text-[11px] uppercase tracking-wide text-muted">
+                            <td className="px-3 py-1.5 text-[11px] text-muted">
                               {sentEmails.has(r.email) ? "attempted" : ""}
                             </td>
                           </tr>
@@ -366,7 +366,7 @@ function Inner() {
 
           {remaining.length > 0 && (
             <div className="rounded-3xl border border-crush-200 bg-crush-50 p-6">
-              <h2 className="text-sm font-bold uppercase tracking-wide text-crush-700">
+              <h2 className="text-sm font-bold text-crush-700">
                 3 · Send to {Math.min(WAVE, remaining.length)} of {remaining.length} selected
               </h2>
               <p className="mt-2 text-sm text-ink-800">
@@ -407,7 +407,7 @@ function Inner() {
                 </ul>
               </div>
               <div className="mt-3 rounded-xl border border-crush-200 bg-white p-4">
-                <label className="text-xs font-semibold uppercase tracking-wide text-muted">
+                <label className="text-xs font-semibold text-muted">
                   Brokerage named in every email
                 </label>
                 <input
@@ -517,7 +517,7 @@ function Inner() {
 
           {results.length > 0 && (
             <div className="rounded-3xl border border-border bg-white p-6">
-              <h2 className="text-sm font-bold uppercase tracking-wide text-crush-700">
+              <h2 className="text-sm font-bold text-crush-700">
                 {lastWasDry ? "Dry run — nothing was sent" : "Outcomes"}
               </h2>
               {lastWasDry && (

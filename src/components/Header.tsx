@@ -93,14 +93,14 @@ export function Header() {
           ) : configured ? (
             <>
               <Link href="/login" className="ml-2 rounded-full px-4 py-2 text-sm font-medium text-slate-200 hover:text-white">Log in</Link>
-              <Link href="/signup" className="inline-flex items-center rounded-full bg-crush-500 px-5 py-2 text-sm font-semibold text-white shadow-lg shadow-crush-500/20 transition-colors hover:bg-crush-600">Create Free Account</Link>
+              <Link href="/signup" className="inline-flex items-center rounded-full bg-crush-500 px-5 py-2 text-sm font-semibold text-white shadow-lg transition-colors hover:bg-crush-600">Create Free Account</Link>
             </>
           ) : (
             <>
               {navItems.map((item) => (
                 <Link key={item.href} href={item.href} className="rounded-full px-4 py-2 text-sm font-medium text-slate-300 hover:text-white">{item.label}</Link>
               ))}
-              <a href={site.applyUrl} target="_blank" rel="noopener noreferrer" className="ml-2 inline-flex items-center rounded-full bg-crush-500 px-5 py-2 text-sm font-semibold text-white shadow-lg shadow-crush-500/20 transition-colors hover:bg-crush-600">Get Pre-Approved</a>
+              <a href={site.applyUrl} target="_blank" rel="noopener noreferrer" className="ml-2 inline-flex items-center rounded-full bg-crush-500 px-5 py-2 text-sm font-semibold text-white shadow-lg transition-colors hover:bg-crush-600">Get Pre-Approved</a>
             </>
           )}
         </nav>
@@ -122,7 +122,7 @@ export function Header() {
                 <Link href="/dashboard" onClick={() => setOpen(false)} className="block rounded-lg px-3 py-2.5 text-base font-bold text-white">Dashboard</Link>
                 {GROUPS.map((g) => (
                   <div key={g.label} className="mt-2">
-                    <p className="px-3 pb-1 pt-2 text-xs font-bold uppercase tracking-wide text-slate-400">{g.label}</p>
+                    <p className="px-3 pb-1 pt-2 text-xs font-bold text-slate-400">{g.label}</p>
                     {g.items.map((it) => (
                       <Link key={it.href} href={it.href} onClick={() => setOpen(false)} className="block rounded-lg px-3 py-2.5 text-base font-medium text-slate-200 hover:bg-white/5">{it.label}</Link>
                     ))}

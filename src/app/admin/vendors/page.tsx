@@ -9,7 +9,7 @@ import { uploadAgentImage } from "@/lib/storage";
 import { fetchVendors, VENDOR_CATEGORIES, type Vendor, type ResourceLink } from "@/lib/vendors";
 
 const inp = "w-full rounded-xl border border-border bg-white px-3.5 py-2.5 text-sm outline-none focus:border-crush-400 focus:ring-2 focus:ring-crush-100";
-const lbl = "text-xs font-semibold uppercase tracking-wide text-muted";
+const lbl = "text-xs font-semibold text-muted";
 
 type Draft = Partial<Vendor>;
 

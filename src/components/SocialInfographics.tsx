@@ -334,7 +334,7 @@ function BrandFooterPreview({ profile }: { profile: Profile | null | undefined }
         {contact && <div className="truncate text-[10px] text-muted">{contact}</div>}
       </div>
       <div className="text-right">
-        <div className="text-[7px] uppercase tracking-wider text-muted">Financing partner</div>
+        <div className="text-[7px] text-muted">Financing partner</div>
         <img src={crushLogoPrimaryDataUri} alt="Crush Mortgage" className="ml-auto mt-0.5 h-4 object-contain" />
       </div>
     </div>
@@ -380,7 +380,7 @@ function EduPreview({ info, profile }: { info: Info; profile: Profile | null | u
     <div className="flex aspect-square flex-col overflow-hidden rounded-2xl border border-border bg-white shadow-sm">
       <div className="relative overflow-hidden px-4 pb-4 pt-5 text-white" style={{ background: `linear-gradient(135deg, ${info.accent} 0%, ${info.accent2} 100%)` }}>
         <div className="pointer-events-none absolute -right-2 -top-3 select-none text-7xl opacity-20" style={{ transform: "rotate(-8deg)" }}>{info.motif}</div>
-        <p className="relative text-[10px] font-bold uppercase tracking-widest opacity-95">{info.kicker}</p>
+        <p className="relative text-[10px] font-bold opacity-95">{info.kicker}</p>
         <h3 className="relative mt-1.5 font-display text-lg font-black leading-tight">{info.title}</h3>
       </div>
       <div className="flex flex-1 flex-col justify-center gap-1.5 px-4 py-3">
@@ -459,7 +459,7 @@ export function SocialInfographics() {
 
           {listing && photos.length > 1 && (
             <div className="mb-4">
-              <p className="mb-2 text-xs font-semibold uppercase tracking-wide text-muted">Choose the photo</p>
+              <p className="mb-2 text-xs font-semibold text-muted">Choose the photo</p>
               <div className="flex flex-wrap gap-2">
                 {photos.map((src, i) => (
                   <button

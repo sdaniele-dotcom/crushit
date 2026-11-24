@@ -114,7 +114,7 @@ export default function AboutPage() {
             {/* Details */}
             <div className="order-1 space-y-6 lg:order-2">
               <Card className="bg-ink-900 text-white">
-                <p className="text-sm font-semibold uppercase tracking-wider text-crush-400">Your loan officer</p>
+                <p className="text-sm font-semibold text-crush-400">Your loan officer</p>
                 <h3 className="mt-2 text-2xl font-bold">{site.loanOfficer}</h3>
                 <p className="text-slate-400">{site.title} · NMLS #{site.nmls}</p>
                 <div className="mt-6 space-y-3 text-sm">

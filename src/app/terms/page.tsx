@@ -22,7 +22,7 @@ export default function TermsPage() {
       />
 
       <Container className="py-14">
-        <p className="text-xs font-semibold uppercase tracking-wide text-muted">
+        <p className="text-xs font-semibold text-muted">
           Version {TERMS_VERSION}
         </p>
 

@@ -27,7 +27,7 @@ export function Footer() {
         </div>
 
         <div>
-          <h3 className="text-sm font-semibold uppercase tracking-wider text-white">
+          <h3 className="text-sm font-semibold text-white">
             The Suite
           </h3>
           <ul className="mt-4 space-y-2 text-sm">
@@ -45,7 +45,7 @@ export function Footer() {
         </div>
 
         <div>
-          <h3 className="text-sm font-semibold uppercase tracking-wider text-white">
+          <h3 className="text-sm font-semibold text-white">
             Connect
           </h3>
           <ul className="mt-4 space-y-2 text-sm">

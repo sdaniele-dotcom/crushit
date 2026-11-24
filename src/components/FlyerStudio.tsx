@@ -16,7 +16,7 @@ const GROUPED = CATEGORY_ORDER.map((cat) => ({
 })).filter((g) => g.items.length > 0);
 
 const inputCls = "w-full rounded-xl border border-border bg-white px-3 py-2 text-sm outline-none focus:border-crush-400 focus:ring-2 focus:ring-crush-100";
-const labelCls = "text-xs font-semibold uppercase tracking-wide text-muted";
+const labelCls = "text-xs font-semibold text-muted";
 
 function resizeToDataUrl(file: File, max = 1400): Promise<string> {
   return new Promise((resolve, reject) => {
@@ -143,7 +143,7 @@ export function FlyerStudio({ initialCategory = "all" }: { initialCategory?: Fly
       {/* Left: template picker + editor */}
       <div>
         <label className="block">
-          <span className="text-sm font-bold uppercase tracking-wide text-crush-700">Template</span>
+          <span className="text-sm font-bold text-crush-700">Template</span>
           <select
             value={tplId}
             onChange={(e) => setTplId(e.target.value)}
@@ -161,7 +161,7 @@ export function FlyerStudio({ initialCategory = "all" }: { initialCategory?: Fly
         <p className="mt-1.5 text-xs text-muted">{FLYER_TEMPLATES.length} templates across {GROUPED.length} categories — switch anytime; your details carry over.</p>
 
         {/* Photos */}
-        <h3 className="mt-8 text-sm font-bold uppercase tracking-wide text-crush-700">Photos</h3>
+        <h3 className="mt-8 text-sm font-bold text-crush-700">Photos</h3>
         <p className="mt-1 text-xs text-muted">Upload your own — the first is the hero. Drag order with the arrows.</p>
         <div className="mt-3 flex flex-wrap gap-3">
           {photos.map((p, i) => (
@@ -185,7 +185,7 @@ export function FlyerStudio({ initialCategory = "all" }: { initialCategory?: Fly
         </div>
 
         {/* Fields */}
-        <h3 className="mt-8 text-sm font-bold uppercase tracking-wide text-crush-700">Details</h3>
+        <h3 className="mt-8 text-sm font-bold text-crush-700">Details</h3>
         <div className="mt-3 grid gap-3 sm:grid-cols-2">
           <label className="block"><span className={labelCls}>Banner text</span>
             <input className={inputCls} value={d.kicker} onChange={(e) => { setKickerTouched(true); set("kicker", e.target.value); }} /></label>
@@ -218,7 +218,7 @@ export function FlyerStudio({ initialCategory = "all" }: { initialCategory?: Fly
 
       {/* Right: live preview */}
       <div className="lg:sticky lg:top-24 lg:self-start">
-        <p className="mb-2 text-sm font-semibold uppercase tracking-wider text-muted">Live preview</p>
+        <p className="mb-2 text-sm font-semibold text-muted">Live preview</p>
         <div className="overflow-hidden rounded-2xl border border-border bg-surface-2 shadow-inner">
           <div className="mx-auto" style={{ width: 408, height: 528 }}>
             <iframe title="Flyer preview" srcDoc={html} style={{ width: 816, height: 1056, border: 0, transform: "scale(0.5)", transformOrigin: "top left" }} />
@@ -227,7 +227,7 @@ export function FlyerStudio({ initialCategory = "all" }: { initialCategory?: Fly
         <div className="mt-4 rounded-2xl border-2 border-crush-200 bg-crush-50 p-4 text-center">
           <p className="text-lg font-extrabold text-ink-900">Your flyer is ready! 🎉</p>
           <p className="mt-0.5 text-xs text-muted">Prints only the flyer — clean, full page, with your logo &amp; branding.</p>
-          <button type="button" onClick={print} className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-full bg-crush-500 px-6 py-3.5 text-base font-bold text-white shadow-lg shadow-crush-500/20 hover:bg-crush-600">
+          <button type="button" onClick={print} className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-full bg-crush-500 px-6 py-3.5 text-base font-bold text-white shadow-lg hover:bg-crush-600">
             🖨️ Print Here
           </button>
         </div>

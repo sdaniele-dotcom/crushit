@@ -265,7 +265,7 @@ export function ChatWidget() {
         type="button"
         onClick={() => { quietNudge(); setOpen((o) => !o); }}
         aria-label={open ? "Close chat" : "Open chat assistant"}
-        className="fixed bottom-5 right-5 z-50 grid h-14 w-14 place-items-center rounded-full bg-crush-500 text-white shadow-xl shadow-crush-500/30 transition-transform hover:scale-105 hover:bg-crush-600"
+        className="fixed bottom-5 right-5 z-50 grid h-14 w-14 place-items-center rounded-full bg-crush-500 text-white shadow-xl transition-transform hover:scale-105 hover:bg-crush-600"
       >
         {open ? (
           <svg viewBox="0 0 24 24" className="h-6 w-6" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>

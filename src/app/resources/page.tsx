@@ -142,7 +142,7 @@ export default function ResourcesPage() {
               🪄
             </span>
             <div>
-              <span className="inline-flex items-center rounded-full bg-crush-50 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-crush-700">
+              <span className="inline-flex items-center rounded-full bg-crush-50 px-3 py-1 text-xs font-semibold text-crush-700">
                 Free &amp; priced by hand
               </span>
               <h3 className="mt-2 text-xl font-bold text-ink-900">

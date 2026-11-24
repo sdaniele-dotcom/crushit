@@ -11,7 +11,7 @@ import { toast } from "@/lib/toast";
 
 const inp =
   "w-full rounded-xl border border-border bg-white px-3.5 py-2.5 text-sm outline-none focus:border-crush-400 focus:ring-2 focus:ring-crush-100";
-const lbl = "text-xs font-semibold uppercase tracking-wide text-muted";
+const lbl = "text-xs font-semibold text-muted";
 
 /** What the agent can ask us to weave into the post — their listing stays the star. */
 const INCLUDE_OPTIONS: [string, string][] = [
@@ -115,7 +115,7 @@ export function ListingPromo() {
     <div className="mb-10 overflow-hidden rounded-3xl border border-crush-200 bg-gradient-to-br from-crush-50 to-white">
       <div className="flex flex-wrap items-center justify-between gap-3 p-6 sm:p-7">
         <div className="min-w-0">
-          <p className="text-xs font-bold uppercase tracking-widest text-crush-600">Done for you · Instagram</p>
+          <p className="text-xs font-bold text-crush-600">Done for you · Instagram</p>
           <h2 className="mt-1 text-2xl font-bold text-ink-900">Want us to promote your listings on Instagram?</h2>
           <p className="mt-1 max-w-2xl text-sm text-muted">
             Opt in and our marketing team builds the post for you — using your listing&apos;s photos and details,

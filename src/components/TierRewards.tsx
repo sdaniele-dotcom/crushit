@@ -56,7 +56,7 @@ export function TierRewards({ lifetime }: { lifetime: number }) {
 
   return (
     <>
-      <h2 className="mt-10 text-sm font-bold uppercase tracking-wide text-crush-700">Tier rewards</h2>
+      <h2 className="mt-10 text-sm font-bold text-crush-700">Tier rewards</h2>
       <p className="mt-1 text-sm text-muted">
         Real perks for leveling up — a free headshot, done-for-you marketing, print runs and more.
         Unlock them with lifetime ⭐, then claim and we&apos;ll take care of it.

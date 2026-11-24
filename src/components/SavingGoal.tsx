@@ -43,7 +43,7 @@ export function SavingGoal({ lifetime, current }: { lifetime: number; current: n
   return (
     <div className="mt-10 rounded-3xl border border-crush-200 bg-gradient-to-br from-white to-crush-50 p-6">
       <div className="flex flex-wrap items-center justify-between gap-3">
-        <h2 className="text-sm font-bold uppercase tracking-wide text-crush-700">What are you saving for?</h2>
+        <h2 className="text-sm font-bold text-crush-700">What are you saving for?</h2>
         {goal && !picking && (
           <button type="button" onClick={() => setPicking(true)} className="text-xs font-semibold text-crush-600 underline">Change goal</button>
         )}

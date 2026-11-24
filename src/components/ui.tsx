@@ -32,8 +32,10 @@ export function Button({
   const base =
     "inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition-colors";
   const variants = {
-    primary:
-      "bg-crush-500 text-white hover:bg-crush-600 shadow-lg shadow-crush-500/20",
+    // No coloured shadow. A red-tinted shadow put a glow under every primary
+    // button on the site, which is the most recognisable AI tell in the whole
+    // suite. Depth comes from the fill against the surface instead.
+    primary: "bg-crush-500 text-white hover:bg-crush-600",
     secondary:
       "bg-white text-ink-900 hover:bg-surface-2 border border-border",
     ghost: "text-ink-900 hover:text-crush-600",
@@ -59,10 +61,17 @@ export function Button({
   );
 }
 
-/** Small pill label. */
+/**
+ * Small category label above a heading.
+ *
+ * Was uppercase with wide tracking inside a tinted pill, which is the
+ * "SHOUTY LABEL" tell and appeared on every page of the suite. Now sentence
+ * case at normal tracking, and a quiet hairline instead of a filled chip, so
+ * it labels the section without competing with the heading under it.
+ */
 export function Eyebrow({ children }: { children: ReactNode }) {
   return (
-    <span className="inline-flex items-center gap-2 rounded-full border border-crush-100 bg-crush-50 px-3 py-1 text-xs font-semibold uppercase tracking-wider text-crush-700">
+    <span className="inline-flex items-center gap-2 rounded-lg border border-crush-100 px-2.5 py-1 text-xs font-medium text-crush-700">
       {children}
     </span>
   );
@@ -80,14 +89,16 @@ export function PageHero({
 }) {
   return (
     <section className="relative overflow-hidden bg-ink-900 text-white">
-      <div className="absolute inset-0 hero-grid opacity-60" aria-hidden />
-      <div
-        className="absolute -top-24 right-0 h-72 w-72 rounded-full bg-crush-500/20 blur-3xl"
-        aria-hidden
-      />
+      {/*
+        The grid overlay and the blurred red blob are gone. Both were
+        decoration that said nothing about the product, and PageHero is used
+        on every interior page, so they were the background of the whole
+        suite. A plain dark field reads as deliberate; a glowing orb behind a
+        heading reads as a template.
+      */}
       <Container className="relative py-16 sm:py-20">
         <Eyebrow>{eyebrow}</Eyebrow>
-        <h1 className="mt-5 max-w-3xl text-4xl font-extrabold leading-tight tracking-tight sm:text-5xl">
+        <h1 className="mt-5 max-w-3xl text-4xl font-bold leading-tight tracking-tight sm:text-5xl">
           {title}
         </h1>
         {subtitle && (

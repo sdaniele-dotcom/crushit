@@ -22,7 +22,7 @@ type Overview = {
 function Stat({ label, value }: { label: string; value: number | string }) {
   return (
     <div className="rounded-2xl border border-border bg-white p-5">
-      <p className="text-xs font-semibold uppercase tracking-wide text-muted">{label}</p>
+      <p className="text-xs font-semibold text-muted">{label}</p>
       <p className="mt-1 text-2xl font-extrabold text-ink-900">{typeof value === "number" ? value.toLocaleString() : value}</p>
     </div>
   );
@@ -82,7 +82,7 @@ function AdminInner() {
 
             <div className="mt-10 grid gap-8 lg:grid-cols-2">
               <div>
-                <h2 className="text-sm font-bold uppercase tracking-wide text-crush-700">Most-used tools</h2>
+                <h2 className="text-sm font-bold text-crush-700">Most-used tools</h2>
                 <div className="mt-4 space-y-2">
                   {ov.top_tools.length === 0 && <p className="rounded-2xl border border-border bg-surface p-4 text-sm text-muted">No tool usage yet.</p>}
                   {ov.top_tools.map((t) => (
@@ -94,7 +94,7 @@ function AdminInner() {
                 </div>
               </div>
               <div>
-                <h2 className="text-sm font-bold uppercase tracking-wide text-crush-700">Recently registered</h2>
+                <h2 className="text-sm font-bold text-crush-700">Recently registered</h2>
                 <div className="mt-4 space-y-2">
                   {ov.recent_signups.map((s) => (
                     <Link key={s.id} href={`/admin/users?u=${s.id}`} className="block rounded-xl border border-border bg-white px-4 py-3 hover:bg-surface-2">

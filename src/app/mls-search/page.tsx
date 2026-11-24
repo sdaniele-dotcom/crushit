@@ -34,7 +34,7 @@ export default function MlsSearchPage() {
             href={CRMLS_IDX_URL}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex shrink-0 items-center gap-2 rounded-full bg-crush-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg shadow-crush-500/20 transition-colors hover:bg-crush-600"
+            className="inline-flex shrink-0 items-center gap-2 rounded-full bg-crush-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg transition-colors hover:bg-crush-600"
           >
             Open CRMLS search
             <svg viewBox="0 0 20 20" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2.2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>

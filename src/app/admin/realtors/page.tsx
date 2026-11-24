@@ -65,7 +65,7 @@ function LogTouch({ contact, onLogged }: { contact: Contact; onLogged: () => voi
 
   return (
     <div className="rounded-2xl border border-border bg-surface p-4">
-      <p className="text-xs font-semibold uppercase tracking-wide text-muted">Log a touch</p>
+      <p className="text-xs font-semibold text-muted">Log a touch</p>
       <div className="mt-3 flex flex-wrap gap-2">
         {(["call", "text", "meeting", "note", "email"] as TouchKind[]).map((k) => (
           <button

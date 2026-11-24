@@ -180,7 +180,7 @@ export function GuideLibrary() {
 
   const inputCls =
     "w-full rounded-xl border border-border bg-white px-4 py-2.5 text-sm text-ink-900 outline-none placeholder:text-muted focus:border-crush-400 focus:ring-2 focus:ring-crush-100";
-  const labelCls = "text-xs font-semibold uppercase tracking-wide text-muted";
+  const labelCls = "text-xs font-semibold text-muted";
 
   return (
     <div>
@@ -198,7 +198,7 @@ export function GuideLibrary() {
             <button
               type="button"
               onClick={() => open(g.key)}
-              className="mt-5 inline-flex items-center justify-center gap-2 self-start rounded-full bg-crush-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-crush-500/20 transition-colors hover:bg-crush-600"
+              className="mt-5 inline-flex items-center justify-center gap-2 self-start rounded-full bg-crush-500 px-6 py-3 text-sm font-semibold text-white shadow-lg transition-colors hover:bg-crush-600"
             >
               <svg viewBox="0 0 20 20" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
                 <path d="M10 3v10m0 0l4-4m-4 4l-4-4M4 17h12" />
@@ -309,7 +309,7 @@ export function GuideLibrary() {
                 type="button"
                 onClick={createGuide}
                 disabled={!ready || busy}
-                className="inline-flex items-center justify-center gap-2 rounded-full bg-crush-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-crush-500/20 transition-colors hover:bg-crush-600 disabled:cursor-not-allowed disabled:opacity-60"
+                className="inline-flex items-center justify-center gap-2 rounded-full bg-crush-500 px-6 py-3 text-sm font-semibold text-white shadow-lg transition-colors hover:bg-crush-600 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {busy ? "Building…" : "Create & download my guide"}
               </button>

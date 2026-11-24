@@ -13,7 +13,7 @@ import { toast } from "@/lib/toast";
 
 const input =
   "w-full rounded-xl border border-border bg-white px-3.5 py-2.5 text-sm outline-none focus:border-crush-400 focus:ring-2 focus:ring-crush-100";
-const label = "text-xs font-semibold uppercase tracking-wide text-muted";
+const label = "text-xs font-semibold text-muted";
 
 function money(n: number | null) {
   return n == null ? "" : n.toLocaleString("en-US", { style: "currency", currency: "USD", maximumFractionDigits: 0 });

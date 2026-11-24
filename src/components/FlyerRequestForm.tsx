@@ -13,7 +13,7 @@ import { toast } from "@/lib/toast";
 
 const inp =
   "mt-1.5 w-full rounded-xl border border-border bg-white px-3.5 py-2.5 text-sm text-ink-900 outline-none focus:border-crush-400 focus:ring-2 focus:ring-crush-500/20";
-const lbl = "text-xs font-semibold uppercase tracking-wide text-muted";
+const lbl = "text-xs font-semibold text-muted";
 
 /** The programs we can price. The team quotes whichever of these apply. */
 const PROGRAMS: [string, string][] = [
@@ -320,7 +320,7 @@ export function FlyerRequestForm() {
           <button
             type="submit"
             disabled={sending}
-            className="rounded-full bg-crush-500 px-7 py-3.5 text-sm font-semibold text-white shadow-lg shadow-crush-500/20 hover:bg-crush-600 disabled:opacity-60"
+            className="rounded-full bg-crush-500 px-7 py-3.5 text-sm font-semibold text-white shadow-lg hover:bg-crush-600 disabled:opacity-60"
           >
             {sending ? "Sending…" : "Send my flyer request"}
           </button>
@@ -337,7 +337,7 @@ export function FlyerRequestForm() {
       <aside className="order-1 lg:order-2">
         <div className="sticky top-24 space-y-4">
           <div className="rounded-3xl border border-crush-200 bg-gradient-to-br from-crush-50 to-white p-6">
-            <p className="text-xs font-bold uppercase tracking-widest text-crush-600">Why a request, not a button</p>
+            <p className="text-xs font-bold text-crush-600">Why a request, not a button</p>
             <h3 className="mt-2 text-lg font-bold text-ink-900">We want to give you the most accurate numbers</h3>
             <p className="mt-2 text-sm text-muted">
               That is exactly why automation is not ideal here. Real pricing depends on the buyer&apos;s credit and

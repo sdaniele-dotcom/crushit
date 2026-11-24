@@ -376,11 +376,11 @@ export function NeighborPostcard() {
   const cls = "rounded-xl border px-4 py-3 text-left text-sm transition-colors";
   const field =
     "mt-1 w-full rounded-xl border border-border bg-white px-3 py-2.5 text-sm outline-none focus:border-crush-400";
-  const label = "text-xs font-semibold uppercase tracking-wide text-muted";
+  const label = "text-xs font-semibold text-muted";
 
   return (
     <div className="rounded-2xl border border-border bg-white p-5 sm:p-6">
-      <h3 className="text-sm font-bold uppercase tracking-wide text-crush-700">Neighbor postcard</h3>
+      <h3 className="text-sm font-bold text-crush-700">Neighbor postcard</h3>
       <p className="mt-1 text-sm text-muted">
         A print-ready invite for the block — front &amp; back, sized and laid out to mail. Uses your selected
         listing&apos;s photo &amp; details.
@@ -391,7 +391,7 @@ export function NeighborPostcard() {
         </p>
       )}
 
-      <p className="mt-4 text-xs font-semibold uppercase tracking-wide text-muted">Template</p>
+      <p className="mt-4 text-xs font-semibold text-muted">Template</p>
       <div className="mt-2 grid gap-2 sm:grid-cols-3">
         {TEMPLATES.map((t) => (
           <button key={t.key} type="button" onClick={() => setTpl(t.key)} className={`${cls} ${tpl === t.key ? "border-crush-400 bg-crush-50" : "border-border hover:bg-surface-2"}`}>
@@ -419,7 +419,7 @@ export function NeighborPostcard() {
 
       {/* Editable copy — tweak anything before you print */}
       <div className="mt-5 rounded-xl border border-border bg-surface p-4">
-        <p className="text-xs font-bold uppercase tracking-wide text-crush-700">Edit the wording</p>
+        <p className="text-xs font-bold text-crush-700">Edit the wording</p>
         <div className="mt-3 grid gap-3">
           <label className="block"><span className={label}>Front headline</span>
             <input value={headline} onChange={(e) => setHeadline(e.target.value)} className={field} /></label>
@@ -445,7 +445,7 @@ export function NeighborPostcard() {
 
       {/* Mail panel — needed for anything going through USPS */}
       <div className="mt-4 rounded-xl border border-border bg-surface p-4">
-        <p className="text-xs font-bold uppercase tracking-wide text-crush-700">Mailing</p>
+        <p className="text-xs font-bold text-crush-700">Mailing</p>
         <p className="mt-1 text-xs text-muted">
           The address side keeps the recipient block empty for your label printer or mail house, and leaves the
           bottom ⅝&quot; clear for the barcode.

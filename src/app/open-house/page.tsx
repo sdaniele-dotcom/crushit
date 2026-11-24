@@ -57,7 +57,7 @@ export default function OpenHouseSignInPage() {
           </div>
         ) : (
           <>
-            <p className="text-sm font-semibold uppercase tracking-wide text-crush-600">Open house sign-in</p>
+            <p className="text-sm font-semibold text-crush-600">Open house sign-in</p>
             <h1 className="mt-1 text-2xl font-bold text-ink-900">Welcome! 👋</h1>
             {address && <p className="mt-1 text-muted">{address}</p>}
             <form onSubmit={submit} className="mt-6 grid gap-4">

@@ -167,7 +167,7 @@ export function RentVsOwnCalculator() {
     <div className="grid gap-8 lg:grid-cols-[minmax(0,380px)_1fr]">
       {/* ── Inputs ─────────────────────────────── */}
       <div className="rounded-3xl border border-border bg-white p-6">
-        <h3 className="text-sm font-bold uppercase tracking-wide text-crush-700">
+        <h3 className="text-sm font-bold text-crush-700">
           The home
         </h3>
         <div className="mt-3 grid gap-4 sm:grid-cols-2">
@@ -180,7 +180,7 @@ export function RentVsOwnCalculator() {
           <Field label="Current rent" value={inp.currentRent} onChange={set("currentRent")} prefix="$" suffix="/mo" min={500} max={20000} step={50} />
         </div>
 
-        <h3 className="mt-6 text-sm font-bold uppercase tracking-wide text-crush-700">
+        <h3 className="mt-6 text-sm font-bold text-crush-700">
           Assumptions
         </h3>
         <div className="mt-3 grid gap-4 sm:grid-cols-2">
@@ -234,7 +234,7 @@ export function RentVsOwnCalculator() {
         {/* Rent vs Own columns */}
         <div className="grid gap-4 sm:grid-cols-2">
           <div className="rounded-2xl border-2 border-red-200 bg-red-50/60 p-5">
-            <p className="text-xs font-bold uppercase tracking-wide text-red-600">If you keep renting</p>
+            <p className="text-xs font-bold text-red-600">If you keep renting</p>
             <div className="mt-2 rounded-xl bg-white/70 p-3">
               <p className="text-xs font-semibold text-red-600">Rent paid over {inp.horizonYears} years — with $0 to show for it</p>
               <p className="mt-0.5 text-3xl font-extrabold tracking-tight text-red-600 sm:text-4xl">{money0(s.totalRentPaid)}</p>
@@ -245,7 +245,7 @@ export function RentVsOwnCalculator() {
             </dl>
           </div>
           <div className="rounded-2xl border border-crush-200 bg-white p-5">
-            <p className="text-xs font-bold uppercase tracking-wide text-crush-700">If you own</p>
+            <p className="text-xs font-bold text-crush-700">If you own</p>
             <dl className="mt-3 space-y-2 text-sm">
               <div className="flex justify-between"><dt className="text-muted">Home value</dt><dd className="font-semibold text-ink-900">{money0(s.homeValue)}</dd></div>
               <div className="flex justify-between"><dt className="text-muted">Equity built</dt><dd className="font-semibold text-ink-900">{money0(s.equity)}</dd></div>
@@ -256,7 +256,7 @@ export function RentVsOwnCalculator() {
 
         {/* Monthly breakdown */}
         <div className="rounded-2xl border border-border bg-white p-5">
-          <p className="text-xs font-bold uppercase tracking-wide text-muted">Your monthly house payment</p>
+          <p className="text-xs font-bold text-muted">Your monthly house payment</p>
           <dl className="mt-3 space-y-1.5 text-sm">
             <Line label="Principal & interest" value={money0(m.principalInterest)} />
             <Line label="Property taxes" value={money0(m.tax)} />
@@ -271,7 +271,7 @@ export function RentVsOwnCalculator() {
 
         {/* Chart */}
         <div className="rounded-2xl border border-border bg-white p-5">
-          <p className="text-xs font-bold uppercase tracking-wide text-muted">Owning advantage over time</p>
+          <p className="text-xs font-bold text-muted">Owning advantage over time</p>
           <div className="mt-3">
             <AdvantageChart data={r.rows.map((row) => ({ year: row.year, value: row.ownAdvantage }))} />
           </div>
@@ -311,7 +311,7 @@ export function RentVsOwnCalculator() {
           <button
             type="button"
             onClick={savePdf}
-            className="inline-flex items-center justify-center gap-2 rounded-full bg-crush-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-crush-500/20 transition-colors hover:bg-crush-600"
+            className="inline-flex items-center justify-center gap-2 rounded-full bg-crush-500 px-6 py-3 text-sm font-semibold text-white shadow-lg transition-colors hover:bg-crush-600"
           >
             <svg viewBox="0 0 20 20" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
               <path d="M6 9V3h8v6M6 15h8v3H6zM4 9h12a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1h-1" />

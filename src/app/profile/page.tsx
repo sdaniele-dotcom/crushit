@@ -43,7 +43,7 @@ const empty: Form = {
 
 const input =
   "mt-1 w-full rounded-xl border border-border bg-white px-3.5 py-2.5 text-sm text-ink-900 outline-none focus:border-crush-400 focus:ring-2 focus:ring-crush-100";
-const label = "text-xs font-semibold uppercase tracking-wide text-muted";
+const label = "text-xs font-semibold text-muted";
 
 function ImageField({
   title,
@@ -179,7 +179,7 @@ function ProfileInner() {
             <p className="text-xs text-muted">Crush Stars · {profile?.lifetime_stars ?? 0} lifetime</p>
           </div>
           <div>
-            <p className="text-sm font-bold uppercase tracking-wide text-ink-800">{level_name(profile?.lifetime_stars ?? 0)}</p>
+            <p className="text-sm font-bold text-ink-800">{level_name(profile?.lifetime_stars ?? 0)}</p>
             <p className="text-xs text-muted">{created && `Member since ${created}`}</p>
           </div>
         </div>
@@ -187,7 +187,7 @@ function ProfileInner() {
         <form onSubmit={save} className="grid gap-8 lg:grid-cols-2">
           {/* Left: details */}
           <div className="rounded-3xl border border-border bg-white p-6">
-            <h2 className="text-sm font-bold uppercase tracking-wide text-crush-700">Your details</h2>
+            <h2 className="text-sm font-bold text-crush-700">Your details</h2>
             <div className="mt-4 grid gap-4 sm:grid-cols-2">
               <div><label className={label}>First name</label><input className={input} value={form.first_name} onChange={(e) => set("first_name", e.target.value)} /></div>
               <div><label className={label}>Last name</label><input className={input} value={form.last_name} onChange={(e) => set("last_name", e.target.value)} /></div>
@@ -205,7 +205,7 @@ function ProfileInner() {
           {/* Right: images + settings */}
           <div className="flex flex-col gap-6">
             <div className="rounded-3xl border border-border bg-white p-6">
-              <h2 className="text-sm font-bold uppercase tracking-wide text-crush-700">Photos &amp; logos</h2>
+              <h2 className="text-sm font-bold text-crush-700">Photos &amp; logos</h2>
               <div className="mt-4 grid gap-5">
                 <ImageField title="Headshot" round url={form.headshot_url} kind="headshot" onChange={(u) => set("headshot_url", u)} />
                 <ImageField title="Brokerage logo" url={form.brokerage_logo_url} kind="brokerage_logo" onChange={(u) => set("brokerage_logo_url", u)} />
@@ -213,7 +213,7 @@ function ProfileInner() {
               </div>
             </div>
             <div className="rounded-3xl border border-border bg-white p-6">
-              <h2 className="text-sm font-bold uppercase tracking-wide text-crush-700">Privacy</h2>
+              <h2 className="text-sm font-bold text-crush-700">Privacy</h2>
               <label className="mt-3 flex items-center gap-3 text-sm text-ink-800">
                 <input type="checkbox" className="h-4 w-4 accent-crush-500" checked={form.leaderboard_visible} onChange={(e) => set("leaderboard_visible", e.target.checked)} />
                 Show me on the Crush Leaderboard
@@ -240,7 +240,7 @@ function ProfileInner() {
             </div>
 
             <div className="rounded-3xl border border-crush-200 bg-crush-50 p-6">
-              <h2 className="text-sm font-bold uppercase tracking-wide text-crush-700">Auto-marketing</h2>
+              <h2 className="text-sm font-bold text-crush-700">Auto-marketing</h2>
               <label className="mt-3 flex items-start gap-3 text-sm text-ink-800">
                 <input type="checkbox" className="mt-0.5 h-4 w-4 accent-crush-500" checked={form.listing_marketing_opt_in} onChange={(e) => set("listing_marketing_opt_in", e.target.checked)} />
                 <span>
@@ -270,7 +270,7 @@ function ProfileInner() {
               on the platform.
             */}
             <div className="rounded-3xl border border-border bg-white p-6">
-              <h2 className="text-sm font-bold uppercase tracking-wide text-crush-700">Your CRM</h2>
+              <h2 className="text-sm font-bold text-crush-700">Your CRM</h2>
               <p className="mt-2 text-sm text-ink-800">
                 Send every open-house sign-in and feedback form straight to your CRM as it comes in.
                 They stay in Crush It either way — this is a copy, not a handoff.
@@ -346,7 +346,7 @@ function ProfileInner() {
           </div>
 
           <div className="lg:col-span-2 flex flex-wrap items-center gap-4">
-            <button type="submit" disabled={saving} className="inline-flex items-center justify-center gap-2 rounded-full bg-crush-500 px-7 py-3 text-sm font-semibold text-white shadow-lg shadow-crush-500/20 transition-colors hover:bg-crush-600 disabled:opacity-60">
+            <button type="submit" disabled={saving} className="inline-flex items-center justify-center gap-2 rounded-full bg-crush-500 px-7 py-3 text-sm font-semibold text-white shadow-lg transition-colors hover:bg-crush-600 disabled:opacity-60">
               {saving ? "Saving…" : "Save profile"}
             </button>
             {saved && <span className="text-sm font-semibold text-mint-500">Saved ✓</span>}

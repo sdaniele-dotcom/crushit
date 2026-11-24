@@ -76,7 +76,7 @@ export default function FeedbackPage() {
         ) : (
           <form onSubmit={submit} className="grid gap-6">
             <div>
-              <p className="text-sm font-semibold uppercase tracking-wide text-crush-600">Open house feedback</p>
+              <p className="text-sm font-semibold text-crush-600">Open house feedback</p>
               <h1 className="mt-1 text-2xl font-bold text-ink-900">How was the home?</h1>
               {address && <p className="mt-1 text-muted">{address}</p>}
             </div>

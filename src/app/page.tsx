@@ -1,3 +1,4 @@
+import { Star, FlyerIcon, HouseIcon, GuideIcon, CalculatorIcon } from "@/components/icons";
 import Link from "next/link";
 import { Container } from "@/components/ui";
 import { site } from "@/lib/site";
@@ -14,28 +15,28 @@ const FEATURES = [
     title: "Professional listing & financing flyers in seconds",
     body: "Drop in an address and out comes a co-branded flyer with real financing scenarios, a shareable page, and a print-ready PDF with a QR code — your photo and logo already on it.",
     points: ["Auto-filled from your profile", "Estimated monthly payments", "Print or share instantly"],
-    emoji: "🎨",
+    Icon: FlyerIcon,
   },
   {
     eyebrow: "Open house tools",
     title: "Everything you need to run a standout open house",
     body: "Branded sign-in sheets, neighbor invites, follow-up templates, and financing one-sheets — a full kit that makes you look organized and buttoned-up.",
     points: ["Sign-in sheets & QR check-in", "Neighbor invitations", "Ready-to-send follow-ups"],
-    emoji: "🏡",
+    Icon: HouseIcon,
   },
   {
     eyebrow: "Buyer & seller guides",
     title: "Client guides that come out branded to you",
     body: "Hand buyers and sellers a polished, co-branded guide that positions you as the expert — no design work, just add your info once.",
     points: ["First-time buyer guide", "Home seller guide", "Saved as a shareable PDF"],
-    emoji: "📘",
+    Icon: GuideIcon,
   },
   {
     eyebrow: "Crush Stars",
     title: "Earn rewards every time you market",
-    body: "Every flyer, guide, and tool you use earns Crush Stars ⭐ — climb from Starter to Crush Club, unlock achievements, and see where you rank.",
+    body: "Every flyer, guide, and tool you use earns Crush Stars — climb from Starter to Crush Club, unlock achievements, and see where you rank.",
     points: ["Points for real activity", "Levels & achievement badges", "Agent leaderboard"],
-    emoji: "⭐",
+    Icon: Star,
   },
 ];
 
@@ -50,13 +51,10 @@ export default function Home() {
     <>
       {/* ───────── Hero ───────── */}
       <section className="relative overflow-hidden bg-ink-900 text-white">
-        <div className="absolute inset-0 hero-grid opacity-70" aria-hidden />
-        <div className="absolute -top-32 -right-24 h-96 w-96 rounded-full bg-crush-500/25 blur-3xl" aria-hidden />
-        <div className="absolute top-40 -left-24 h-72 w-72 rounded-full bg-sky-500/10 blur-3xl" aria-hidden />
 
         <Container className="relative grid items-center gap-12 py-20 lg:grid-cols-2 lg:py-28">
           <div>
-            <p className="text-sm font-semibold uppercase tracking-[0.2em] text-crush-400">
+            <p className="text-sm font-medium text-crush-400">
               {site.brand} · by {site.company}
             </p>
             <h1 className="mt-5 text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl">
@@ -67,7 +65,7 @@ export default function Home() {
               programs. Earn rewards — all in one place, co-branded to you. Free for partner agents.
             </p>
             <div className="mt-8 flex flex-wrap gap-4">
-              <Link href="/signup" className="inline-flex items-center rounded-full bg-crush-500 px-7 py-3.5 text-base font-semibold text-white shadow-lg shadow-crush-500/25 transition-colors hover:bg-crush-600">
+              <Link href="/signup" className="inline-flex items-center rounded-full bg-crush-500 px-7 py-3.5 text-base font-semibold text-white shadow-lg transition-colors hover:bg-crush-600">
                 Create Free Agent Account
               </Link>
               <Link href="#features" className="inline-flex items-center rounded-full border border-white/20 px-7 py-3.5 text-base font-semibold text-white transition-colors hover:bg-white/10">
@@ -90,10 +88,15 @@ export default function Home() {
               <div className="rounded-xl bg-white p-5 text-ink-900">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-xs font-semibold uppercase tracking-wide text-muted">Good morning</p>
-                    <p className="text-lg font-bold">Welcome back 👋</p>
+                    <p className="text-xs font-medium text-muted">Your dashboard</p>
+                    <p className="text-lg font-semibold">November 2026</p>
                   </div>
-                  <span className="rounded-full bg-crush-50 px-3 py-1.5 text-sm font-bold text-crush-600">⭐ 128</span>
+                  {/* The count is a number with the mark beside it, not an
+                      emoji inside a tinted pill. */}
+                  <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-crush-600">
+                    <Star size={15} />
+                    <span className="tabular-nums">128</span>
+                  </span>
                 </div>
                 <div className="mt-4">
                   <div className="flex justify-between text-xs font-medium text-muted">
@@ -104,12 +107,19 @@ export default function Home() {
                   </div>
                 </div>
                 <div className="mt-5 grid grid-cols-2 gap-3">
-                  {[["🎨", "Flyer created", "+5 ⭐"], ["🏡", "Open house kit", "+10 ⭐"], ["📘", "Buyer guide", "+5 ⭐"], ["🧮", "Calculator", "+2 ⭐"]].map(([i, t, s]) => (
-                    <div key={t} className="flex items-center gap-3 rounded-xl border border-border bg-surface p-3">
-                      <span className="text-lg" aria-hidden>{i}</span>
+                  {([
+                    [FlyerIcon, "Flyer created", 5],
+                    [HouseIcon, "Open house kit", 10],
+                    [GuideIcon, "Buyer guide", 5],
+                    [CalculatorIcon, "Calculator", 2],
+                  ] as const).map(([Icon, label, stars]) => (
+                    <div key={label} className="flex items-center gap-3 rounded-xl border border-border bg-surface p-3">
+                      <Icon className="shrink-0 text-muted" />
                       <div className="min-w-0">
-                        <p className="truncate text-sm font-semibold">{t}</p>
-                        <p className="text-xs font-bold text-crush-600">{s}</p>
+                        <p className="truncate text-sm font-medium">{label}</p>
+                        <p className="flex items-center gap-1 text-xs font-semibold text-crush-600">
+                          +{stars} <Star size={12} />
+                        </p>
                       </div>
                     </div>
                   ))}
@@ -136,7 +146,7 @@ export default function Home() {
       <section id="features" className="scroll-mt-16 py-20 sm:py-24">
         <Container>
           <div className="mx-auto max-w-2xl text-center">
-            <p className="text-sm font-semibold uppercase tracking-wider text-crush-600">The suite</p>
+            <p className="text-sm font-semibold text-crush-600">The suite</p>
             <h2 className="mt-3 text-3xl font-bold tracking-tight text-ink-900 sm:text-4xl">
               Everything you need to market like a pro
             </h2>
@@ -150,7 +160,7 @@ export default function Home() {
             {FEATURES.map((f, i) => (
               <div key={f.title} className="grid items-center gap-8 lg:grid-cols-2">
                 <div className={i % 2 === 1 ? "lg:order-2" : ""}>
-                  <p className="text-sm font-semibold uppercase tracking-wider text-crush-600">{f.eyebrow}</p>
+                  <p className="text-sm font-semibold text-crush-600">{f.eyebrow}</p>
                   <h3 className="mt-2 text-2xl font-bold text-ink-900 sm:text-3xl">{f.title}</h3>
                   <p className="mt-4 text-lg text-muted">{f.body}</p>
                   <ul className="mt-6 space-y-2.5">
@@ -162,8 +172,14 @@ export default function Home() {
                   </ul>
                 </div>
                 <div className={i % 2 === 1 ? "lg:order-1" : ""}>
-                  <div className="grid aspect-[4/3] place-items-center rounded-3xl border border-border bg-gradient-to-br from-surface to-surface-2">
-                    <span className="text-7xl sm:text-8xl" aria-hidden>{f.emoji}</span>
+                  {/*
+                    A drawn mark on a plain surface, replacing a 7xl emoji on
+                    a gradient. These four slots still want real product
+                    previews — the flyer, the open-house kit, the guide, the
+                    leaderboard — which is a bigger job than this pass.
+                  */}
+                  <div className="grid aspect-[4/3] place-items-center rounded-3xl border border-border bg-surface">
+                    <f.Icon size={88} className="text-crush-500/60" />
                   </div>
                 </div>
               </div>
@@ -176,7 +192,7 @@ export default function Home() {
       <section className="bg-surface py-20 sm:py-24">
         <Container>
           <div className="mx-auto max-w-2xl text-center">
-            <p className="text-sm font-semibold uppercase tracking-wider text-crush-600">How it works</p>
+            <p className="text-sm font-semibold text-crush-600">How it works</p>
             <h2 className="mt-3 text-3xl font-bold tracking-tight text-ink-900 sm:text-4xl">
               Up and running in three steps
             </h2>
@@ -191,7 +207,7 @@ export default function Home() {
             ))}
           </div>
           <div className="mt-12 text-center">
-            <Link href="/signup" className="inline-flex items-center rounded-full bg-crush-500 px-7 py-3.5 text-base font-semibold text-white shadow-lg shadow-crush-500/20 transition-colors hover:bg-crush-600">
+            <Link href="/signup" className="inline-flex items-center rounded-full bg-crush-500 px-7 py-3.5 text-base font-semibold text-white shadow-lg transition-colors hover:bg-crush-600">
               Get started free
             </Link>
           </div>
@@ -203,7 +219,7 @@ export default function Home() {
         <Container>
           <div className="grid items-center gap-12 md:grid-cols-2">
             <div>
-              <p className="text-sm font-semibold uppercase tracking-wider text-crush-600">Why agents partner with us</p>
+              <p className="text-sm font-semibold text-crush-600">Why agents partner with us</p>
               <h2 className="mt-3 text-3xl font-bold tracking-tight text-ink-900 sm:text-4xl">
                 A lending partner that makes you look great
               </h2>
@@ -250,8 +266,6 @@ export default function Home() {
       <section className="pb-24">
         <Container>
           <div className="relative overflow-hidden rounded-3xl bg-ink-900 px-8 py-16 text-center sm:px-16">
-            <div className="absolute inset-0 hero-grid opacity-60" aria-hidden />
-            <div className="absolute -bottom-20 left-1/2 h-64 w-64 -translate-x-1/2 rounded-full bg-crush-500/25 blur-3xl" aria-hidden />
             <div className="relative">
               <h2 className="mx-auto max-w-2xl text-3xl font-extrabold tracking-tight text-white sm:text-4xl">
                 Start marketing like the top agent in your market.
@@ -260,7 +274,7 @@ export default function Home() {
                 Create your free account and generate your first co-branded flyer in minutes.
               </p>
               <div className="mt-8 flex flex-wrap justify-center gap-4">
-                <Link href="/signup" className="inline-flex items-center rounded-full bg-crush-500 px-7 py-3.5 text-base font-semibold text-white shadow-lg shadow-crush-500/25 transition-colors hover:bg-crush-600">
+                <Link href="/signup" className="inline-flex items-center rounded-full bg-crush-500 px-7 py-3.5 text-base font-semibold text-white shadow-lg transition-colors hover:bg-crush-600">
                   Create your free account
                 </Link>
                 <Link href="/login" className="inline-flex items-center rounded-full border border-white/20 px-7 py-3.5 text-base font-semibold text-white transition-colors hover:bg-white/10">

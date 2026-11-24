@@ -287,7 +287,7 @@ const followUps: { title: string; meta: string; text: string }[] = [
 ];
 
 const printBtnClass =
-  "inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-crush-500 px-6 py-3 text-sm font-semibold text-white shadow-lg shadow-crush-500/20 transition-colors hover:bg-crush-600";
+  "inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-crush-500 px-6 py-3 text-sm font-semibold text-white shadow-lg transition-colors hover:bg-crush-600";
 const printBtnGhost =
   "inline-flex shrink-0 items-center justify-center gap-2 rounded-full border border-border bg-white px-6 py-3 text-sm font-semibold text-ink-900 transition-colors hover:bg-surface-2";
 

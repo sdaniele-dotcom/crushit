@@ -70,7 +70,7 @@ export function TermsGate({ onAccepted }: { onAccepted: () => void }) {
   return (
     <Container className="flex min-h-[80vh] items-center justify-center py-14">
       <div className="w-full max-w-2xl rounded-3xl border border-border bg-white p-7 shadow-xl sm:p-10">
-        <p className="text-xs font-semibold uppercase tracking-wider text-crush-600">
+        <p className="text-xs font-semibold text-crush-600">
           Before you continue
         </p>
         <h1 className="mt-3 text-2xl font-extrabold tracking-tight text-ink-900 sm:text-3xl">

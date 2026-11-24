@@ -10,7 +10,7 @@ import { site } from "@/lib/site";
 import { CurrencyInput } from "@/components/CurrencyInput";
 
 const inp = "w-full rounded-xl border border-border bg-white px-3.5 py-2.5 text-sm outline-none focus:border-crush-400 focus:ring-2 focus:ring-crush-100";
-const lbl = "text-xs font-semibold uppercase tracking-wide text-muted";
+const lbl = "text-xs font-semibold text-muted";
 
 const CREDIT = ["740+", "680-739", "620-679", "580-619", "<580"];
 const PROPERTY = ["single-family", "condo", "townhome", "multi-unit"];
@@ -170,7 +170,7 @@ export function LoanFinder() {
         const { standard, exclusive } = splitMatches(results);
         return (
         <div className="mt-6">
-          <h3 className="text-sm font-bold uppercase tracking-wide text-crush-700">Programs that may be worth exploring</h3>
+          <h3 className="text-sm font-bold text-crush-700">Programs that may be worth exploring</h3>
           {results.length === 0 && <p className="mt-3 text-sm text-muted">No clear matches from the answers given — a quick chat with a loan officer is the best next step.</p>}
           <div className="mt-3 grid gap-3 sm:grid-cols-2">
             {standard.map((m) => <ProgramCard key={m.program.id} m={m} />)}
@@ -180,7 +180,7 @@ export function LoanFinder() {
             <div className="mt-6">
               <div className="flex items-center gap-2">
                 <span className="rounded-full bg-crush-500 px-2.5 py-1 text-xs font-bold text-white">⭐ Exclusive</span>
-                <h3 className="text-sm font-bold uppercase tracking-wide text-crush-700">Exclusive Crush Mortgage programs to ask about</h3>
+                <h3 className="text-sm font-bold text-crush-700">Exclusive Crush Mortgage programs to ask about</h3>
               </div>
               <div className="mt-3 grid gap-3 sm:grid-cols-2">
                 {exclusive.map((m) => <ProgramCard key={m.program.id} m={m} exclusive />)}

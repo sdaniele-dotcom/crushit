@@ -146,7 +146,7 @@ function UsersInner() {
 
                 {/* Star management */}
                 <div className="rounded-2xl border border-border bg-white p-6">
-                  <h3 className="text-sm font-bold uppercase tracking-wide text-crush-700">Adjust Crush Stars</h3>
+                  <h3 className="text-sm font-bold text-crush-700">Adjust Crush Stars</h3>
                   <div className="mt-3 grid gap-3 sm:grid-cols-[120px_1fr_auto]">
                     <input className={input} type="number" min={1} placeholder="Amount" value={stars} onChange={(e) => setStars(e.target.value)} />
                     <input className={input} placeholder="Reason (required) — e.g. Attended workshop" value={reason} onChange={(e) => setReason(e.target.value)} />
@@ -161,7 +161,7 @@ function UsersInner() {
 
                 {/* Activity */}
                 <div className="rounded-2xl border border-border bg-white p-6">
-                  <h3 className="text-sm font-bold uppercase tracking-wide text-crush-700">Recent activity</h3>
+                  <h3 className="text-sm font-bold text-crush-700">Recent activity</h3>
                   <div className="mt-3 space-y-1.5">
                     {txs.length === 0 && <p className="text-sm text-muted">No star activity yet.</p>}
                     {txs.map((t) => (

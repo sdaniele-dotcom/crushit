@@ -56,7 +56,7 @@ export function RewardDrops({ current }: { current: number }) {
 
   return (
     <>
-      <h2 className="mt-10 flex items-center gap-2 text-sm font-bold uppercase tracking-wide text-crush-700">
+      <h2 className="mt-10 flex items-center gap-2 text-sm font-bold text-crush-700">
         <span aria-hidden>🔥</span> Limited-time drops
       </h2>
       <p className="mt-1 text-sm text-muted">Spend your stars on these while they last — limited quantities, limited time.</p>

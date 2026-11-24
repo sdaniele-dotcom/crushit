@@ -73,7 +73,7 @@ function RewardsInner() {
         <SavingGoal lifetime={lifetime} current={profile?.current_stars ?? 0} />
 
         {/* Levels */}
-        <h2 className="mt-10 text-sm font-bold uppercase tracking-wide text-crush-700">Crush tiers</h2>
+        <h2 className="mt-10 text-sm font-bold text-crush-700">Crush tiers</h2>
         <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-5">
           {sortedLevels.map((l, i) => {
             const reached = lifetime >= l.min;
@@ -101,7 +101,7 @@ function RewardsInner() {
         <TierRewards lifetime={lifetime} />
 
         {/* Achievements */}
-        <h2 className="mt-10 text-sm font-bold uppercase tracking-wide text-crush-700">Achievements</h2>
+        <h2 className="mt-10 text-sm font-bold text-crush-700">Achievements</h2>
         <div className="mt-4 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {achievements.map((a) => {
             const got = earned.has(a.key);
@@ -119,7 +119,7 @@ function RewardsInner() {
         </div>
 
         {/* Star history */}
-        <h2 className="mt-10 text-sm font-bold uppercase tracking-wide text-crush-700">Star history</h2>
+        <h2 className="mt-10 text-sm font-bold text-crush-700">Star history</h2>
         <div className="mt-4 overflow-hidden rounded-2xl border border-border bg-white">
           {txs.length === 0 ? (
             <p className="p-6 text-center text-sm text-muted">No stars yet — use a tool to start earning.</p>

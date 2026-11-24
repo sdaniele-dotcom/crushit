@@ -190,7 +190,7 @@ export function ContactForm() {
         <button
           type="submit"
           disabled={status === "submitting"}
-          className="inline-flex w-full items-center justify-center rounded-full bg-crush-500 px-6 py-3.5 text-sm font-semibold text-white shadow-lg shadow-crush-500/20 transition-colors hover:bg-crush-600 disabled:opacity-60 sm:w-auto"
+          className="inline-flex w-full items-center justify-center rounded-full bg-crush-500 px-6 py-3.5 text-sm font-semibold text-white shadow-lg transition-colors hover:bg-crush-600 disabled:opacity-60 sm:w-auto"
         >
           {status === "submitting" ? "Sending…" : "Request pre-approval"}
         </button>

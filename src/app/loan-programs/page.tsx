@@ -137,7 +137,7 @@ export default function LoanProgramsPage() {
                   <p className="text-lg font-extrabold text-crush-600">
                     {p.minDown}
                   </p>
-                  <p className="text-[10px] font-semibold uppercase tracking-wide text-crush-700">
+                  <p className="text-[10px] font-semibold text-crush-700">
                     Min down
                   </p>
                 </div>
@@ -189,7 +189,7 @@ export default function LoanProgramsPage() {
         {/* Specialty & exclusive programs — highlighted band */}
         <div className="mt-16 rounded-3xl border-2 border-crush-200 bg-gradient-to-b from-crush-50 to-white p-6 sm:p-10">
           <div className="flex flex-wrap items-center gap-3">
-            <span className="inline-flex items-center gap-1.5 rounded-full bg-crush-500 px-3 py-1 text-xs font-bold uppercase tracking-wider text-white shadow-sm shadow-crush-500/30">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-crush-500 px-3 py-1 text-xs font-bold text-white shadow-sm">
               ⭐ Exclusive
             </span>
             <Eyebrow>Specialty programs</Eyebrow>
@@ -215,7 +215,7 @@ export default function LoanProgramsPage() {
                   <span className="inline-flex w-fit items-center rounded-full bg-crush-500 px-3 py-1 text-xs font-bold text-white">
                     {p.badge}
                   </span>
-                  <span className="text-[10px] font-bold uppercase tracking-wider text-crush-400">
+                  <span className="text-[10px] font-bold text-crush-400">
                     Exclusive
                   </span>
                 </div>

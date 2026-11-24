@@ -24,7 +24,7 @@ function VendorCard({ v }: { v: Vendor }) {
             <h3 className="font-bold text-ink-900">{v.name}</h3>
             {v.featured && <span className="rounded-full bg-crush-500 px-2 py-0.5 text-[10px] font-bold text-white">Featured</span>}
           </div>
-          {v.category && <p className="text-xs font-semibold uppercase tracking-wide text-crush-600">{v.category}</p>}
+          {v.category && <p className="text-xs font-semibold text-crush-600">{v.category}</p>}
         </div>
       </div>
       {v.description && <p className="mt-3 flex-1 text-sm text-muted">{v.description}</p>}

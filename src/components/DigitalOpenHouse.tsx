@@ -103,19 +103,19 @@ export function DigitalOpenHouse() {
                 </div>
                 <div className="mt-4 grid gap-4 sm:grid-cols-2">
                   <div>
-                    <p className="text-xs font-bold uppercase tracking-wide text-crush-700">Price feedback</p>
+                    <p className="text-xs font-bold text-crush-700">Price feedback</p>
                     <div className="mt-2 space-y-1">
                       {Object.entries(s.priceCounts).map(([k, v]) => (
                         <div key={k} className="flex justify-between text-sm"><span className="text-ink-800">{PRICE_LABEL[k] ?? k}</span><span className="font-semibold">{Math.round((v / s.count) * 100)}%</span></div>
                       ))}
                     </div>
-                    <p className="mt-3 text-xs font-bold uppercase tracking-wide text-crush-700">Offer interest</p>
+                    <p className="mt-3 text-xs font-bold text-crush-700">Offer interest</p>
                     <div className="mt-2 flex gap-3 text-sm">
                       <span>✅ {s.offerCounts.yes} yes</span><span>🤔 {s.offerCounts.maybe} maybe</span><span>❌ {s.offerCounts.no} no</span>
                     </div>
                   </div>
                   <div>
-                    <p className="text-xs font-bold uppercase tracking-wide text-crush-700">Ratings by area</p>
+                    <p className="text-xs font-bold text-crush-700">Ratings by area</p>
                     <div className="mt-2 space-y-1">
                       {Object.entries(s.categoryAverages).map(([k, v]) => (
                         <div key={k} className="flex justify-between text-sm capitalize"><span className="text-ink-800">{k}</span><span className="font-semibold">{v}/5</span></div>
@@ -123,7 +123,7 @@ export function DigitalOpenHouse() {
                     </div>
                     {s.topBlockers.length > 0 && (
                       <>
-                        <p className="mt-3 text-xs font-bold uppercase tracking-wide text-crush-700">Top concerns</p>
+                        <p className="mt-3 text-xs font-bold text-crush-700">Top concerns</p>
                         <p className="mt-1 text-sm text-ink-800">{s.topBlockers.join(" · ")}</p>
                       </>
                     )}

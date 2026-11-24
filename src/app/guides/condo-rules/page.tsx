@@ -59,7 +59,7 @@ export default function CondoRulesPage() {
 
       <Container className="py-14">
         <div className="rounded-2xl border border-crush-500/40 bg-crush-50 p-6">
-          <p className="text-sm font-bold uppercase tracking-wide text-crush-700">
+          <p className="text-sm font-bold text-crush-700">
             The short version
           </p>
           <p className="mt-2 text-ink-800">
@@ -82,7 +82,7 @@ export default function CondoRulesPage() {
         </div>
         <Card className="mt-5 border-crush-500/40 p-6">
           <p className="text-ink-800">{PRE_APPROVAL.intro}</p>
-          <p className="mt-5 text-sm font-bold uppercase tracking-wide text-crush-700">
+          <p className="mt-5 text-sm font-bold text-crush-700">
             Send us these
           </p>
           <ul className="mt-3 grid gap-3 sm:grid-cols-2">
@@ -131,7 +131,7 @@ export default function CondoRulesPage() {
               <div className="sm:w-40 sm:shrink-0">
                 <p className="font-bold text-ink-900">{t.date}</p>
                 <p
-                  className={`mt-0.5 text-xs font-semibold uppercase tracking-wide ${
+                  className={`mt-0.5 text-xs font-semibold ${
                     t.passed ? "text-crush-600" : "text-muted"
                   }`}
                 >

@@ -145,7 +145,7 @@ function RewardsInner() {
           <div className="mt-5 overflow-x-auto rounded-2xl border border-border bg-white">
             <table className="w-full min-w-[720px] text-sm">
               <thead>
-                <tr className="border-b border-border text-left text-xs uppercase tracking-wide text-muted">
+                <tr className="border-b border-border text-left text-xs text-muted">
                   <th className="px-4 py-3 font-semibold">Action</th>
                   <th className="px-4 py-3 font-semibold">⭐ Stars</th>
                   <th className="px-4 py-3 font-semibold">Per-user cap</th>
