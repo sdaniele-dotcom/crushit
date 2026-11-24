@@ -26,7 +26,18 @@ export function Toaster() {
           className="pointer-events-auto flex items-center gap-3 rounded-2xl border border-crush-200 bg-white px-4 py-3 shadow-xl shadow-black/10"
           style={{ animation: "crush-toast-in .25s ease-out" }}
         >
-          {t.emoji && <span className="text-2xl" aria-hidden>{t.emoji}</span>}
+          {/*
+            The emoji is deliberately not rendered.
+
+            Sixty-three call sites pass one — 📋, 📨, 📝, ⚠️ — and every toast
+            in the suite opened with a 24px emoji whose shape depended on the
+            visitor's operating system. Ignoring it here retires all of them
+            at once, which is the only change that does not mean editing
+            sixty-three files. The field is marked deprecated in lib/toast.ts;
+            call sites can drop it as they are next touched.
+
+            A toast is a title and a sentence. It does not need a picture.
+          */}
           <div>
             <p className="text-sm font-bold text-ink-900">{t.title}</p>
             {t.body && <p className="text-xs text-muted">{t.body}</p>}

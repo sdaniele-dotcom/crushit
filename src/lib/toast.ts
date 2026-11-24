@@ -5,6 +5,11 @@ export type ToastItem = {
   id: string;
   title: string;
   body?: string;
+  /**
+   * @deprecated Not rendered. Toaster stopped showing these — a toast is a
+   * title and a sentence, and an emoji's shape depended on the viewer's OS.
+   * Drop the argument when you next touch a call site; passing it is a no-op.
+   */
   emoji?: string;
 };
 

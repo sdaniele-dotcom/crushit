@@ -1,6 +1,9 @@
 "use client";
 
-import { Star } from "@/components/icons";
+import {
+  Star, FlyerIcon, HouseIcon, GuideIcon, CalculatorIcon,
+  SocialIcon, VideoIcon, BankIcon, DocIcon, TrophyIcon,
+} from "@/components/icons";
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { Container } from "@/components/ui";
@@ -28,18 +31,26 @@ function money(n: number | null) {
 type Tx = { id: string; action: string; stars: number; description: string | null; created_at: string };
 type Project = { id: string; kind: string; title: string | null; public_url: string | null; pdf_url: string | null; created_at: string };
 
-const KIND_ICON: Record<string, string> = {
-  property_flyer: "🎨", open_house_flyer: "🏡", buyer_guide: "📘",
-  seller_guide: "📗", social: "📱", video: "🎬", open_house_kit: "🏡",
-};
+/** One line icon per kind of thing the suite produces. */
+const KIND_ICON = {
+  property_flyer: FlyerIcon, open_house_flyer: HouseIcon, buyer_guide: GuideIcon,
+  seller_guide: GuideIcon, social: SocialIcon, video: VideoIcon,
+  open_house_kit: HouseIcon,
+} as const;
 
+/*
+  Six tiles that used to be six different hue gradients — red, ink, sky,
+  emerald, violet, amber — each with an emoji on it. Six highlights means no
+  highlight, so they are one quiet surface now and the icon carries the
+  meaning. The red stays for the thing we actually want clicked.
+*/
 const QUICK_ACTIONS = [
-  { label: "Request a Mortgage Flyer", desc: "We price it and co-brand it", icon: "🎨", href: "/co-brand", tone: "from-crush-500 to-crush-600" },
-  { label: "Build Open House Kit", desc: "Sign-in, invites & follow-ups", icon: "🏡", href: "/co-marketing/open-house-kit", tone: "from-ink-800 to-ink-900" },
-  { label: "Run Buyer Payment", desc: "Mortgage & affordability", icon: "🧮", href: "/calculators", tone: "from-sky-500 to-sky-600" },
-  { label: "Find a Loan Program", desc: "Match a buyer to a program", icon: "🏦", href: "/loan-programs", tone: "from-emerald-500 to-emerald-600" },
-  { label: "Create Social Content", desc: "Posts, captions & scripts", icon: "📱", href: "/co-marketing/social-kit", tone: "from-violet-500 to-violet-600" },
-  { label: "Buyer / Seller Guides", desc: "Co-branded client guides", icon: "📘", href: "/resources", tone: "from-amber-500 to-amber-600" },
+  { label: "Request a Mortgage Flyer", desc: "We price it and co-brand it", Icon: FlyerIcon, href: "/co-brand", primary: true },
+  { label: "Build Open House Kit", desc: "Sign-in, invites & follow-ups", Icon: HouseIcon, href: "/co-marketing/open-house-kit" },
+  { label: "Run Buyer Payment", desc: "Mortgage & affordability", Icon: CalculatorIcon, href: "/calculators" },
+  { label: "Find a Loan Program", desc: "Match a buyer to a program", Icon: BankIcon, href: "/loan-programs" },
+  { label: "Create Social Content", desc: "Posts, captions & scripts", Icon: SocialIcon, href: "/co-marketing/social-kit" },
+  { label: "Buyer / Seller Guides", desc: "Co-branded client guides", Icon: GuideIcon, href: "/resources" },
 ];
 
 function DashboardInner() {
@@ -66,7 +77,7 @@ function DashboardInner() {
   }, [user]);
 
   const levels = useLevels();
-  const name = profile?.first_name || "there";
+  const name = profile?.first_name || "";
   const lifetime = profile?.lifetime_stars ?? 0;
   const lp = levelProgress(lifetime, levels);
 
@@ -86,7 +97,7 @@ function DashboardInner() {
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <h1 className="text-3xl font-extrabold tracking-tight text-ink-900 sm:text-4xl">
-            {name ? `${name}'s dashboard` : "Your dashboard"}
+            {name ? `${name}’s dashboard` : "Your dashboard"}
           </h1>
           <p className="mt-1 text-muted">What are you working on today?</p>
         </div>
@@ -103,8 +114,13 @@ function DashboardInner() {
             href={a.href}
             className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-border bg-white p-5 transition-shadow hover:shadow-lg"
           >
-            <span className={`grid h-12 w-12 place-items-center rounded-xl bg-gradient-to-br ${a.tone} text-2xl text-white shadow-sm`} aria-hidden>
-              {a.icon}
+            <span
+              className={`grid h-12 w-12 place-items-center rounded-xl ${
+                a.primary ? "bg-crush-500 text-white" : "bg-surface-2 text-ink-800"
+              }`}
+              aria-hidden
+            >
+              <a.Icon size={22} />
             </span>
             <div className="mt-4">
               <p className="font-bold text-ink-900">{a.label}</p>
@@ -120,7 +136,9 @@ function DashboardInner() {
         className="group mt-3 flex items-center justify-between gap-4 rounded-2xl border border-border bg-white p-5 transition-shadow hover:shadow-lg sm:mt-4"
       >
         <div className="flex items-center gap-4">
-          <span className="grid h-12 w-12 place-items-center rounded-xl bg-gradient-to-br from-teal-500 to-teal-600 text-2xl text-white shadow-sm" aria-hidden>🏠</span>
+          <span className="grid h-12 w-12 place-items-center rounded-xl bg-surface-2 text-ink-800" aria-hidden>
+            <HouseIcon size={22} />
+          </span>
           <div>
             <p className="font-bold text-ink-900">Rent vs Own</p>
             <p className="mt-0.5 text-xs text-muted">Show buyers the math on renting vs. buying</p>
@@ -140,11 +158,13 @@ function DashboardInner() {
         </div>
         <div>
           <div className="flex items-baseline justify-between gap-3">
-            <span className="text-lg font-bold text-ink-900">{lp.current.name} 🔥</span>
+            <span className="text-lg font-bold text-ink-900">{lp.current.name}</span>
             {lp.next ? (
               <span className="text-sm text-muted">{lp.starsToNext} until {lp.next.name}</span>
             ) : (
-              <span className="text-sm font-semibold text-crush-600">Top tier 🏆</span>
+              <span className="inline-flex items-center gap-1.5 text-sm font-semibold text-crush-600">
+                <TrophyIcon size={15} /> Top tier
+              </span>
             )}
           </div>
           <div className="mt-2 h-3 w-full overflow-hidden rounded-full bg-white/70 ring-1 ring-crush-100">
@@ -181,7 +201,10 @@ function DashboardInner() {
               )}
               {projects.map((p) => (
                 <div key={p.id} className="flex items-center gap-4 rounded-2xl border border-border bg-white p-4">
-                  <span className="text-2xl" aria-hidden>{KIND_ICON[p.kind] ?? "📄"}</span>
+                  {(() => {
+                    const Icon = KIND_ICON[p.kind as keyof typeof KIND_ICON] ?? DocIcon;
+                    return <Icon size={20} className="shrink-0 text-muted" />;
+                  })()}
                   <div className="min-w-0 flex-1">
                     <p className="truncate font-semibold text-ink-900">{p.title || p.kind.replace(/_/g, " ")}</p>
                     <p className="text-xs text-muted">{when(p.created_at)}</p>

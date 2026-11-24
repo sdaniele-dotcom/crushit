@@ -87,3 +87,56 @@ export function CalculatorIcon({ className = "", size = 18 }: IconProps) {
     </svg>
   );
 }
+
+/** Social content. A phone. */
+export function SocialIcon({ className = "", size = 18 }: IconProps) {
+  return (
+    <svg {...base(size, className)}>
+      <rect x="7" y="2.5" width="10" height="19" rx="2.5" />
+      <path d="M11 5.5h2" />
+      <circle cx="12" cy="18" r="0.9" fill="currentColor" stroke="none" />
+    </svg>
+  );
+}
+
+/** Video. A play triangle in a frame. */
+export function VideoIcon({ className = "", size = 18 }: IconProps) {
+  return (
+    <svg {...base(size, className)}>
+      <rect x="3" y="5" width="18" height="14" rx="2.5" />
+      <path d="M10.5 9.5l4.5 2.5-4.5 2.5z" />
+    </svg>
+  );
+}
+
+/** Loan programs. A bank front. */
+export function BankIcon({ className = "", size = 18 }: IconProps) {
+  return (
+    <svg {...base(size, className)}>
+      <path d="M3.5 9.5L12 4.5l8.5 5" />
+      <path d="M5.5 9.5v8M9.5 9.5v8M14.5 9.5v8M18.5 9.5v8" />
+      <path d="M3.5 19.5h17" />
+    </svg>
+  );
+}
+
+/** A generated document. */
+export function DocIcon({ className = "", size = 18 }: IconProps) {
+  return (
+    <svg {...base(size, className)}>
+      <path d="M13.5 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8.5z" />
+      <path d="M13.5 3v5.5H19" />
+    </svg>
+  );
+}
+
+/** A tier reached. */
+export function TrophyIcon({ className = "", size = 18 }: IconProps) {
+  return (
+    <svg {...base(size, className)}>
+      <path d="M7.5 4h9v5a4.5 4.5 0 0 1-9 0z" />
+      <path d="M7.5 5.5H5a2 2 0 0 0 2.5 3M16.5 5.5H19a2 2 0 0 1-2.5 3" />
+      <path d="M12 13.5V17M9 20h6" />
+    </svg>
+  );
+}
