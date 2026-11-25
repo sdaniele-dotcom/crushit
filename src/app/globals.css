@@ -7,7 +7,10 @@
 */
 
 :root {
-  --background: #ffffff;
+  /* Light grey, not white: the agreed design puts white cards on a tinted
+     page, which is what separates a card from its background without a
+     heavy border or a shadow. */
+  --background: #f2f3f5;
   --foreground: #16181d;
 
   /* Brand ink (charcoal/black) scale — matches the Crush Mortgage logo */
@@ -64,8 +67,19 @@
   --font-mono: var(--font-geist-mono), ui-monospace, monospace;
 }
 
-* {
-  border-color: var(--border);
+/*
+  The default border colour, so an unqualified `border` is a hairline.
+
+  THIS MUST BE IN @layer base. Unlayered CSS beats anything inside a layer,
+  and Tailwind v4 emits utilities into `@layer utilities` — so while this rule
+  sat outside a layer it silently overrode EVERY coloured border utility in
+  the codebase. `border-crush-500` and friends resolved to grey and nobody
+  noticed, because grey is a plausible border.
+*/
+@layer base {
+  * {
+    border-color: var(--border);
+  }
 }
 
 html {

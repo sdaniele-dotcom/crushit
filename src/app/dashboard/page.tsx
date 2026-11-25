@@ -7,6 +7,7 @@ import {
 import { useEffect, useMemo, useState } from "react";
 import Link from "next/link";
 import { Container } from "@/components/ui";
+import { ToolCard, ToolGroup } from "@/components/ToolCard";
 import { RequireAuth } from "@/components/auth/RequireAuth";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { ApplicationPageCard } from "@/components/ApplicationPageCard";
@@ -44,13 +45,29 @@ const KIND_ICON = {
   highlight, so they are one quiet surface now and the icon carries the
   meaning. The red stays for the thing we actually want clicked.
 */
-const QUICK_ACTIONS = [
-  { label: "Request a Mortgage Flyer", desc: "We price it and co-brand it", Icon: FlyerIcon, href: "/co-brand", primary: true },
-  { label: "Build Open House Kit", desc: "Sign-in, invites & follow-ups", Icon: HouseIcon, href: "/co-marketing/open-house-kit" },
-  { label: "Run Buyer Payment", desc: "Mortgage & affordability", Icon: CalculatorIcon, href: "/calculators" },
-  { label: "Find a Loan Program", desc: "Match a buyer to a program", Icon: BankIcon, href: "/loan-programs" },
-  { label: "Create Social Content", desc: "Posts, captions & scripts", Icon: SocialIcon, href: "/co-marketing/social-kit" },
-  { label: "Buyer / Seller Guides", desc: "Co-branded client guides", Icon: GuideIcon, href: "/resources" },
+/*
+  Grouped rather than a flat grid of six. The two columns are the two jobs an
+  agent is actually here to do, and a named group is easier to scan than six
+  equal tiles with no relationship between them.
+*/
+const TOOL_GROUPS = [
+  {
+    label: "Buyer financing",
+    items: [
+      { label: "Run Buyer Payment", desc: "Mortgage & affordability", Icon: CalculatorIcon, href: "/calculators" },
+      { label: "Find a Loan Program", desc: "Match a buyer to a program", Icon: BankIcon, href: "/loan-programs" },
+      { label: "Rent vs Own", desc: "Show buyers the math on renting vs. buying", Icon: HouseIcon, href: "/rent-vs-own" },
+    ],
+  },
+  {
+    label: "Marketing & client materials",
+    items: [
+      { label: "Request a Mortgage Flyer", desc: "We price it and co-brand it", Icon: FlyerIcon, href: "/co-brand" },
+      { label: "Build Open House Kit", desc: "Sign-in, invites & follow-ups", Icon: HouseIcon, href: "/co-marketing/open-house-kit" },
+      { label: "Create Social Content", desc: "Posts, captions & scripts", Icon: SocialIcon, href: "/co-marketing/social-kit" },
+      { label: "Buyer / Seller Guides", desc: "Co-branded client guides", Icon: GuideIcon, href: "/resources" },
+    ],
+  },
 ];
 
 function DashboardInner() {
@@ -97,7 +114,7 @@ function DashboardInner() {
       <div className="flex flex-wrap items-end justify-between gap-4">
         <div>
           <h1 className="text-3xl font-extrabold tracking-tight text-ink-900 sm:text-4xl">
-            {name ? `${name}’s dashboard` : "Your dashboard"}
+            {name ? `Welcome back, ${name}` : "Welcome back"}
           </h1>
           <p className="mt-1 text-muted">What are you working on today?</p>
         </div>
@@ -106,46 +123,24 @@ function DashboardInner() {
         </Link>
       </div>
 
-      {/* Quick actions */}
-      <div className="mt-6 grid grid-cols-2 gap-3 sm:gap-4 lg:grid-cols-3">
-        {QUICK_ACTIONS.map((a) => (
-          <Link
-            key={a.href + a.label}
-            href={a.href}
-            className="group relative flex flex-col justify-between overflow-hidden rounded-2xl border border-border bg-white p-5 transition-shadow hover:shadow-lg"
-          >
-            <span
-              className={`grid h-12 w-12 place-items-center rounded-xl ${
-                a.primary ? "bg-crush-500 text-white" : "bg-surface-2 text-ink-800"
-              }`}
-              aria-hidden
-            >
-              <a.Icon size={22} />
-            </span>
-            <div className="mt-4">
-              <p className="font-bold text-ink-900">{a.label}</p>
-              <p className="mt-0.5 text-xs text-muted">{a.desc}</p>
-            </div>
-          </Link>
+      {/* Quick actions, grouped */}
+      <div className="mt-7 grid gap-8 lg:grid-cols-2 lg:gap-10">
+        {TOOL_GROUPS.map((g) => (
+          <ToolGroup key={g.label} label={g.label}>
+            {g.items.map((it) => (
+              <ToolCard
+                key={it.href + it.label}
+                href={it.href}
+                title={it.label}
+                desc={it.desc}
+                icon={<it.Icon size={20} />}
+              />
+            ))}
+          </ToolGroup>
         ))}
       </div>
 
-      {/* Rent vs Own — full-width */}
-      <Link
-        href="/rent-vs-own"
-        className="group mt-3 flex items-center justify-between gap-4 rounded-2xl border border-border bg-white p-5 transition-shadow hover:shadow-lg sm:mt-4"
-      >
-        <div className="flex items-center gap-4">
-          <span className="grid h-12 w-12 place-items-center rounded-xl bg-surface-2 text-ink-800" aria-hidden>
-            <HouseIcon size={22} />
-          </span>
-          <div>
-            <p className="font-bold text-ink-900">Rent vs Own</p>
-            <p className="mt-0.5 text-xs text-muted">Show buyers the math on renting vs. buying</p>
-          </div>
-        </div>
-        <span className="text-crush-600 transition-transform group-hover:translate-x-1" aria-hidden>→</span>
-      </Link>
+
 
       {/* Rewards summary */}
       <div className="mt-8 grid gap-4 rounded-2xl border border-crush-200 bg-gradient-to-br from-crush-50 to-white p-6 sm:grid-cols-[auto_1fr_auto] sm:items-center sm:gap-8">

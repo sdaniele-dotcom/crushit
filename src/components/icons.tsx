@@ -47,12 +47,19 @@ export function Star({ className = "", size = 18 }: IconProps) {
   );
 }
 
-/** Flyer / design. A sheet with a rule across it. */
+/**
+ * Flyer. A sheet with a photo block at the top and text under it.
+ *
+ * The earlier version was a rectangle with three rules, which at 20px was
+ * indistinguishable from the calculator sitting next to it on the dashboard.
+ * The filled block is what tells a flyer from a form at a glance.
+ */
 export function FlyerIcon({ className = "", size = 18 }: IconProps) {
   return (
     <svg {...base(size, className)}>
       <rect x="4.5" y="3" width="15" height="18" rx="2" />
-      <path d="M8 8h8M8 12h8M8 16h4" />
+      <rect x="7.5" y="6" width="9" height="5.5" rx="1" fill="currentColor" stroke="none" />
+      <path d="M7.5 14.5h9M7.5 17.5h5.5" />
     </svg>
   );
 }
