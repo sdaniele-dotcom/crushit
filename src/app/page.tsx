@@ -51,17 +51,17 @@ export default function Home() {
   return (
     <>
       {/* ───────── Hero ───────── */}
-      <section className="relative overflow-hidden bg-ink-900 text-white">
+      <section className="relative overflow-hidden border-b border-border bg-white text-ink-900">
 
         <Container className="relative grid items-center gap-12 py-20 lg:grid-cols-2 lg:py-28">
           <div>
-            <p className="text-sm font-medium text-crush-400">
+            <p className="text-sm font-semibold text-crush-600">
               {site.brand} · by {site.company}
             </p>
             <h1 className="mt-5 text-4xl font-extrabold leading-[1.05] tracking-tight sm:text-5xl lg:text-6xl">
-              Crush your market. <span className="text-gradient">One dashboard.</span>
+              Crush your market. <span className="text-crush-600">One dashboard.</span>
             </h1>
-            <p className="mt-6 max-w-xl text-lg text-slate-300">
+            <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted">
               Market listings. Run buyer numbers. Create content. Prep open houses. Find loan
               programs. Earn rewards — all in one place, co-branded to you. Free for partner agents.
             </p>
@@ -69,11 +69,11 @@ export default function Home() {
               <Link href="/signup" className="inline-flex items-center rounded-full bg-crush-500 px-7 py-3.5 text-base font-semibold text-white shadow-lg transition-colors hover:bg-crush-600">
                 Create Free Agent Account
               </Link>
-              <Link href="#features" className="inline-flex items-center rounded-full border border-white/20 px-7 py-3.5 text-base font-semibold text-white transition-colors hover:bg-white/10">
+              <Link href="#features" className="inline-flex items-center rounded-full border border-border bg-white px-7 py-3.5 text-base font-semibold text-ink-900 transition-colors hover:bg-surface-2">
                 Explore Agent Tools
               </Link>
             </div>
-            <p className="mt-5 text-sm text-slate-400">
+            <p className="mt-5 text-sm text-muted">
               No credit card · Free for partner agents · Works on any device
             </p>
           </div>
@@ -131,12 +131,12 @@ export default function Home() {
         </Container>
 
         {/* Trust bar */}
-        <div className="relative border-t border-white/10">
+        <div className="relative border-t border-border">
           <Container className="grid grid-cols-2 gap-6 py-8 sm:grid-cols-4">
             {[["Free", "for partner agents"], ["1 profile", "reused everywhere"], ["Print & share", "ready in seconds"], ["Any device", "desktop or mobile"]].map(([a, b]) => (
               <div key={a} className="text-center">
-                <p className="text-lg font-extrabold text-white">{a}</p>
-                <p className="text-sm text-slate-400">{b}</p>
+                <p className="text-lg font-extrabold text-ink-900">{a}</p>
+                <p className="text-sm text-muted">{b}</p>
               </div>
             ))}
           </Container>
@@ -277,7 +277,7 @@ export default function Home() {
                 <Link href="/signup" className="inline-flex items-center rounded-full bg-crush-500 px-7 py-3.5 text-base font-semibold text-white shadow-lg transition-colors hover:bg-crush-600">
                   Create your free account
                 </Link>
-                <Link href="/login" className="inline-flex items-center rounded-full border border-white/20 px-7 py-3.5 text-base font-semibold text-white transition-colors hover:bg-white/10">
+                <Link href="/login" className="inline-flex items-center rounded-full border border-border bg-white px-7 py-3.5 text-base font-semibold text-ink-900 transition-colors hover:bg-surface-2">
                   Log in
                 </Link>
               </div>
