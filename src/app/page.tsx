@@ -1,4 +1,5 @@
 import { Star, FlyerIcon, HouseIcon, GuideIcon, CalculatorIcon } from "@/components/icons";
+import { FlyerPreview, OpenHousePreview, GuidePreview, RewardsPreview } from "@/components/previews";
 import Link from "next/link";
 import { Container } from "@/components/ui";
 import { site } from "@/lib/site";
@@ -15,28 +16,28 @@ const FEATURES = [
     title: "Professional listing & financing flyers in seconds",
     body: "Drop in an address and out comes a co-branded flyer with real financing scenarios, a shareable page, and a print-ready PDF with a QR code — your photo and logo already on it.",
     points: ["Auto-filled from your profile", "Estimated monthly payments", "Print or share instantly"],
-    Icon: FlyerIcon,
+    Preview: FlyerPreview,
   },
   {
     eyebrow: "Open house tools",
     title: "Everything you need to run a standout open house",
     body: "Branded sign-in sheets, neighbor invites, follow-up templates, and financing one-sheets — a full kit that makes you look organized and buttoned-up.",
     points: ["Sign-in sheets & QR check-in", "Neighbor invitations", "Ready-to-send follow-ups"],
-    Icon: HouseIcon,
+    Preview: OpenHousePreview,
   },
   {
     eyebrow: "Buyer & seller guides",
     title: "Client guides that come out branded to you",
     body: "Hand buyers and sellers a polished, co-branded guide that positions you as the expert — no design work, just add your info once.",
     points: ["First-time buyer guide", "Home seller guide", "Saved as a shareable PDF"],
-    Icon: GuideIcon,
+    Preview: GuidePreview,
   },
   {
     eyebrow: "Crush Stars",
     title: "Earn rewards every time you market",
     body: "Every flyer, guide, and tool you use earns Crush Stars — climb from Starter to Crush Club, unlock achievements, and see where you rank.",
     points: ["Points for real activity", "Levels & achievement badges", "Agent leaderboard"],
-    Icon: Star,
+    Preview: RewardsPreview,
   },
 ];
 
@@ -173,13 +174,12 @@ export default function Home() {
                 </div>
                 <div className={i % 2 === 1 ? "lg:order-1" : ""}>
                   {/*
-                    A drawn mark on a plain surface, replacing a 7xl emoji on
-                    a gradient. These four slots still want real product
-                    previews — the flyer, the open-house kit, the guide, the
-                    leaderboard — which is a bigger job than this pass.
+                    The product itself, in miniature. An icon floating in an
+                    empty box read as a placeholder; the thing the tool makes
+                    is what gives the section something to look at.
                   */}
-                  <div className="grid aspect-[4/3] place-items-center rounded-3xl border border-border bg-surface">
-                    <f.Icon size={88} className="text-crush-500/60" />
+                  <div className="relative grid aspect-[4/3] place-items-center overflow-hidden rounded-3xl border border-border bg-gradient-to-b from-surface to-surface-2">
+                    <f.Preview />
                   </div>
                 </div>
               </div>
