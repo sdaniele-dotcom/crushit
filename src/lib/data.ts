@@ -192,33 +192,23 @@ export const loanPrograms: LoanProgram[] = [
   },
 ];
 
-export type RateRow = {
-  program: string;
-  term: string;
-  rate: string; // note rate
-  apr: string; // annual percentage rate
-  points?: string;
-  featured?: boolean;
-};
+/*
+  THE SAMPLE RATE TABLE WAS DELETED, NOT UPDATED.
 
-/**
- * ⚠️ SAMPLE RATES — for layout only. Mortgage rates change daily and are
- * regulated (APR must reflect the same assumptions). Replace every value
- * below with your own current, compliant numbers before promoting the site,
- * and update `ratesAsOf` each time. Keep the assumptions line accurate.
- */
-export const ratesAsOf = "August 10, 2026";
-export const rateAssumptions =
-  "Sample scenario: $400,000 loan amount, 25% down, 740+ FICO, single-family primary residence, 30-day rate lock. Your rate depends on your full application.";
+  It held 0.000% for rate, APR and points on all six programs, under a
+  warning to replace every value before promoting the site, and a stale
+  `ratesAsOf` of "August 10, 2026". Nothing rendered it and it was not in
+  the built output, so it advertised nothing — but it was a table of
+  mortgage rates sitting in the data layer one import away from a page,
+  with a zero where a regulated figure goes.
 
-export const rateTable: RateRow[] = [
-  { program: "Conventional", term: "30-Year Fixed", rate: "0.000%", apr: "0.000%", points: "0.00", featured: true },
-  { program: "Conventional", term: "15-Year Fixed", rate: "0.000%", apr: "0.000%", points: "0.00" },
-  { program: "FHA", term: "30-Year Fixed", rate: "0.000%", apr: "0.000%", points: "0.00" },
-  { program: "VA", term: "30-Year Fixed", rate: "0.000%", apr: "0.000%", points: "0.00" },
-  { program: "Jumbo", term: "30-Year Fixed", rate: "0.000%", apr: "0.000%", points: "0.00" },
-  { program: "ARM", term: "7/6 SOFR ARM", rate: "0.000%", apr: "0.000%", points: "0.00" },
-];
+  Rates are priced daily through the Loan Sifter toolkit in the
+  crushmortgage repo, and an APR has to be computed against the same
+  assumptions as the rate it sits beside. That is not something a constant
+  in this file can stay honest about between deploys, so there is no
+  placeholder here to find and fill in. A rates page starts from the
+  pricing output, or it does not start.
+*/
 
 export type SpecialtyProgram = {
   name: string;
@@ -606,7 +596,7 @@ export const resources: Resource[] = [
   {
     title: "Down Payment Assistance",
     description:
-      "Check any California address against thousands of assistance programs — and find out why you should run your own listings through it.",
+      "Check any California address against hundreds of assistance programs — and find out why you should run your own listings through it.",
     audience: "Buyers who think they can't buy yet",
     href: "/down-payment-assistance",
     items: [
@@ -725,9 +715,15 @@ export const team: TeamMember[] = [
   },
 ];
 
-export const stats = [
-  { value: "4", label: "Interactive tools" },
-  { value: "6", label: "Loan programs explained" },
-  { value: "100%", label: "Free for partner agents" },
-  { value: "24/7", label: "Access, any device" },
-];
+/*
+  THE STATS STRIP WAS DELETED, NOT CORRECTED.
+
+  It claimed "6 Loan programs explained" when loanPrograms has held seven
+  since DSCR was added, and "4 Interactive tools" with nothing tying that
+  number to the tools that exist. Nothing imported it, so neither number
+  was ever shown.
+
+  A counter that is maintained by hand next to the list it counts will
+  disagree with that list, and this one already did. If the strip comes
+  back it should read loanPrograms.length, not a typed digit.
+*/

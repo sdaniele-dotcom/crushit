@@ -14,7 +14,7 @@ import {
 export const metadata: Metadata = {
   title: "Down Payment Assistance",
   description:
-    "Check a California address against thousands of down payment assistance programs — grants, forgivable seconds, deferred loans and MCCs from cities, counties, the state and employers. Plus how agents actually use it on listings and buyers.",
+    "Check a California address against hundreds of down payment assistance programs — grants, forgivable seconds, deferred loans and MCCs from cities, counties, the state and employers. Plus how agents actually use it on listings and buyers.",
 };
 
 export default function DownPaymentAssistancePage() {
@@ -27,7 +27,7 @@ export default function DownPaymentAssistancePage() {
             Down payment <span className="text-gradient">assistance</span>
           </>
         }
-        subtitle="Thousands of California programs, and most buyers have never heard of one of them. Run an address and a household income and see what matches — then use it on your listings, not just your buyers."
+        subtitle="Hundreds of California programs, and most buyers have never heard of one of them. Run an address and a household income and see what matches — then use it on your listings, not just your buyers."
       />
 
       <Container className="py-14">

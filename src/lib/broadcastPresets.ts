@@ -31,7 +31,7 @@ export const BROADCAST_PRESETS: BroadcastPreset[] = [
 
 There's something new in your Crush suite, and it's the kind of thing that wins listings rather than just helping buyers.
 
-You can now run any California address against thousands of down payment assistance programs — grants, forgivable seconds, deferred loans, Mortgage Credit Certificates — from cities, counties, the state, and employers. It's the Down Payment Resource database, provided through CRMLS.
+You can now run any California address against hundreds of down payment assistance programs — grants, forgivable seconds, deferred loans, Mortgage Credit Certificates — from cities, counties, the state, and employers. It's the Down Payment Resource database, provided through CRMLS.
 
 **Here's the part most agents miss.** Eligibility is frequently tied to the address, not the person. That means a listing can sit inside a program boundary no matter who ends up buying it. Run your listing before you go live and you may find you're marketing to a wider pool than the comps suggest — and "buyers at this address may qualify for down payment assistance" is a real reason a seller picks you over the agent who didn't check.
 

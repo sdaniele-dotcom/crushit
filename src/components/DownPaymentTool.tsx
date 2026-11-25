@@ -56,8 +56,8 @@ export function DownPaymentTool({
         <span className="block text-lg font-bold text-ink-900">{title}</span>
         <span className="mx-auto mt-1 block max-w-xl text-sm text-muted">
           Answer a few questions about the home, your household and your income
-          — it checks thousands of assistance programs and shows the ones you
-          may qualify for.
+          — it checks hundreds of California assistance programs and shows the
+          ones you may qualify for.
         </span>
         <span className="mt-4 inline-flex items-center gap-2 rounded-full bg-crush-500 px-6 py-2.5 text-sm font-semibold text-white">
           Check your eligibility

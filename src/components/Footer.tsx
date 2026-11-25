@@ -82,13 +82,22 @@ export function Footer() {
       <div className="border-t border-white/10">
         <div className="mx-auto w-full max-w-6xl px-5 py-6 sm:px-8">
           <p className="text-xs leading-relaxed text-slate-500">
-            © {2026} {site.company}. {site.brand} Agent Suite. Company NMLS
-            #{site.companyNmls}. This material is for real-estate professional
-            and educational use only and is not an advertisement to extend
-            consumer credit as defined by Section 1026.2 of Regulation Z. All
-            calculators provide estimates only — actual figures depend on a full
-            application, credit approval, and current market rates. Equal Housing
-            Opportunity.
+            {/*
+              The year is computed. It was the literal {2026}, which is not a
+              date — it is a number that would have read 2026 in 2030.
+
+              The entity is the registered one, and the DRE line is here at
+              all because it was not: this site disclosed a company NMLS and
+              nothing else, while whatsapayment.com printed the broker licence
+              on every page. Same company, two different disclosures.
+            */}
+            © {new Date().getFullYear()} {site.legalEntity}. {site.brand} Agent
+            Suite. Company NMLS #{site.companyNmls}. {site.caLicenseLine}. This
+            material is for real-estate professional and educational use only
+            and is not an advertisement to extend consumer credit as defined by
+            Section 1026.2 of Regulation Z. All calculators provide estimates
+            only — actual figures depend on a full application, credit
+            approval, and current market rates. Equal Housing Opportunity.
           </p>
           <p className="mt-3 text-xs text-slate-500">
             <Link href="/terms" className="underline hover:text-slate-300">

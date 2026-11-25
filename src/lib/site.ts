@@ -18,11 +18,34 @@ export const site = {
     "Crush Your Market is the agent suite from Crush Mortgage: mortgage calculators, loan-program matching, open house kits, and co-branded marketing.",
 
   // ─── Company / loan-officer details ───────────────────────────────
+  // The trade name, for prose: "by Crush Mortgage", "Financing by …".
   company: "Crush Mortgage",
+  /**
+   * The registered entity, for the legal footer and anywhere a licence is
+   * named. The two are not interchangeable: a disclosure has to name the
+   * entity the licence is held in, and whatsapayment.com already prints
+   * "Crush Mortgage Corp" for exactly that reason. This footer said
+   * "Crush Mortgage", so the two sites disagreed on the licensee's name.
+   */
+  legalEntity: "Crush Mortgage Corp",
   loanOfficer: "Shannon Daniele",
   title: "Loan Officer",
   nmls: "2332050", // Shannon Daniele (individual MLO)
   companyNmls: "169136",
+  /**
+   * The California broker licence. This site carried no DRE number at all
+   * while whatsapayment.com printed one on every page — the same entity,
+   * disclosed two different ways. Both numbers come from the What's a
+   * Payment brand guide (v1, November 2026).
+   *
+   * ▶ UNVERIFIED AGAINST THE REGISTRY. Nobody has checked 169136 or
+   *   02142680 against NMLS Consumer Access or the DRE licence lookup. They
+   *   are consistent across both sites now, which is not the same as being
+   *   right. Confirm them before any print run.
+   */
+  dreLicense: "02142680",
+  caLicenseLine:
+    "Real estate broker, California Department of Real Estate, License #02142680",
   phone: "(562) 317-6112",
   email: "info@crushmortgage.com",
   website: "https://www.crushmortgage.com",

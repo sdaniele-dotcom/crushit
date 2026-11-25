@@ -3,7 +3,9 @@
  *
  * SOURCING AND WHY IT READS THE WAY IT DOES. The program database belongs to
  * Down Payment Resource, reached through CRMLS and subscribed under Shannon —
- * it covers thousands of programs whose income limits, funding and rules change
+ * its national database covers thousands of programs, of which California's
+ * share is in the hundreds — say hundreds in anything buyer-facing, which is
+ * what the rest of the suite now does. Income limits, funding and rules change
  * constantly. So nothing here names a dollar figure, an income cap or a specific
  * program: the tool is the source of truth for all of that, and a page that
  * repeats a number is a page that will be wrong within a quarter and is being
