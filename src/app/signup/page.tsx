@@ -130,7 +130,7 @@ export default function SignupPage() {
   return (
     <AuthShell
       title="Create your free account"
-      subtitle="One profile, reused across every Crushing It tool."
+      subtitle="One profile, reused across every Crush Your Market tool."
       footer={
         <>
           Already have an account?{" "}

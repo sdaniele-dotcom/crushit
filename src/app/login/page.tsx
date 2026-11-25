@@ -61,7 +61,7 @@ export default function LoginPage() {
   return (
     <AuthShell
       title="Log in"
-      subtitle="Welcome back to Crushing It."
+      subtitle="Welcome back to Crush Your Market."
       footer={
         <>
           New here?{" "}

@@ -43,7 +43,7 @@ function AdminInner() {
 
   return (
     <>
-      <PageHero eyebrow="Admin" title={<>Platform <span className="text-gradient">Overview</span></>} subtitle="Everything happening across Crushing It." />
+      <PageHero eyebrow="Admin" title={<>Platform <span className="text-gradient">Overview</span></>} subtitle="Everything happening across Crush Your Market." />
       <Container className="py-12">
         <div className="mb-8 flex flex-wrap gap-3">
           <Link href="/admin/users" className="rounded-full bg-crush-500 px-6 py-3 text-sm font-semibold text-white hover:bg-crush-600">Manage users</Link>

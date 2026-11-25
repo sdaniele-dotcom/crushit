@@ -51,7 +51,7 @@ function LeaderboardInner() {
       <PageHero
         eyebrow="Crush community"
         title={<>Crush <span className="text-gradient">Leaderboard</span></>}
-        subtitle="The most active agents on Crushing It, ranked by lifetime Crush Stars."
+        subtitle="The most active agents on Crush Your Market, ranked by lifetime Crush Stars."
       />
       <Container className="py-12">
         {/* Scope filter */}

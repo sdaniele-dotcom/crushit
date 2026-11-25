@@ -169,7 +169,7 @@ function ProfileInner() {
       <PageHero
         eyebrow="Your account"
         title={<>My <span className="text-gradient">Profile</span></>}
-        subtitle="Enter your info once — Crushing It reuses it on your flyers, guides, and every tool."
+        subtitle="Enter your info once — Crush Your Market reuses it on your flyers, guides, and every tool."
       />
       <Container className="py-12">
         {/* Stars summary */}
