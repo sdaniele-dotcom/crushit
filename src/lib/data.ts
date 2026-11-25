@@ -681,6 +681,7 @@ export const team: TeamMember[] = [
     name: "Shannon Daniele",
     role: "Loan Officer",
     nmls: "2332050",
+    // Shannon's DIRECT line. The main office is site.phone, (562) 317-6112.
     phone: "(562) 256-5779",
     email: "sdaniele@crushmortgage.com",
     photo: shannonPhoto,

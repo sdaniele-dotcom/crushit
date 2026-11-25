@@ -46,6 +46,15 @@ export const site = {
   dreLicense: "02142680",
   caLicenseLine:
     "Real estate broker, California Department of Real Estate, License #02142680",
+  /**
+   * THE MAIN OFFICE LINE. Not Shannon's.
+   *
+   * Shannon's direct line is (562) 256-5779 and lives on her entry in
+   * `team` in lib/data.ts, which is the only place it belongs. The two
+   * numbers read as a contradiction when you meet them cold — one site-wide
+   * phone, a different one on the founder's card — so: site.phone is the
+   * company, team[].phone is the person. Confirmed by Shannon.
+   */
   phone: "(562) 317-6112",
   email: "info@crushmortgage.com",
   website: "https://www.crushmortgage.com",
