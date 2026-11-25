@@ -198,7 +198,7 @@ export function GuideLibrary() {
             <button
               type="button"
               onClick={() => open(g.key)}
-              className="mt-5 inline-flex items-center justify-center gap-2 self-start rounded-full bg-crush-500 px-6 py-3 text-sm font-semibold text-white shadow-lg transition-colors hover:bg-crush-600"
+              className="mt-5 inline-flex items-center justify-center gap-2 self-start rounded-full bg-crush-500 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-crush-600"
             >
               <svg viewBox="0 0 20 20" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
                 <path d="M10 3v10m0 0l4-4m-4 4l-4-4M4 17h12" />
@@ -309,7 +309,7 @@ export function GuideLibrary() {
                 type="button"
                 onClick={createGuide}
                 disabled={!ready || busy}
-                className="inline-flex items-center justify-center gap-2 rounded-full bg-crush-500 px-6 py-3 text-sm font-semibold text-white shadow-lg transition-colors hover:bg-crush-600 disabled:cursor-not-allowed disabled:opacity-60"
+                className="inline-flex items-center justify-center gap-2 rounded-full bg-crush-500 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-crush-600 disabled:cursor-not-allowed disabled:opacity-60"
               >
                 {busy ? "Building…" : "Create & download my guide"}
               </button>

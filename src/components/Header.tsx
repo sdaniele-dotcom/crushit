@@ -100,14 +100,14 @@ export function Header() {
           ) : configured ? (
             <>
               <Link href="/login" className="ml-2 rounded-full px-4 py-2 text-sm font-medium text-ink-800 hover:text-crush-700">Log in</Link>
-              <Link href="/signup" className="inline-flex items-center rounded-full bg-crush-500 px-5 py-2 text-sm font-semibold text-white shadow-lg transition-colors hover:bg-crush-600">Create Free Account</Link>
+              <Link href="/signup" className="inline-flex items-center rounded-full bg-crush-500 px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-crush-600">Create Free Account</Link>
             </>
           ) : (
             <>
               {navItems.map((item) => (
                 <Link key={item.href} href={item.href} className="rounded-full px-4 py-2 text-sm font-medium text-ink-800 hover:bg-surface-2 hover:text-crush-700">{item.label}</Link>
               ))}
-              <a href={site.applyUrl} target="_blank" rel="noopener noreferrer" className="ml-2 inline-flex items-center rounded-full bg-crush-500 px-5 py-2 text-sm font-semibold text-white shadow-lg transition-colors hover:bg-crush-600">Get Pre-Approved</a>
+              <a href={site.applyUrl} target="_blank" rel="noopener noreferrer" className="ml-2 inline-flex items-center rounded-full bg-crush-500 px-5 py-2 text-sm font-semibold text-white transition-colors hover:bg-crush-600">Get Pre-Approved</a>
             </>
           )}
         </nav>

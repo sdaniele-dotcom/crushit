@@ -346,7 +346,7 @@ function ProfileInner() {
           </div>
 
           <div className="lg:col-span-2 flex flex-wrap items-center gap-4">
-            <button type="submit" disabled={saving} className="inline-flex items-center justify-center gap-2 rounded-full bg-crush-500 px-7 py-3 text-sm font-semibold text-white shadow-lg transition-colors hover:bg-crush-600 disabled:opacity-60">
+            <button type="submit" disabled={saving} className="inline-flex items-center justify-center gap-2 rounded-full bg-crush-500 px-7 py-3 text-sm font-semibold text-white transition-colors hover:bg-crush-600 disabled:opacity-60">
               {saving ? "Saving…" : "Save profile"}
             </button>
             {saved && <span className="text-sm font-semibold text-mint-500">Saved ✓</span>}

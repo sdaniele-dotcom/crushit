@@ -320,7 +320,7 @@ export function FlyerRequestForm() {
           <button
             type="submit"
             disabled={sending}
-            className="rounded-full bg-crush-500 px-7 py-3.5 text-sm font-semibold text-white shadow-lg hover:bg-crush-600 disabled:opacity-60"
+            className="rounded-full bg-crush-500 px-7 py-3.5 text-sm font-semibold text-white hover:bg-crush-600 disabled:opacity-60"
           >
             {sending ? "Sending…" : "Send my flyer request"}
           </button>

@@ -227,7 +227,7 @@ export function FlyerStudio({ initialCategory = "all" }: { initialCategory?: Fly
         <div className="mt-4 rounded-2xl border-2 border-crush-200 bg-crush-50 p-4 text-center">
           <p className="text-lg font-extrabold text-ink-900">Your flyer is ready! 🎉</p>
           <p className="mt-0.5 text-xs text-muted">Prints only the flyer — clean, full page, with your logo &amp; branding.</p>
-          <button type="button" onClick={print} className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-full bg-crush-500 px-6 py-3.5 text-base font-bold text-white shadow-lg hover:bg-crush-600">
+          <button type="button" onClick={print} className="mt-3 inline-flex w-full items-center justify-center gap-2 rounded-full bg-crush-500 px-6 py-3.5 text-base font-bold text-white hover:bg-crush-600">
             🖨️ Print Here
           </button>
         </div>

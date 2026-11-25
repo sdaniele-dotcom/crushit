@@ -66,7 +66,7 @@ export default function Home() {
               programs. Earn rewards — all in one place, co-branded to you. Free for partner agents.
             </p>
             <div className="mt-8 flex flex-wrap gap-4">
-              <Link href="/signup" className="inline-flex items-center rounded-full bg-crush-500 px-7 py-3.5 text-base font-semibold text-white shadow-lg transition-colors hover:bg-crush-600">
+              <Link href="/signup" className="inline-flex items-center rounded-full bg-crush-500 px-7 py-3.5 text-base font-semibold text-white transition-colors hover:bg-crush-600">
                 Create Free Agent Account
               </Link>
               <Link href="#features" className="inline-flex items-center rounded-full border border-border bg-white px-7 py-3.5 text-base font-semibold text-ink-900 transition-colors hover:bg-surface-2">
@@ -80,7 +80,12 @@ export default function Home() {
 
           {/* App preview mock */}
           <div className="relative">
-            <div className="rounded-2xl border border-white/10 bg-white/5 p-3 shadow-2xl backdrop-blur">
+            {/* The frame around the mock. It was white/10 on white/5, which
+                was a pane of frosted glass over the old near-black hero; on
+                the white hero it is invisible and the shadow was doing all
+                the work. A light grey chrome with a hairline reads as a
+                window on a white page. */}
+            <div className="rounded-2xl border border-border bg-surface-2 p-3 shadow-xl shadow-ink-900/5">
               <div className="flex items-center gap-1.5 px-2 py-1.5">
                 <span className="h-3 w-3 rounded-full bg-crush-500/70" />
                 <span className="h-3 w-3 rounded-full bg-amber-400/70" />
@@ -207,7 +212,7 @@ export default function Home() {
             ))}
           </div>
           <div className="mt-12 text-center">
-            <Link href="/signup" className="inline-flex items-center rounded-full bg-crush-500 px-7 py-3.5 text-base font-semibold text-white shadow-lg transition-colors hover:bg-crush-600">
+            <Link href="/signup" className="inline-flex items-center rounded-full bg-crush-500 px-7 py-3.5 text-base font-semibold text-white transition-colors hover:bg-crush-600">
               Get started free
             </Link>
           </div>
@@ -274,7 +279,7 @@ export default function Home() {
                 Create your free account and generate your first co-branded flyer in minutes.
               </p>
               <div className="mt-8 flex flex-wrap justify-center gap-4">
-                <Link href="/signup" className="inline-flex items-center rounded-full bg-crush-500 px-7 py-3.5 text-base font-semibold text-white shadow-lg transition-colors hover:bg-crush-600">
+                <Link href="/signup" className="inline-flex items-center rounded-full bg-crush-500 px-7 py-3.5 text-base font-semibold text-white transition-colors hover:bg-crush-600">
                   Create your free account
                 </Link>
                 <Link href="/login" className="inline-flex items-center rounded-full border border-border bg-white px-7 py-3.5 text-base font-semibold text-ink-900 transition-colors hover:bg-surface-2">

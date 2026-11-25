@@ -215,7 +215,7 @@ export function NearbyListingsTool({ initialAddress = "" }: { initialAddress?: s
           <button
             type="submit"
             disabled={loading || !ready}
-            className="inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-crush-500 px-6 py-3 text-sm font-semibold text-white shadow-lg transition-colors hover:bg-crush-600 disabled:cursor-not-allowed disabled:opacity-60"
+            className="inline-flex shrink-0 items-center justify-center gap-2 rounded-full bg-crush-500 px-6 py-3 text-sm font-semibold text-white transition-colors hover:bg-crush-600 disabled:cursor-not-allowed disabled:opacity-60"
           >
             {loading ? "Searching…" : "Find homes"}
           </button>
@@ -252,7 +252,7 @@ export function NearbyListingsTool({ initialAddress = "" }: { initialAddress?: s
                 });
               }
               }
-              className="inline-flex items-center gap-2 rounded-full bg-crush-500 px-5 py-2.5 text-sm font-semibold text-white shadow-lg transition-colors hover:bg-crush-600"
+              className="inline-flex items-center gap-2 rounded-full bg-crush-500 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-crush-600"
             >
               <svg viewBox="0 0 20 20" className="h-4 w-4" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden>
                 <path d="M6 9V3h8v6M6 15h8v3H6zM4 9h12a1 1 0 0 1 1 1v4a1 1 0 0 1-1 1h-1" />
