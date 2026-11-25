@@ -3,7 +3,7 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
 
 /**
- * Browser Supabase client for the CRUSH IT suite.
+ * Browser Supabase client for the Crush Your Market suite.
  *
  * The public URL + anon key are safe to ship in the static bundle — all data
  * access is enforced server-side by Supabase Row Level Security. Until these

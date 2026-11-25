@@ -1,4 +1,4 @@
-# CRUSH IT — Realtors Suite
+# Crush Your Market — Realtors Suite
 
 A complete resource website for real-estate agents, powered by **Crush Mortgage**.
 It gives partner realtors a toolkit of interactive calculators, plain-English loan

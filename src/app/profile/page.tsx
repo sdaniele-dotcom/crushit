@@ -273,7 +273,7 @@ function ProfileInner() {
               <h2 className="text-sm font-bold text-crush-700">Your CRM</h2>
               <p className="mt-2 text-sm text-ink-800">
                 Send every open-house sign-in and feedback form straight to your CRM as it comes in.
-                They stay in Crush It either way — this is a copy, not a handoff.
+                They stay in Crush Your Market either way — this is a copy, not a handoff.
               </p>
 
               <label className="mt-5 block">

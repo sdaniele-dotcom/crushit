@@ -145,7 +145,7 @@ function Inner() {
           <div>
             <p className="text-xs font-semibold text-muted">Preview</p>
             <div className="mt-2 overflow-hidden rounded-2xl border border-border bg-[#f5f4f2] p-4">
-              <p className="mb-2 text-[11px] font-extrabold tracking-widest text-crush-600">CRUSH IT · AGENT SUITE</p>
+              <p className="mb-2 text-[11px] font-extrabold tracking-widest text-crush-600">CRUSH YOUR MARKET · AGENT SUITE</p>
               <div className="rounded-xl border border-border bg-white p-4">
                 <p className="text-base font-bold text-ink-900">{subject.trim() || "Your subject appears here"}</p>
                 <div className="mt-2 space-y-2 text-sm text-ink-800">

@@ -10,7 +10,7 @@ export const TEMPLATE_META: Record<string, { title: string; blurb: string; token
     title: "Welcome email",
     blurb: "Sent automatically the moment a new agent confirms their account.",
     tokens: ["first_name"],
-    defaultSubject: "Welcome to the CRUSH IT Agent Suite 🎉",
+    defaultSubject: "Welcome to the Crush Your Market Agent Suite 🎉",
   },
   new_listing: {
     title: "New-listing email",

@@ -8,7 +8,7 @@ import { site } from "@/lib/site";
 export const metadata: Metadata = {
   title: "About",
   description:
-    "About the Crush It Agent Suite and Crush Mortgage — who we are, meet the team, and how to reach us.",
+    "About the Crush Your Market Agent Suite and Crush Mortgage — who we are, meet the team, and how to reach us.",
 };
 
 function initials(name: string) {

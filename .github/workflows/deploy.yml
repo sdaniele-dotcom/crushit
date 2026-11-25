@@ -1,4 +1,4 @@
-name: Deploy CRUSH IT to GitHub Pages
+name: Deploy Crush Your Market to GitHub Pages
 
 on:
   push:

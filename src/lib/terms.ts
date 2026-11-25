@@ -46,7 +46,7 @@ export const TERMS: TermsSection[] = [
   {
     heading: "1. Who this is between",
     body: [
-      "These terms are between you — a licensed real estate agent or broker using the CRUSH IT Agent Suite — and Crush Mortgage. “We”, “us” and “Crush” mean Crush Mortgage. “The suite” means crushyourmarket.com and the tools on it.",
+      "These terms are between you — a licensed real estate agent or broker using the Crush Your Market Agent Suite — and Crush Mortgage. “We”, “us” and “Crush” mean Crush Mortgage. “The suite” means crushyourmarket.com and the tools on it.",
       "You use the suite as an independent real estate professional. Nothing here makes you our employee, our agent, or a partner in a legal sense, and nothing here obliges you or your clients to use Crush Mortgage for financing.",
     ],
   },

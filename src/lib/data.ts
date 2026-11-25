@@ -1,5 +1,5 @@
 /**
- * Static content data for the CRUSH IT suite.
+ * Static content data for the Crush Your Market suite.
  * Editable, plain-English content — safe for non-developers to update.
  */
 import type { StaticImageData } from "next/image";

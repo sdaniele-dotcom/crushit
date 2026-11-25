@@ -5,7 +5,7 @@ import { TERMS, TERMS_VERSION } from "@/lib/terms";
 export const metadata: Metadata = {
   title: "Agent Terms of Use",
   description:
-    "The terms for using the CRUSH IT Agent Suite — including how Crush Mortgage may use an agent's name, headshot and co-branded marketing materials.",
+    "The terms for using the Crush Your Market Agent Suite — including how Crush Mortgage may use an agent's name, headshot and co-branded marketing materials.",
 };
 
 export default function TermsPage() {

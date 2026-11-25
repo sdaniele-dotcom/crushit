@@ -285,7 +285,7 @@ export function ChatWidget() {
           <div className="flex items-center gap-3 bg-ink-900 px-5 py-4 text-white">
             <span className="grid h-9 w-9 place-items-center rounded-full bg-crush-500 text-lg">💬</span>
             <div className="leading-tight">
-              <p className="text-sm font-bold">CRUSH IT Assistant</p>
+              <p className="text-sm font-bold">Crush Your Market Assistant</p>
               <p className="text-xs text-slate-300">Find the right tool, fast</p>
             </div>
           </div>

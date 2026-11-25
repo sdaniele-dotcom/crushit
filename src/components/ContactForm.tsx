@@ -91,7 +91,7 @@ export function ContactForm() {
       <input
         type="hidden"
         name="_subject"
-        value="New CRUSH IT Agent Suite inquiry"
+        value="New Crush Your Market Agent Suite inquiry"
       />
       <input type="hidden" name="_template" value="table" />
       <input type="hidden" name="_captcha" value="false" />

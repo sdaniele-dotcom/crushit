@@ -1,5 +1,5 @@
 /**
- * CRUSH IT — Agent Suite
+ * Crush Your Market — Agent Suite
  * Central configuration.
  *
  * Pre-filled with Crush Mortgage details pulled from crushmortgage.com.
@@ -9,13 +9,13 @@
  */
 
 export const site = {
-  brand: "CRUSH IT",
+  brand: "Crush Your Market",
   tagline: "The Agent Suite by Crush Mortgage",
   // Home-page title used for search results and social cards. Leads with
   // the domain name so the page matches searches for Crush Your Market.
-  seoTitle: "Crush Your Market — CRUSH IT Agent Suite by Crush Mortgage",
+  seoTitle: "Crush Your Market — Agent Suite by Crush Mortgage",
   shortDescription:
-    "Crush Your Market is the CRUSH IT agent suite from Crush Mortgage: mortgage calculators, loan-program matching, open house kits, and co-branded marketing.",
+    "Crush Your Market is the agent suite from Crush Mortgage: mortgage calculators, loan-program matching, open house kits, and co-branded marketing.",
 
   // ─── Company / loan-officer details ───────────────────────────────
   company: "Crush Mortgage",
