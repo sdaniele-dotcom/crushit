@@ -9,6 +9,7 @@ import { useAuth } from "@/components/auth/AuthProvider";
 import { TermsGate } from "@/components/auth/TermsGate";
 import { TERMS_VERSION } from "@/lib/terms";
 import { Container } from "@/components/ui";
+import { AUTH_ROUTES, PUBLIC_ROUTES, normalizePath } from "@/lib/routes";
 
 /**
  * App shell + login gate.
@@ -22,25 +23,8 @@ import { Container } from "@/components/ui";
  * When Supabase is NOT configured, it degrades to the old public site so
  * nothing breaks before accounts are switched on.
  */
-// Public routes that render without the login gate or app chrome — auth pages
-// plus the QR-driven open-house visitor forms (scanned by logged-out visitors).
-const AUTH_ROUTES = [
-  "/login", "/signup", "/reset-password", "/update-password", "/auth/callback",
-  "/open-house", "/feedback",
-];
-
-/**
- * Readable without an account AND without having accepted the terms. /terms
- * has to be on this list or the gate traps you: the gate links to the terms,
- * and a gate that blocks the document it is asking you to agree to is asking
- * you to agree to something you cannot read.
- */
-const PUBLIC_ROUTES = ["/terms"];
-
-function normalize(p: string): string {
-  if (p.length > 1 && p.endsWith("/")) return p.slice(0, -1);
-  return p;
-}
+// The route lists live in lib/routes so the sitemap can read the same answer;
+// see the note there on why they were split out.
 
 function Spinner() {
   return (
@@ -52,7 +36,7 @@ function Spinner() {
 
 export function AppFrame({ children }: { children: ReactNode }) {
   const { configured, ready, user, profile, refreshProfile } = useAuth();
-  const path = normalize(usePathname() || "/");
+  const path = normalizePath(usePathname() || "/");
   const isAuthRoute = AUTH_ROUTES.includes(path);
   const isPublicRoute = PUBLIC_ROUTES.includes(path);
   const isHome = path === "/";
@@ -108,20 +92,40 @@ export function AppFrame({ children }: { children: ReactNode }) {
   } else if (isPublicRoute) {
     content = children; // readable logged-out and before accepting the terms
     chrome = true;
-  } else if (!ready) {
-    content = <Spinner />; // wait for the session check before deciding
   } else if (needsTerms) {
     // Ahead of every other signed-in branch, including the home redirect, so
-    // there is no route that reaches the app around it.
+    // there is no route that reaches the app around it. Safe to sit ahead of
+    // the home branch below: it requires a loaded profile, so it is false at
+    // build time and cannot swallow the prerender.
     content = <TermsGate onAccepted={() => void refreshProfile()} />;
     chrome = false;
   } else if (isHome) {
-    if (user) {
+    /*
+      THE HOME BRANCH COMES BEFORE THE `!ready` CHECK, AND THAT IS THE POINT.
+
+      `ready` is false at build time — there is no session to check during a
+      static export — so when this branch sat after `!ready`, the homepage
+      prerendered as a spinner. Production served 3.8KB of header and a
+      spinning border to every visitor and every crawler, and the marketing
+      page only existed once JS had run. The footer went with it, which is
+      where the NMLS, Equal Housing and Regulation Z disclosures live.
+
+      It was invisible locally because an unconfigured Supabase takes the
+      `!configured` path above, which renders everything. Only the deployed
+      build, with env set, took the broken path.
+
+      So: render the real page unless we positively know we are about to
+      redirect. `ready && user` is that knowledge, and it is only ever true
+      after hydration.
+    */
+    if (ready && user) {
       content = <Spinner />; // signed-in → redirecting to dashboard
     } else {
-      content = children; // logged-out → full marketing homepage
-      chrome = true; // marketing page gets the footer + chat
+      content = children; // build time and logged-out → marketing homepage
+      chrome = true; // which means the footer is in the served HTML
     }
+  } else if (!ready) {
+    content = <Spinner />; // wait for the session check before deciding
   } else if (!user) {
     content = <Spinner />; // redirecting to /login
   } else {
